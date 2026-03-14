@@ -756,6 +756,49 @@
     margin-top: 3px; transition: transform 0.18s;
   }
   .rm-item.open .rm-item-chevron { transform: rotate(90deg); }
+
+  /* ─── BUDGET TRACKER ─── */
+  .budget-category {
+    background: var(--bg-primary); border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg); margin-bottom: 10px; overflow: hidden;
+  }
+  .budget-cat-header {
+    display: flex; align-items: center; gap: 12px;
+    padding: 13px 18px; cursor: pointer; transition: background 0.12s; user-select: none;
+  }
+  .budget-cat-header:hover { background: var(--bg-secondary); }
+  .budget-cat-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+  .budget-cat-info { flex: 1; }
+  .budget-cat-name { font-size: 13px; font-weight: 500; color: var(--text-primary); }
+  .budget-cat-meta { font-size: 11px; color: var(--text-tertiary); margin-top: 1px; }
+  .budget-cat-amounts { text-align: right; flex-shrink: 0; }
+  .budget-cat-spent { font-size: 14px; font-weight: 500; font-family: var(--font-mono); color: var(--text-primary); }
+  .budget-cat-budget { font-size: 10px; color: var(--text-tertiary); margin-top: 1px; }
+  .budget-cat-chevron { font-size: 12px; color: var(--text-tertiary); flex-shrink: 0; transition: transform 0.2s; }
+  .budget-category.open .budget-cat-chevron { transform: rotate(90deg); }
+  .budget-cat-body { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+  .budget-category.open .budget-cat-body { max-height: 1200px; border-top: 0.5px solid var(--border); }
+  .budget-progress { height: 3px; background: var(--bg-tertiary); }
+  .budget-progress-fill { height: 100%; border-radius: 2px; transition: width 0.4s ease; }
+  .budget-entry { display: flex; align-items: center; gap: 10px; padding: 9px 18px; border-bottom: 0.5px solid var(--border); font-size: 12px; }
+  .budget-entry:last-of-type { border-bottom: none; }
+  .budget-entry-date { color: var(--text-tertiary); font-family: var(--font-mono); font-size: 10px; min-width: 76px; flex-shrink: 0; }
+  .budget-entry-desc { flex: 1; color: var(--text-primary); }
+  .budget-entry-amount { font-family: var(--font-mono); font-weight: 500; color: var(--text-primary); min-width: 100px; text-align: right; flex-shrink: 0; }
+  .budget-entry-del { background: none; border: none; color: var(--text-tertiary); cursor: pointer; font-size: 11px; padding: 2px 5px; border-radius: 4px; }
+  .budget-entry-del:hover { color: var(--red); }
+  .budget-add-row { display: flex; gap: 8px; align-items: center; padding: 10px 18px 12px; background: var(--bg-secondary); flex-wrap: wrap; }
+  .budget-add-row input, .budget-add-row select { border: 0.5px solid var(--border); border-radius: 6px; padding: 6px 10px; font-size: 12px; font-family: var(--font); color: var(--text-primary); background: var(--bg-primary); outline: none; }
+  .budget-add-row input:focus, .budget-add-row select:focus { border-color: var(--green); }
+
+  /* ─── COST ESTIMATOR ─── */
+  .est-row { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 0.5px solid var(--border); }
+  .est-row:last-child { border-bottom: none; }
+  .est-label { flex: 1; font-size: 13px; color: var(--text-secondary); }
+  .est-sublabel { font-size: 10px; color: var(--text-tertiary); margin-top: 2px; }
+  .est-input { width: 140px; text-align: right; border: 0.5px solid var(--border); border-radius: 6px; padding: 5px 10px; font-size: 12px; font-family: var(--font-mono); color: var(--text-primary); background: var(--bg-primary); outline: none; flex-shrink: 0; }
+  .est-input:focus { border-color: var(--green); }
+
   ::-webkit-scrollbar { width: 5px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
@@ -1019,6 +1062,12 @@
   <button class="sb-item" onclick="nav('financials',this)">
     <div class="sb-icon" style="background:#eaf3de;color:#3b6d11">$</div> Financials
   </button>
+  <button class="sb-item" onclick="nav('estimator',this)">
+    <div class="sb-icon" style="background:#faeeda;color:#854f0b">⊟</div> Cost estimator
+  </button>
+  <button class="sb-item" onclick="nav('budget',this)">
+    <div class="sb-icon" style="background:#fcebeb;color:#a32d2d">◈</div> Budget tracker
+  </button>
   <button class="sb-item" onclick="nav('calculator',this)">
     <div class="sb-icon" style="background:#d9f0e5;color:#0f6e56">⚙</div> Calculator
   </button>
@@ -1047,8 +1096,9 @@
   <button class="sb-item" onclick="nav('notes',this)">
     <div class="sb-icon" style="background:#eeedfe;color:#534ab7">✏</div> Notes
   </button>
-  <div style="padding:12px 18px;margin-top:auto;border-top:0.5px solid var(--border)">
+  <div style="padding:12px 18px;margin-top:auto;border-top:0.5px solid var(--border);display:flex;flex-direction:column;gap:6px">
     <button class="btn" style="width:100%;font-size:12px;color:var(--text-secondary)" onclick="window.print()">⎙ Print / Save PDF</button>
+    <button class="btn" style="width:100%;font-size:12px;color:var(--text-secondary)" onclick="exportBackup()">⬇ Export backup (JSON)</button>
   </div>
 </nav>
 
@@ -1581,23 +1631,146 @@
         </div>
         <div class="gantt-legend" id="gantt-legend"></div>
       </div>
-      <div class="two-col" style="margin-top:14px">
-        <div class="card">
+      <div style="margin-top:14px">
+
+        <!-- Critical path — visual chain -->
+        <div class="card" style="margin-bottom:14px">
           <div class="card-title">Critical path</div>
-          <div class="info-box red" style="margin-bottom:10px">
-            <strong>Longest sequential chain:</strong> Legal setup (M2) → COFEPRIS application (M3) → Inspection wait (M4–9) → License received → Open. Any delay in Phase 2 or 3 pushes everything.
+          <div style="font-size:11px;color:var(--text-tertiary);margin-bottom:14px">The longest sequential dependency chain — any delay here pushes your entire launch date.</div>
+
+          <div style="display:flex;align-items:center;flex-wrap:wrap;gap:0;margin-bottom:18px">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:5px;min-width:90px;text-align:center">
+              <div style="width:38px;height:38px;border-radius:50%;background:#faeeda;color:#854f0b;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500">M2</div>
+              <div style="font-size:11px;font-weight:500;color:var(--text-primary)">Legal setup</div>
+              <div style="font-size:10px;color:var(--text-tertiary)">Acta + RFC</div>
+            </div>
+            <div style="flex:1;min-width:20px;height:2px;background:linear-gradient(to right,#854f0b,#ef4444);margin-bottom:18px"></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:5px;min-width:90px;text-align:center">
+              <div style="width:38px;height:38px;border-radius:50%;background:#fcebeb;color:#a32d2d;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500">M3</div>
+              <div style="font-size:11px;font-weight:500;color:var(--text-primary)">COFEPRIS filed</div>
+              <div style="font-size:10px;color:var(--text-tertiary)">Clock starts</div>
+            </div>
+            <div style="flex:1;min-width:20px;height:2px;background:linear-gradient(to right,#ef4444,#ef4444);margin-bottom:18px"></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:5px;min-width:90px;text-align:center">
+              <div style="width:38px;height:38px;border-radius:50%;background:#fcebeb;color:#a32d2d;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500">M4–9</div>
+              <div style="font-size:11px;font-weight:500;color:var(--text-primary)">Inspection wait</div>
+              <div style="font-size:10px;color:var(--text-tertiary)">3–9 months</div>
+            </div>
+            <div style="flex:1;min-width:20px;height:2px;background:linear-gradient(to right,#ef4444,#185fa5);margin-bottom:18px"></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:5px;min-width:90px;text-align:center">
+              <div style="width:38px;height:38px;border-radius:50%;background:#e6f1fb;color:#185fa5;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500">M9</div>
+              <div style="font-size:11px;font-weight:500;color:var(--text-primary)">License received</div>
+              <div style="font-size:10px;color:var(--text-tertiary)">Green light</div>
+            </div>
+            <div style="flex:1;min-width:20px;height:2px;background:linear-gradient(to right,#185fa5,#1d9e75);margin-bottom:18px"></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:5px;min-width:90px;text-align:center">
+              <div style="width:38px;height:38px;border-radius:50%;background:#e1f5ee;color:#0f6e56;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500">M10</div>
+              <div style="font-size:11px;font-weight:500;color:var(--text-primary)">Open</div>
+              <div style="font-size:10px;color:var(--text-tertiary)">First patient</div>
+            </div>
           </div>
-          <div style="font-size:12px;color:var(--text-secondary);line-height:1.7">
-            <strong style="color:var(--text-primary)">Parallel tracks to exploit:</strong> While waiting for COFEPRIS (3–9 months), complete: equipment procurement, buildout, staffing, physician outreach prep, branding, and LIS setup. This is why smart operators launch in 12 months, not 18.
+
+          <div style="padding:10px 14px;background:#faeeda;border-radius:var(--radius-md);font-size:12px;color:#633806;line-height:1.6">
+            ⚠ <strong>Every week of delay in Phase 2 or 3 pushes your launch by one week.</strong> There are no shortcuts on the critical path — but you can run everything else in parallel.
           </div>
         </div>
+
+        <!-- Parallel tracks -->
+        <div class="card" style="margin-bottom:14px">
+          <div class="card-title">Parallel tracks — run these while waiting for COFEPRIS</div>
+          <div style="font-size:11px;color:var(--text-tertiary);margin-bottom:14px">COFEPRIS takes 3–9 months. Smart operators use that time to be fully ready to open the day the license arrives.</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+            <div style="padding:12px;background:var(--bg-secondary);border-radius:var(--radius-md)">
+              <div style="font-size:16px;margin-bottom:6px">🏗</div>
+              <div style="font-size:12px;font-weight:500;color:var(--text-primary);margin-bottom:4px">Buildout</div>
+              <div style="font-size:11px;color:var(--text-secondary);line-height:1.5">Complete lab construction and equipment installation. Must be ready before inspection.</div>
+            </div>
+            <div style="padding:12px;background:var(--bg-secondary);border-radius:var(--radius-md)">
+              <div style="font-size:16px;margin-bottom:6px">🔬</div>
+              <div style="font-size:12px;font-weight:500;color:var(--text-primary);margin-bottom:4px">Equipment</div>
+              <div style="font-size:11px;color:var(--text-secondary);line-height:1.5">Order analyzers early — import lead times are 8–16 weeks. Calibrate before inspection.</div>
+            </div>
+            <div style="padding:12px;background:var(--bg-secondary);border-radius:var(--radius-md)">
+              <div style="font-size:16px;margin-bottom:6px">👥</div>
+              <div style="font-size:12px;font-weight:500;color:var(--text-primary);margin-bottom:4px">Staffing</div>
+              <div style="font-size:11px;color:var(--text-secondary);line-height:1.5">Hire and train QFB, lab techs, and front desk. IMSS registration once staff is signed.</div>
+            </div>
+            <div style="padding:12px;background:var(--bg-secondary);border-radius:var(--radius-md)">
+              <div style="font-size:16px;margin-bottom:6px">🩺</div>
+              <div style="font-size:12px;font-weight:500;color:var(--text-primary);margin-bottom:4px">Physician outreach</div>
+              <div style="font-size:11px;color:var(--text-secondary);line-height:1.5">Start visiting médicos now. Takes 3–5 touches. Your referral network should be warm before day 1.</div>
+            </div>
+            <div style="padding:12px;background:var(--bg-secondary);border-radius:var(--radius-md)">
+              <div style="font-size:16px;margin-bottom:6px">💻</div>
+              <div style="font-size:12px;font-weight:500;color:var(--text-primary);margin-bottom:4px">LIS & branding</div>
+              <div style="font-size:11px;color:var(--text-secondary);line-height:1.5">Set up LIS software, WhatsApp Business, Google Business Profile, logo, and signage.</div>
+            </div>
+            <div style="padding:12px;background:#e1f5ee;border-radius:var(--radius-md);border:0.5px solid #a8dfc9">
+              <div style="font-size:16px;margin-bottom:6px">🎯</div>
+              <div style="font-size:12px;font-weight:500;color:#0f6e56;margin-bottom:4px">Goal</div>
+              <div style="font-size:11px;color:#3b6d11;line-height:1.5"><strong>Be 100% operational</strong> the day the Licencia Sanitaria arrives. No scrambling.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Key milestones — vertical timeline -->
         <div class="card">
           <div class="card-title">Key milestones</div>
-          <div class="reg-item"><div class="reg-dot" style="background:#a32d2d"></div><div><div class="reg-name">COFEPRIS application filed</div><div class="reg-detail">Month 3 · Triggers the clock on inspection</div></div></div>
-          <div class="reg-item"><div class="reg-dot" style="background:#854f0b"></div><div><div class="reg-name">Equipment installed & calibrated</div><div class="reg-detail">Month 8 · Must be ready before inspection</div></div></div>
-          <div class="reg-item"><div class="reg-dot" style="background:#185fa5"></div><div><div class="reg-name">COFEPRIS inspection passed</div><div class="reg-detail">Month 9 · Green light to operate</div></div></div>
-          <div class="reg-item"><div class="reg-dot" style="background:#1d9e75"></div><div><div class="reg-name">Soft launch — first patient</div><div class="reg-detail">Month 10 · Revenue begins</div></div></div>
+          <div style="position:relative;padding-left:28px">
+            <div style="position:absolute;left:10px;top:8px;bottom:8px;width:1.5px;background:var(--border)"></div>
+            <div style="display:flex;align-items:flex-start;gap:14px;margin-bottom:18px;position:relative">
+              <div style="position:absolute;left:-22px;width:12px;height:12px;border-radius:50%;background:#a32d2d;top:3px;border:2px solid var(--bg-primary)"></div>
+              <div style="flex:1">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:2px">
+                  <span style="font-size:12px;font-weight:500;color:var(--text-primary)">COFEPRIS application filed</span>
+                  <span style="font-size:10px;font-weight:500;padding:1px 7px;border-radius:10px;background:#fcebeb;color:#a32d2d">Month 3</span>
+                </div>
+                <div style="font-size:12px;color:var(--text-secondary)">Triggers the inspection clock. Every day you delay filing is a day you delay opening.</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:14px;margin-bottom:18px;position:relative">
+              <div style="position:absolute;left:-22px;width:12px;height:12px;border-radius:50%;background:#8b5cf6;top:3px;border:2px solid var(--bg-primary)"></div>
+              <div style="flex:1">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:2px">
+                  <span style="font-size:12px;font-weight:500;color:var(--text-primary)">Equipment installed & calibrated</span>
+                  <span style="font-size:10px;font-weight:500;padding:1px 7px;border-radius:10px;background:#eeedfe;color:#534ab7">Month 8</span>
+                </div>
+                <div style="font-size:12px;color:var(--text-secondary)">All analyzers must be on-site and calibrated before COFEPRIS arrives. Inspector will check them.</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:14px;margin-bottom:18px;position:relative">
+              <div style="position:absolute;left:-22px;width:12px;height:12px;border-radius:50%;background:#854f0b;top:3px;border:2px solid var(--bg-primary)"></div>
+              <div style="flex:1">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:2px">
+                  <span style="font-size:12px;font-weight:500;color:var(--text-primary)">COFEPRIS inspection</span>
+                  <span style="font-size:10px;font-weight:500;padding:1px 7px;border-radius:10px;background:#faeeda;color:#854f0b">Month 9</span>
+                </div>
+                <div style="font-size:12px;color:var(--text-secondary)">Physical inspection of the lab. Have all documents ready: QFB cédula, equipment certs, RPBI contract, floor plan.</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:14px;margin-bottom:18px;position:relative">
+              <div style="position:absolute;left:-22px;width:12px;height:12px;border-radius:50%;background:#185fa5;top:3px;border:2px solid var(--bg-primary)"></div>
+              <div style="flex:1">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:2px">
+                  <span style="font-size:12px;font-weight:500;color:var(--text-primary)">Licencia Sanitaria received</span>
+                  <span style="font-size:10px;font-weight:500;padding:1px 7px;border-radius:10px;background:#e6f1fb;color:#185fa5">Month 9–10</span>
+                </div>
+                <div style="font-size:12px;color:var(--text-secondary)">Green light to operate. Post the original visibly in the lab — inspectors will check for it.</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:14px;position:relative">
+              <div style="position:absolute;left:-22px;width:14px;height:14px;border-radius:50%;background:#1d9e75;top:2px;border:2px solid var(--bg-primary)"></div>
+              <div style="flex:1">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:2px">
+                  <span style="font-size:12px;font-weight:500;color:var(--green-dark)">Soft launch — first patient</span>
+                  <span style="font-size:10px;font-weight:500;padding:1px 7px;border-radius:10px;background:#e1f5ee;color:#0f6e56">Month 10</span>
+                </div>
+                <div style="font-size:12px;color:var(--text-secondary)">Revenue begins. Target 50–80 studies in month 1, break-even by month 6–8.</div>
+              </div>
+            </div>
+          </div>
         </div>
+
       </div>
     </div>
   </section>
@@ -2747,6 +2920,63 @@
       </div>
     </div>
   </section>
+  <!-- ── COST ESTIMATOR ── -->
+  <section id="page-estimator" class="page">
+    <div class="page-title">Startup cost estimator</div>
+    <div class="page-sub">Build your real cost estimate line by line — updates automatically</div>
+
+    <div class="two-col">
+      <div>
+        <div class="card">
+          <div class="section-hdr" style="margin-bottom:14px">
+            <div class="card-title" style="margin:0">Equipment & infrastructure</div>
+            <button class="btn" style="font-size:11px;padding:4px 12px;color:var(--text-tertiary)" onclick="resetEstimator()">Reset defaults</button>
+          </div>
+          <div id="est-equipment"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Permits, legal & admin</div>
+          <div id="est-legal"></div>
+        </div>
+      </div>
+      <div>
+        <div class="card">
+          <div class="card-title">Operations & working capital</div>
+          <div id="est-ops"></div>
+        </div>
+        <div class="card" style="position:sticky;top:20px">
+          <div class="card-title">Total estimate</div>
+          <div class="calc-output" style="margin-bottom:10px">
+            <div class="calc-output-label">Grand total</div>
+            <div class="calc-output-val" id="est-total" style="color:var(--amber)">$0</div>
+          </div>
+          <div id="est-breakdown"></div>
+          <div class="calc-divider" style="margin:10px 0"></div>
+          <div style="font-size:11px;color:var(--text-tertiary);line-height:1.6">
+            Adjust each line item to match your actual quotes. The total feeds into the Financial projections page.
+          </div>
+          <div class="info-box blue" style="margin-top:12px;font-size:11px">
+            💡 <strong>Comodato tip:</strong> If you choose comodato for all 3 analyzers, subtract ~$580,000 from equipment — but add ~$15,000/mo in reagent premium to your operating costs.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── BUDGET TRACKER ── -->
+  <section id="page-budget" class="page">
+    <div class="page-title">Budget tracker</div>
+    <div class="page-sub">Log actual expenses against your estimate — every peso accounted for</div>
+
+    <div class="metrics" style="margin-bottom:18px">
+      <div class="metric"><div class="metric-label">Total budgeted</div><div class="metric-val amber" id="bud-total-budget" style="font-size:17px">—</div></div>
+      <div class="metric"><div class="metric-label">Total spent</div><div class="metric-val red" id="bud-total-spent" style="font-size:17px">—</div></div>
+      <div class="metric"><div class="metric-label">Remaining</div><div class="metric-val green" id="bud-remaining" style="font-size:17px">—</div></div>
+      <div class="metric"><div class="metric-label">% used</div><div class="metric-val" id="bud-pct" style="font-size:17px">—</div></div>
+    </div>
+
+    <div id="budget-categories"></div>
+  </section>
 
 </main>
 
@@ -2765,6 +2995,251 @@
 </div>
 
 <script>
+  // ══════════════════════════════════════════
+  // ── COST ESTIMATOR ──
+  // ══════════════════════════════════════════
+  const estSections = {
+    equipment: {
+      title: 'Equipment & infrastructure',
+      items: [
+        { id:'eq1', label:'Hematology analyzer', sub:'e.g. Mindray BC-5150 (comodato = $0)', default:220000 },
+        { id:'eq2', label:'Chemistry analyzer',  sub:'e.g. Mindray BS-230 (comodato = $0)',  default:280000 },
+        { id:'eq3', label:'Coagulation analyzer', sub:'e.g. Mindray C3510 (comodato = $0)',  default:120000 },
+        { id:'eq4', label:'Centrifuges (×2)',     sub:'e.g. Hettich EBA 200 ×2',             default:45000  },
+        { id:'eq5', label:'Microscope',           sub:'e.g. Olympus CX23',                   default:35000  },
+        { id:'eq6', label:'Refrigerator 2–8°C',  sub:'e.g. Thermo TSX505',                  default:60000  },
+        { id:'eq7', label:'Freezer −20°C',        sub:'e.g. Thermo TFS-20',                  default:40000  },
+        { id:'eq8', label:'Lab buildout & remodeling', sub:'Walls, sinks, ventilation, electrical', default:300000 },
+        { id:'eq9', label:'Furniture & fixtures', sub:'Benches, chairs, signage',             default:80000  },
+      ]
+    },
+    legal: {
+      title: 'Permits, legal & admin',
+      items: [
+        { id:'lg1', label:'Notario público (Acta Constitutiva)', sub:'S.A. de C.V. incorporation', default:20000 },
+        { id:'lg2', label:'COFEPRIS fees & consultant',          sub:'Licencia Sanitaria process',  default:15000 },
+        { id:'lg3', label:'Licencia municipal + Protección Civil', sub:'Municipal opening permits', default:5000  },
+        { id:'lg4', label:'IMPI trademark filing',              sub:'Optional but recommended',    default:2500  },
+        { id:'lg5', label:'Accounting setup / PAC provider',    sub:'CFDI invoicing, RFC setup',    default:8000  },
+        { id:'lg6', label:'Lease deposit (2 months)',           sub:'Based on $25,000/mo rent',     default:50000 },
+      ]
+    },
+    ops: {
+      title: 'Operations & working capital',
+      items: [
+        { id:'op1', label:'LIS software (license or year 1 SaaS)', sub:'LabSoft, HealthPath, etc.', default:80000 },
+        { id:'op2', label:'Initial reagents & supplies',            sub:'3-month supply to open',    default:120000 },
+        { id:'op3', label:'Branding & marketing launch',            sub:'Logo, collateral, ads',     default:50000  },
+        { id:'op4', label:'IT equipment (PC, printer, barcode)',     sub:'Front desk + lab computers',default:35000  },
+        { id:'op5', label:'First 6 months rent',                    sub:'Pre-opening period',        default:150000 },
+        { id:'op6', label:'Staff salary buffer (3 months)',          sub:'QFB + 2 techs + front desk',default:200000 },
+        { id:'op7', label:'Working capital reserve',                 sub:'Unexpected costs buffer',   default:100000 },
+      ]
+    }
+  };
+
+  let estValues = {};
+  Object.values(estSections).forEach(sec => sec.items.forEach(item => { estValues[item.id] = item.default; }));
+
+  function renderEstimator() {
+    Object.entries(estSections).forEach(([secKey, sec]) => {
+      const el = document.getElementById('est-' + secKey);
+      if (!el) return;
+      el.innerHTML = sec.items.map(item => `
+        <div class="est-row">
+          <div class="est-label">
+            <div>${item.label}</div>
+            <div class="est-sublabel">${item.sub}</div>
+          </div>
+          <input class="est-input" type="number" value="${estValues[item.id]}"
+            oninput="updateEstItem('${item.id}', this.value)"
+            onchange="saveEstimator()">
+        </div>`).join('');
+    });
+    updateEstTotals();
+  }
+
+  function updateEstItem(id, val) {
+    estValues[id] = Math.max(0, +val || 0);
+    updateEstTotals();
+  }
+
+  let estSaveTimer = null;
+  function saveEstimator() {
+    clearTimeout(estSaveTimer);
+    estSaveTimer = setTimeout(() => dbSet('estValues', estValues), 600);
+  }
+
+  function updateEstTotals() {
+    const sectionTotals = {};
+    let grand = 0;
+    Object.entries(estSections).forEach(([key, sec]) => {
+      const total = sec.items.reduce((s, item) => s + (estValues[item.id] || 0), 0);
+      sectionTotals[key] = total;
+      grand += total;
+    });
+    const totalEl = document.getElementById('est-total');
+    if (totalEl) totalEl.textContent = '$' + fmt(grand) + ' MXN';
+    const bdEl = document.getElementById('est-breakdown');
+    if (bdEl) {
+      bdEl.innerHTML = Object.entries(estSections).map(([key, sec]) => `
+        <div class="calc-row">
+          <div class="calc-row-label">${sec.title}</div>
+          <div class="calc-row-val">$${fmt(sectionTotals[key])}</div>
+        </div>`).join('') +
+        `<div style="margin-top:6px;font-size:11px;color:var(--text-tertiary)">~$${Math.round(grand/20000)/1000}K USD at 20:1</div>`;
+    }
+    // Update financials header metric
+    const finMetric = document.querySelector('#page-financials .metric-val.amber');
+    if (finMetric) finMetric.textContent = '$' + fmt(Math.round(grand / 1000) * 1000) + ' MXN';
+  }
+
+  function resetEstimator() {
+    if (!confirm('Reset all estimates to defaults?')) return;
+    Object.values(estSections).forEach(sec => sec.items.forEach(item => { estValues[item.id] = item.default; }));
+    renderEstimator();
+    dbSet('estValues', estValues);
+  }
+
+  renderEstimator();
+
+  // ══════════════════════════════════════════
+  // ── BUDGET TRACKER ──
+  // ══════════════════════════════════════════
+  const budgetCats = [
+    { id:'bcat1', icon:'🔬', iconBg:'#eeedfe', iconColor:'#534ab7', name:'Equipment',          budgetKey:'eq', entries:[] },
+    { id:'bcat2', icon:'🏗', iconBg:'#e6f1fb', iconColor:'#185fa5', name:'Buildout & Fixtures', budgetKey:'eq', entries:[] },
+    { id:'bcat3', icon:'⚖', iconBg:'#faeeda', iconColor:'#854f0b', name:'Legal & Permits',     budgetKey:'lg', entries:[] },
+    { id:'bcat4', icon:'💻', iconBg:'#e1f5ee', iconColor:'#0f6e56', name:'IT & Software',       budgetKey:'op', entries:[] },
+    { id:'bcat5', icon:'🧪', iconBg:'#eaf3de', iconColor:'#3b6d11', name:'Reagents & Supplies', budgetKey:'op', entries:[] },
+    { id:'bcat6', icon:'📢', iconBg:'#fbeaf0', iconColor:'#993556', name:'Marketing & Branding', budgetKey:'op', entries:[] },
+    { id:'bcat7', icon:'🏠', iconBg:'#f1efe8', iconColor:'#5f5e5a', name:'Rent & Utilities',    budgetKey:'op', entries:[] },
+    { id:'bcat8', icon:'👥', iconBg:'#dde8f8', iconColor:'#2a5ea8', name:'Staff & Salaries',    budgetKey:'op', entries:[] },
+    { id:'bcat9', icon:'📦', iconBg:'#f5e6f0', iconColor:'#7a2d6b', name:'Miscellaneous',       budgetKey:'op', entries:[] },
+  ];
+
+  function getBudgetForCat(cat) {
+    // Sum estimator values whose keys start with the budgetKey prefix
+    const prefix = cat.budgetKey;
+    return Object.entries(estValues)
+      .filter(([k]) => k.startsWith(prefix))
+      .reduce((s, [,v]) => s + (v||0), 0);
+  }
+
+  function renderBudget() {
+    const wrap = document.getElementById('budget-categories');
+    if (!wrap) return;
+    wrap.innerHTML = budgetCats.map((cat, ci) => {
+      const spent = cat.entries.reduce((s, e) => s + e.amount, 0);
+      const budget = getBudgetForCat(cat);
+      const pct = budget > 0 ? Math.min(Math.round(spent / budget * 100), 100) : 0;
+      const overBudget = budget > 0 && spent > budget;
+      const barColor = overBudget ? 'var(--red)' : pct > 80 ? 'var(--amber)' : 'var(--green)';
+      return `
+        <div class="budget-category" id="${cat.id}">
+          <div class="budget-cat-header" onclick="toggleBudgetCat('${cat.id}')">
+            <div class="budget-cat-icon" style="background:${cat.iconBg};color:${cat.iconColor}">${cat.icon}</div>
+            <div class="budget-cat-info">
+              <div class="budget-cat-name">${cat.name}</div>
+              <div class="budget-cat-meta">${cat.entries.length} expense${cat.entries.length !== 1 ? 's' : ''} logged</div>
+            </div>
+            <div class="budget-cat-amounts">
+              <div class="budget-cat-spent" style="color:${overBudget ? 'var(--red)' : 'var(--text-primary)'}">$${fmt(spent)}</div>
+              <div class="budget-cat-budget">of $${fmt(budget)} est.</div>
+            </div>
+            <span class="budget-cat-chevron">›</span>
+          </div>
+          <div class="budget-progress"><div class="budget-progress-fill" style="width:${pct}%;background:${barColor}"></div></div>
+          <div class="budget-cat-body">
+            ${cat.entries.length ? cat.entries.map((e, ei) => `
+              <div class="budget-entry">
+                <span class="budget-entry-date">${e.date}</span>
+                <span class="budget-entry-desc">${e.desc}</span>
+                <span class="budget-entry-amount">$${fmt(e.amount)}</span>
+                <button class="budget-entry-del" onclick="deleteBudgetEntry(${ci},${ei})">✕</button>
+              </div>`).join('') : `<div style="padding:12px 18px;font-size:12px;color:var(--text-tertiary)">No expenses logged yet.</div>`}
+            <div class="budget-add-row">
+              <input type="text" placeholder="Description" id="bdesc-${ci}" style="flex:1;min-width:120px">
+              <input type="number" placeholder="Amount MXN" id="bamt-${ci}" style="width:130px">
+              <input type="date" id="bdate-${ci}" style="width:130px">
+              <button class="btn btn-primary" style="font-size:12px;padding:5px 14px;flex-shrink:0" onclick="addBudgetEntry(${ci})">Add</button>
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+    updateBudgetSummary();
+  }
+
+  function toggleBudgetCat(id) {
+    document.getElementById(id).classList.toggle('open');
+  }
+
+  function addBudgetEntry(ci) {
+    const desc = document.getElementById('bdesc-' + ci).value.trim();
+    const amt  = +document.getElementById('bamt-'  + ci).value;
+    const date = document.getElementById('bdate-'  + ci).value ||
+                 new Date().toISOString().split('T')[0];
+    if (!desc || !amt) return;
+    budgetCats[ci].entries.push({ desc, amount: amt, date });
+    renderBudget();
+    // Re-open the category after re-render
+    document.getElementById(budgetCats[ci].id).classList.add('open');
+    saveBudget();
+  }
+
+  function deleteBudgetEntry(ci, ei) {
+    budgetCats[ci].entries.splice(ei, 1);
+    renderBudget();
+    document.getElementById(budgetCats[ci].id).classList.add('open');
+    saveBudget();
+  }
+
+  function saveBudget() {
+    const data = budgetCats.map(c => c.entries);
+    dbSet('budgetEntries', data);
+  }
+
+  function updateBudgetSummary() {
+    const totalBudget = budgetCats.reduce((s, c) => s + getBudgetForCat(c), 0);
+    const totalSpent  = budgetCats.reduce((s, c) => s + c.entries.reduce((ss, e) => ss + e.amount, 0), 0);
+    const remaining   = totalBudget - totalSpent;
+    const pct         = totalBudget > 0 ? Math.round(totalSpent / totalBudget * 100) : 0;
+    const setEl = (id, text, color) => { const el = document.getElementById(id); if (el) { el.textContent = text; if (color) el.style.color = color; } };
+    setEl('bud-total-budget', '$' + fmt(totalBudget));
+    setEl('bud-total-spent',  '$' + fmt(totalSpent), totalSpent > totalBudget ? 'var(--red)' : null);
+    setEl('bud-remaining',    '$' + fmt(Math.abs(remaining)), remaining < 0 ? 'var(--red)' : 'var(--green-dark)');
+    setEl('bud-pct',          pct + '%', pct > 100 ? 'var(--red)' : pct > 80 ? 'var(--amber)' : null);
+  }
+
+  renderBudget();
+
+  // ══════════════════════════════════════════
+  // ── DATA EXPORT / BACKUP ──
+  // ══════════════════════════════════════════
+  async function exportBackup() {
+    setSyncStatus('saving');
+    try {
+      const keys = ['checks','permits','physicians','notes','locations','docStatMap',
+                    'savedScenarios','pricingYours','lastPage','estValues','budgetEntries'];
+      const results = await Promise.all(keys.map(k => dbGet(k)));
+      const data = {};
+      keys.forEach((k, i) => { data[k] = results[i]; });
+      data._exportedAt = new Date().toISOString();
+      data._version = 'labqro-v18';
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement('a');
+      a.href     = url;
+      a.download = 'labqro-backup-' + new Date().toISOString().split('T')[0] + '.json';
+      a.click();
+      URL.revokeObjectURL(url);
+      setSyncStatus('live');
+    } catch(e) {
+      setSyncStatus('offline');
+      alert('Export failed. Check your connection and try again.');
+    }
+  }
+
   // ── Roadmap accordion ──
   function toggleRmPhase(num) {
     const el = document.getElementById('rm-phase-' + num);
@@ -3848,11 +4323,12 @@
     setSyncStatus('connecting');
 
     // Load all keys in parallel
-    const [savedChecks, savedPermits, savedPhysicians, savedNotes, savedLocations, savedDocStatMap, savedScenariosData, savedPricingYours, lastPage] =
+    const [savedChecks, savedPermits, savedPhysicians, savedNotes, savedLocations, savedDocStatMap, savedScenariosData, savedPricingYours, lastPage, savedEstValues, savedBudgetEntries] =
       await Promise.all([
         dbGet('checks'), dbGet('permits'), dbGet('physicians'),
         dbGet('notes'),  dbGet('locations'), dbGet('docStatMap'),
         dbGet('savedScenarios'), dbGet('pricingYours'), dbGet('lastPage'),
+        dbGet('estValues'), dbGet('budgetEntries'),
       ]);
 
     if (savedChecks) { Object.assign(checks, savedChecks); renderChecklist(); }
@@ -3865,6 +4341,11 @@
     if (savedPricingYours) {
       savedPricingYours.forEach((price, i) => { if (price !== null && pricingData[i]) pricingData[i].yours = price; });
       renderPricingTable();
+    }
+    if (savedEstValues) { Object.assign(estValues, savedEstValues); renderEstimator(); }
+    if (savedBudgetEntries) {
+      savedBudgetEntries.forEach((entries, i) => { if (budgetCats[i]) budgetCats[i].entries = entries || []; });
+      renderBudget();
     }
 
     // Restore last active page — remap any stale route names from old versions
