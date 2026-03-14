@@ -1,0 +1,3089 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LabQro — Business Plan HQ</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f5f5f3;
+    --bg-tertiary: #eeede9;
+    --bg-info: #e6f1fb;
+    --bg-success: #eaf3de;
+    --bg-warning: #faeeda;
+    --bg-danger: #fcebeb;
+
+    --text-primary: #1a1a18;
+    --text-secondary: #5f5e5a;
+    --text-tertiary: #999890;
+    --text-info: #185fa5;
+    --text-success: #3b6d11;
+    --text-warning: #854f0b;
+    --text-danger: #a32d2d;
+
+    --border: rgba(26,26,24,0.13);
+    --border-strong: rgba(26,26,24,0.22);
+
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+
+    --green: #1d9e75;
+    --green-dark: #0f6e56;
+    --blue: #185fa5;
+    --amber: #854f0b;
+    --red: #a32d2d;
+
+    --nav-w: 224px;
+    --font: 'DM Sans', system-ui, sans-serif;
+    --font-mono: 'DM Mono', monospace;
+  }
+
+  html, body { height: 100%; }
+  body {
+    font-family: var(--font);
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    display: flex;
+    font-size: 14px;
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  /* ─── SIDEBAR ─── */
+  #sidebar {
+    width: var(--nav-w);
+    background: var(--bg-primary);
+    border-right: 0.5px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    overflow-y: auto;
+    z-index: 10;
+  }
+  .sb-logo {
+    padding: 20px 18px 16px;
+    border-bottom: 0.5px solid var(--border);
+    margin-bottom: 8px;
+  }
+  .sb-logo h2 { font-size: 15px; font-weight: 500; color: var(--text-primary); letter-spacing: -0.01em; }
+  .sb-logo p  { font-size: 11px; color: var(--text-tertiary); margin-top: 2px; }
+  .sb-section {
+    font-size: 10px;
+    color: var(--text-tertiary);
+    padding: 10px 18px 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 500;
+  }
+  .sb-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 18px;
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--text-secondary);
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    font-family: var(--font);
+    transition: background 0.12s;
+    border-radius: 0;
+  }
+  .sb-item:hover { background: var(--bg-secondary); }
+  .sb-item.active { color: var(--text-primary); font-weight: 500; background: var(--bg-secondary); }
+  .sb-icon {
+    width: 18px; height: 18px;
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; flex-shrink: 0;
+  }
+
+  /* ─── MAIN ─── */
+  #main {
+    margin-left: var(--nav-w);
+    flex: 1;
+    padding: 28px 32px;
+    overflow-y: auto;
+    min-height: 100vh;
+  }
+  .page { display: none; }
+  .page.active { display: block; }
+
+  .page-title { font-size: 20px; font-weight: 500; color: var(--text-primary); margin-bottom: 3px; letter-spacing: -0.02em; }
+  .page-sub   { font-size: 13px; color: var(--text-secondary); margin-bottom: 20px; }
+
+  /* ─── CARDS ─── */
+  .card {
+    background: var(--bg-primary);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 18px 20px;
+    margin-bottom: 14px;
+  }
+  .card-title { font-size: 13px; font-weight: 500; color: var(--text-primary); margin-bottom: 12px; }
+
+  /* ─── METRIC CARDS ─── */
+  .metrics { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 10px; margin-bottom: 14px; }
+  .metric { background: var(--bg-secondary); border-radius: var(--radius-md); padding: 14px 16px; }
+  .metric-label { font-size: 11px; color: var(--text-secondary); margin-bottom: 5px; }
+  .metric-val { font-size: 20px; font-weight: 500; color: var(--text-primary); }
+  .metric-val.green  { color: var(--green-dark); }
+  .metric-val.amber  { color: var(--amber); }
+  .metric-val.blue   { color: var(--blue); }
+  .metric-val.red    { color: var(--red); }
+
+  /* ─── BADGES ─── */
+  .badge {
+    display: inline-flex; align-items: center;
+    padding: 2px 9px; border-radius: 20px;
+    font-size: 11px; font-weight: 500;
+  }
+  .badge-todo     { background: #f1efe8; color: #5f5e5a; }
+  .badge-progress { background: #e6f1fb; color: #185fa5; }
+  .badge-done     { background: #eaf3de; color: #3b6d11; }
+  .badge-urgent   { background: #faeeda; color: #854f0b; }
+
+  /* ─── LAYOUTS ─── */
+  .two-col   { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+
+  /* ─── PHASE ROWS ─── */
+  .phase-row {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 10px 0;
+    border-bottom: 0.5px solid var(--border);
+  }
+  .phase-row:last-child { border-bottom: none; }
+  .phase-num {
+    width: 28px; height: 28px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 500; flex-shrink: 0;
+  }
+  .phase-body { flex: 1; }
+  .phase-name { font-size: 13px; font-weight: 500; color: var(--text-primary); }
+  .phase-desc { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+  .phase-meta { font-size: 11px; color: var(--text-tertiary); margin-top: 3px; }
+  .phase-hdr  { display: flex; justify-content: space-between; align-items: flex-start; }
+
+  /* ─── PROGRESS BAR ─── */
+  .progress-bar  { height: 5px; background: var(--bg-secondary); border-radius: 3px; margin-top: 7px; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 3px; background: var(--green); }
+
+  /* ─── REG ITEMS ─── */
+  .reg-item {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 10px 0; border-bottom: 0.5px solid var(--border);
+  }
+  .reg-item:last-child { border-bottom: none; }
+  .reg-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+  .reg-name   { font-size: 13px; font-weight: 500; color: var(--text-primary); }
+  .reg-detail { font-size: 12px; color: var(--text-secondary); margin-top: 2px; line-height: 1.5; }
+  .reg-time   { font-size: 11px; color: var(--text-tertiary); margin-top: 3px; }
+
+  /* ─── FINANCIALS ─── */
+  .fin-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 7px 0; border-bottom: 0.5px solid var(--border);
+    font-size: 13px;
+  }
+  .fin-row:last-child { border-bottom: none; }
+  .fin-label { color: var(--text-secondary); }
+  .fin-val   { font-weight: 500; color: var(--text-primary); }
+  .fin-val.total { color: var(--blue); font-size: 14px; }
+  .fin-val.green { color: var(--green-dark); }
+  .fin-val.red   { color: var(--red); }
+
+  /* ─── MARKET BARS ─── */
+  .mkt-row { display: flex; align-items: center; gap: 10px; padding: 7px 0; }
+  .mkt-label { font-size: 12px; color: var(--text-secondary); min-width: 150px; }
+  .mkt-bar-wrap { flex: 1; height: 7px; background: var(--bg-secondary); border-radius: 4px; overflow: hidden; }
+  .mkt-bar { height: 100%; border-radius: 4px; }
+  .mkt-pct { font-size: 12px; color: var(--text-primary); font-weight: 500; min-width: 40px; text-align: right; }
+
+  /* ─── CHECKLIST ─── */
+  .tab-row { display: flex; gap: 5px; margin-bottom: 14px; }
+  .tab {
+    padding: 5px 14px; border-radius: 20px;
+    font-size: 12px; cursor: pointer;
+    border: 0.5px solid var(--border);
+    background: var(--bg-primary);
+    color: var(--text-secondary);
+    font-family: var(--font);
+    transition: background 0.12s;
+  }
+  .tab:hover { background: var(--bg-secondary); }
+  .tab.active { background: var(--bg-secondary); color: var(--text-primary); font-weight: 500; }
+
+  .checklist-item {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 9px 0; border-bottom: 0.5px solid var(--border);
+  }
+  .checklist-item:last-child { border-bottom: none; }
+  .check-box {
+    width: 16px; height: 16px; border-radius: 3px;
+    border: 1.5px solid var(--border-strong);
+    flex-shrink: 0; margin-top: 2px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+  }
+  .check-box.checked { background: var(--green); border-color: var(--green); color: #fff; font-size: 10px; }
+  .check-text     { font-size: 13px; color: var(--text-primary); }
+  .check-text.done { color: var(--text-tertiary); text-decoration: line-through; }
+  .check-sub      { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+
+  /* ─── DOCUMENTS ─── */
+  .doc-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 0; border-bottom: 0.5px solid var(--border);
+  }
+  .doc-row:last-child { border-bottom: none; }
+  .doc-icon {
+    width: 34px; height: 34px; border-radius: 7px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 500; flex-shrink: 0;
+  }
+  .doc-name   { font-size: 13px; color: var(--text-primary); font-weight: 500; }
+  .doc-meta   { font-size: 11px; color: var(--text-tertiary); margin-top: 1px; }
+  .doc-status { margin-left: auto; flex-shrink: 0; }
+
+  /* ─── NOTES ─── */
+  .note-area {
+    width: 100%;
+    border: 0.5px solid var(--border-strong);
+    border-radius: var(--radius-md);
+    padding: 12px 14px;
+    font-size: 13px;
+    font-family: var(--font);
+    color: var(--text-primary);
+    background: var(--bg-primary);
+    resize: vertical;
+    min-height: 90px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .note-area:focus { border-color: var(--green); }
+
+  .btn {
+    padding: 7px 16px; border-radius: var(--radius-md);
+    font-size: 13px; cursor: pointer; font-family: var(--font);
+    border: 0.5px solid var(--border-strong);
+    background: var(--bg-primary); color: var(--text-primary);
+    transition: background 0.12s;
+  }
+  .btn:hover { background: var(--bg-secondary); }
+  .btn-primary { background: var(--green); color: #fff; border-color: var(--green-dark); }
+  .btn-primary:hover { background: var(--green-dark); }
+
+  /* ─── RISK ROWS ─── */
+  .risk-row { display: flex; align-items: flex-start; gap: 10px; font-size: 12px; padding: 5px 0; }
+  .risk-icon { font-size: 11px; margin-top: 1px; flex-shrink: 0; }
+
+  /* ─── ZONE CARDS ─── */
+  .zone-card { padding: 14px; background: var(--bg-secondary); border-radius: var(--radius-md); }
+  .zone-card .zone-name { font-size: 13px; font-weight: 500; color: var(--text-primary); }
+  .zone-card .zone-desc { font-size: 12px; color: var(--text-secondary); margin-top: 4px; line-height: 1.5; }
+  .zone-card .zone-badge { margin-top: 10px; }
+
+  /* ─── SECTION HDR ─── */
+  .section-hdr { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+
+  /* ─── CALLOUT ─── */
+  .callout {
+    background: #faeeda; border-radius: var(--radius-md);
+    padding: 12px 14px; font-size: 12px; color: #633806;
+    line-height: 1.6; margin-bottom: 12px;
+  }
+
+  /* ─── NEXT ACTIONS DOT ─── */
+  .action-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--blue); flex-shrink: 0; margin-top: 5px; }
+
+  /* ─── RANGE SLIDER ─── */
+  .slider-group { margin-bottom: 16px; }
+  .slider-label {
+    display: flex; justify-content: space-between; align-items: baseline;
+    font-size: 12px; color: var(--text-secondary); margin-bottom: 6px;
+  }
+  .slider-val { font-family: var(--font-mono); font-weight: 500; color: var(--text-primary); font-size: 13px; }
+  input[type=range] {
+    -webkit-appearance: none; width: 100%; height: 5px;
+    background: var(--bg-tertiary); border-radius: 3px; outline: none;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%;
+    background: var(--green); cursor: pointer; border: 2px solid #fff;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.18);
+  }
+
+  /* ─── CALC OUTPUT ─── */
+  .calc-output {
+    background: var(--bg-secondary); border-radius: var(--radius-md);
+    padding: 14px 16px; margin-bottom: 10px;
+  }
+  .calc-output-label { font-size: 11px; color: var(--text-secondary); margin-bottom: 3px; }
+  .calc-output-val { font-size: 22px; font-weight: 500; font-family: var(--font-mono); }
+  .calc-row { display: flex; justify-content: space-between; font-size: 12px; padding: 5px 0; }
+  .calc-row-label { color: var(--text-secondary); }
+  .calc-row-val { font-weight: 500; font-family: var(--font-mono); }
+  .calc-divider { border-top: 1.5px solid var(--border-strong); margin: 6px 0; }
+  .calc-bar-wrap { height: 22px; background: var(--bg-tertiary); border-radius: 4px; overflow: hidden; position: relative; margin-top: 8px; }
+  .calc-bar { height: 100%; border-radius: 4px; transition: width 0.4s ease; }
+  .calc-bar-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); font-size: 10px; font-weight: 500; color: var(--text-primary); }
+  .scenario-tabs { display: flex; gap: 5px; margin-bottom: 14px; }
+  .scenario-tab {
+    padding: 5px 14px; border-radius: 20px; font-size: 12px; cursor: pointer;
+    border: 0.5px solid var(--border); background: var(--bg-primary);
+    color: var(--text-secondary); font-family: var(--font); transition: all 0.12s;
+  }
+  .scenario-tab:hover { background: var(--bg-secondary); }
+  .scenario-tab.active { background: var(--green); color: #fff; border-color: var(--green-dark); }
+
+  /* ─── GANTT TIMELINE ─── */
+  .gantt-wrap { overflow-x: auto; padding-bottom: 10px; }
+  .gantt { min-width: 700px; }
+  .gantt-header { display: flex; border-bottom: 0.5px solid var(--border); padding-bottom: 8px; margin-bottom: 6px; }
+  .gantt-label-col { width: 180px; flex-shrink: 0; font-size: 11px; color: var(--text-tertiary); font-weight: 500; }
+  .gantt-months { flex: 1; display: grid; grid-template-columns: repeat(18,1fr); gap: 0; }
+  .gantt-mo { font-size: 9px; color: var(--text-tertiary); text-align: center; padding: 0 1px; font-family: var(--font-mono); }
+  .gantt-row { display: flex; align-items: center; padding: 5px 0; min-height: 32px; }
+  .gantt-row-label { width: 180px; flex-shrink: 0; font-size: 12px; font-weight: 500; color: var(--text-primary); display: flex; align-items: center; gap: 8px; }
+  .gantt-row-label .gnum { width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 500; flex-shrink: 0; }
+  .gantt-bars { flex: 1; display: grid; grid-template-columns: repeat(18,1fr); position: relative; height: 24px; }
+  .gantt-bar {
+    border-radius: 4px; height: 20px; position: absolute; top: 2px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9px; font-weight: 500; color: rgba(255,255,255,0.9);
+    transition: opacity 0.15s;
+  }
+  .gantt-bar:hover { opacity: 0.85; }
+  .gantt-milestone {
+    position: absolute; top: 4px; width: 14px; height: 14px;
+    transform: rotate(45deg); border-radius: 2px;
+  }
+  .gantt-grid-line { position: absolute; top: 0; bottom: 0; width: 0.5px; background: var(--border); }
+  .gantt-legend { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 14px; padding-top: 12px; border-top: 0.5px solid var(--border); }
+  .gantt-legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text-secondary); }
+  .gantt-legend-dot { width: 10px; height: 10px; border-radius: 3px; }
+  .gantt-today { position: absolute; top: -6px; bottom: -6px; width: 2px; background: var(--red); z-index: 2; }
+  .gantt-today::after { content: 'HOY'; position: absolute; top: -14px; left: 50%; transform: translateX(-50%); font-size: 8px; font-weight: 500; color: var(--red); font-family: var(--font-mono); }
+
+  /* ─── PRICING TABLE ─── */
+  .pricing-tbl { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .pricing-tbl th {
+    text-align: left; padding: 8px 10px; font-weight: 500; font-size: 11px;
+    color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em;
+    border-bottom: 1.5px solid var(--border-strong); position: sticky; top: 0;
+    background: var(--bg-primary); z-index: 1;
+  }
+  .pricing-tbl td { padding: 7px 10px; border-bottom: 0.5px solid var(--border); }
+  .pricing-tbl tr:hover td { background: var(--bg-secondary); }
+  .pricing-tbl .price-cell { font-family: var(--font-mono); font-weight: 500; text-align: right; }
+  .pricing-tbl .your-price { color: var(--green-dark); font-weight: 500; }
+  .pricing-tbl .cat-row td { background: var(--bg-secondary); font-weight: 500; color: var(--text-primary); border-bottom: none; font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .pricing-tbl input {
+    width: 70px; text-align: right; border: 0.5px solid var(--border);
+    border-radius: 4px; padding: 3px 6px; font-family: var(--font-mono);
+    font-size: 12px; background: var(--bg-primary); color: var(--green-dark);
+    font-weight: 500; outline: none;
+  }
+  .pricing-tbl input:focus { border-color: var(--green); box-shadow: 0 0 0 2px rgba(29,158,117,0.15); }
+
+  /* ─── LOCATION SCORING ─── */
+  .loc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
+  .loc-card { background: var(--bg-primary); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 18px 20px; position: relative; }
+  .loc-card.winner { border-color: var(--green); box-shadow: 0 0 0 1.5px var(--green); }
+  .loc-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; }
+  .loc-card-name { font-size: 15px; font-weight: 500; }
+  .loc-score-circle {
+    width: 44px; height: 44px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 500; font-family: var(--font-mono);
+    flex-shrink: 0;
+  }
+  .loc-criterion { display: flex; align-items: center; gap: 8px; padding: 5px 0; }
+  .loc-criterion-label { font-size: 12px; color: var(--text-secondary); flex: 1; }
+  .loc-criterion-weight { font-size: 10px; color: var(--text-tertiary); font-family: var(--font-mono); min-width: 28px; }
+  .loc-stars { display: flex; gap: 2px; }
+  .loc-star {
+    width: 18px; height: 18px; border-radius: 3px; border: none;
+    background: var(--bg-tertiary); color: var(--text-tertiary);
+    font-size: 10px; cursor: pointer; display: flex; align-items: center;
+    justify-content: center; transition: all 0.1s; font-family: var(--font);
+  }
+  .loc-star.filled { background: var(--green); color: #fff; }
+  .loc-star:hover { background: #b8e4d0; }
+  .loc-add-btn {
+    border: 1.5px dashed var(--border-strong); border-radius: var(--radius-lg);
+    padding: 30px; text-align: center; cursor: pointer;
+    color: var(--text-tertiary); font-size: 13px; background: none;
+    font-family: var(--font); transition: all 0.12s; width: 100%;
+    min-height: 200px; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 6px;
+  }
+  .loc-add-btn:hover { border-color: var(--green); color: var(--green); background: rgba(29,158,117,0.04); }
+  .loc-remove { position: absolute; top: 10px; right: 10px; width: 22px; height: 22px; border-radius: 50%; border: none; background: var(--bg-secondary); color: var(--text-tertiary); cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: center; transition: all 0.12s; }
+  .loc-remove:hover { background: #fcebeb; color: var(--red); }
+  .loc-notes-input { width: 100%; border: 0.5px solid var(--border); border-radius: 4px; padding: 6px 8px; font-size: 11px; font-family: var(--font); color: var(--text-primary); background: var(--bg-primary); outline: none; margin-top: 8px; resize: none; height: 40px; }
+  .loc-notes-input:focus { border-color: var(--green); }
+  .loc-name-input { border: none; background: none; font-size: 15px; font-weight: 500; font-family: var(--font); color: var(--text-primary); outline: none; width: 100%; padding: 0; }
+  .loc-name-input::placeholder { color: var(--text-tertiary); }
+
+  /* ─── PHYSICIAN CRM ─── */
+  .crm-pipeline { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; min-height: 300px; }
+  .crm-col { background: var(--bg-secondary); border-radius: var(--radius-md); padding: 10px; }
+  .crm-col-header {
+    font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em;
+    font-weight: 500; color: var(--text-tertiary); margin-bottom: 8px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .crm-col-count {
+    background: var(--bg-tertiary); border-radius: 10px; padding: 0 7px;
+    font-size: 10px; font-family: var(--font-mono);
+  }
+  .crm-card {
+    background: var(--bg-primary); border: 0.5px solid var(--border);
+    border-radius: var(--radius-md); padding: 10px 12px; margin-bottom: 6px;
+    cursor: grab; transition: box-shadow 0.12s;
+  }
+  .crm-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+  .crm-card.dragging { opacity: 0.5; }
+  .crm-card-name { font-size: 12px; font-weight: 500; color: var(--text-primary); }
+  .crm-card-spec { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+  .crm-card-clinic { font-size: 10px; color: var(--text-tertiary); margin-top: 3px; }
+  .crm-card-actions { display: flex; gap: 4px; margin-top: 6px; }
+  .crm-move-btn {
+    font-size: 9px; padding: 2px 7px; border-radius: 10px;
+    border: 0.5px solid var(--border); background: var(--bg-secondary);
+    color: var(--text-secondary); cursor: pointer; font-family: var(--font);
+    transition: all 0.1s;
+  }
+  .crm-move-btn:hover { background: var(--green); color: #fff; border-color: var(--green); }
+  .crm-add-form {
+    background: var(--bg-primary); border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg); padding: 18px 20px; margin-bottom: 14px;
+  }
+  .crm-input {
+    width: 100%; border: 0.5px solid var(--border); border-radius: 6px;
+    padding: 7px 10px; font-size: 12px; font-family: var(--font);
+    color: var(--text-primary); background: var(--bg-primary); outline: none;
+    margin-bottom: 8px;
+  }
+  .crm-input:focus { border-color: var(--green); }
+  .crm-input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .crm-stats { display: grid; grid-template-columns: repeat(5,1fr); gap: 10px; margin-bottom: 14px; }
+  .crm-stat { background: var(--bg-secondary); border-radius: var(--radius-md); padding: 10px 14px; text-align: center; }
+  .crm-stat-val { font-size: 20px; font-weight: 500; font-family: var(--font-mono); }
+  .crm-stat-label { font-size: 10px; color: var(--text-tertiary); margin-top: 2px; }
+  .crm-remove { float: right; border: none; background: none; color: var(--text-tertiary); cursor: pointer; font-size: 10px; padding: 2px; }
+  .crm-remove:hover { color: var(--red); }
+
+  /* ─── EQUIPMENT COMPARE ─── */
+  .eq-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .eq-table th { padding: 8px 10px; font-weight: 500; font-size: 11px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1.5px solid var(--border-strong); text-align: left; background: var(--bg-primary); position: sticky; top: 0; z-index: 1; }
+  .eq-table td { padding: 7px 10px; border-bottom: 0.5px solid var(--border); vertical-align: top; }
+  .eq-table tr:hover td { background: var(--bg-secondary); }
+  .eq-input { width: 100%; border: 0.5px solid var(--border); border-radius: 4px; padding: 4px 7px; font-size: 12px; font-family: var(--font); background: var(--bg-primary); color: var(--text-primary); outline: none; }
+  .eq-input:focus { border-color: var(--green); }
+  .eq-input-num { font-family: var(--font-mono); text-align: right; width: 90px; }
+  .eq-cat-tabs { display: flex; gap: 5px; margin-bottom: 14px; }
+  .eq-highlight { background: #e1f5ee !important; }
+  .eq-add-col { border: 1.5px dashed var(--border-strong); border-radius: 6px; padding: 4px 12px; background: none; cursor: pointer; color: var(--text-tertiary); font-size: 11px; font-family: var(--font); transition: all 0.12s; }
+  .eq-add-col:hover { border-color: var(--green); color: var(--green); }
+  .eq-best { color: var(--green-dark); font-weight: 500; }
+
+  /* ─── KANBAN (REG BOARD) ─── */
+  .kanban { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; min-height: 350px; }
+  .kanban-col { background: var(--bg-secondary); border-radius: var(--radius-md); padding: 10px; }
+  .kanban-col-header {
+    font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em;
+    font-weight: 500; margin-bottom: 8px; padding-bottom: 6px;
+    border-bottom: 2px solid; display: flex; justify-content: space-between; align-items: center;
+  }
+  .kanban-card {
+    background: var(--bg-primary); border: 0.5px solid var(--border);
+    border-radius: var(--radius-md); padding: 10px 12px; margin-bottom: 6px;
+    transition: box-shadow 0.12s;
+  }
+  .kanban-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+  .kanban-card-name { font-size: 12px; font-weight: 500; color: var(--text-primary); }
+  .kanban-card-dep { font-size: 10px; color: var(--text-tertiary); margin-top: 4px; display: flex; align-items: center; gap: 4px; }
+  .kanban-card-dep::before { content: '←'; font-size: 9px; }
+  .kanban-card-time { font-size: 10px; color: var(--text-secondary); margin-top: 3px; font-family: var(--font-mono); }
+  .kanban-card-actions { display: flex; gap: 3px; margin-top: 6px; }
+  .kanban-move {
+    font-size: 9px; padding: 2px 7px; border-radius: 10px;
+    border: 0.5px solid var(--border); background: var(--bg-secondary);
+    color: var(--text-secondary); cursor: pointer; font-family: var(--font); transition: all 0.1s;
+  }
+  .kanban-move:hover { background: var(--green); color: #fff; border-color: var(--green); }
+  .dep-arrow { font-size: 9px; color: var(--text-tertiary); }
+  .kanban-blocked { border-left: 3px solid var(--red); }
+  .kanban-critical { border-left: 3px solid var(--amber); }
+
+  /* ─── CLICKABLE PHASES ─── */
+  .phase-row.clickable { cursor: pointer; border-radius: var(--radius-md); padding: 10px 8px; margin: 0 -8px; transition: background 0.15s; }
+  .phase-row.clickable:hover { background: var(--bg-secondary); }
+  .phase-row.clickable::after {
+    content: '→'; font-size: 13px; color: var(--text-tertiary);
+    margin-left: auto; flex-shrink: 0; align-self: center;
+    transition: transform 0.15s, color 0.15s;
+  }
+  .phase-row.clickable:hover::after { transform: translateX(3px); color: var(--text-primary); }
+
+  /* ─── BACK NAV ─── */
+  .back-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 12px; color: var(--text-secondary); cursor: pointer;
+    padding: 5px 10px 5px 6px; border-radius: 6px; border: none;
+    background: none; font-family: var(--font); margin-bottom: 14px;
+    transition: background 0.12s, color 0.12s;
+  }
+  .back-btn:hover { background: var(--bg-secondary); color: var(--text-primary); }
+  .back-btn svg { width: 14px; height: 14px; }
+
+  /* ─── PHASE DETAIL PAGES ─── */
+  .phase-header {
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 6px;
+  }
+  .phase-header-num {
+    width: 38px; height: 38px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; font-weight: 500; flex-shrink: 0;
+  }
+  .phase-header-title { font-size: 20px; font-weight: 500; letter-spacing: -0.02em; }
+
+  .phase-timeline {
+    font-size: 12px; color: var(--text-secondary); margin-bottom: 22px;
+    display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+  }
+  .phase-timeline .sep { color: var(--border-strong); }
+
+  /* sub-sections inside phase detail */
+  .phase-section { margin-bottom: 14px; }
+  .phase-section-title {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.07em;
+    color: var(--text-tertiary); font-weight: 500; margin-bottom: 8px;
+    padding-bottom: 6px; border-bottom: 0.5px solid var(--border);
+  }
+
+  /* task items inside phase detail */
+  .task-item {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 11px 0; border-bottom: 0.5px solid var(--border);
+  }
+  .task-item:last-child { border-bottom: none; }
+  .task-icon {
+    width: 28px; height: 28px; border-radius: 7px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; flex-shrink: 0; margin-top: 1px;
+  }
+  .task-body { flex: 1; }
+  .task-name { font-size: 13px; font-weight: 500; color: var(--text-primary); }
+  .task-detail { font-size: 12px; color: var(--text-secondary); margin-top: 3px; line-height: 1.55; }
+  .task-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 6px; }
+  .task-tag {
+    font-size: 10px; padding: 2px 8px; border-radius: 12px;
+    font-weight: 500;
+  }
+  .tag-cost     { background: #faeeda; color: #854f0b; }
+  .tag-time     { background: #e6f1fb; color: #185fa5; }
+  .tag-critical { background: #fcebeb; color: #a32d2d; }
+  .tag-tip      { background: #eaf3de; color: #3b6d11; }
+  .tag-resource { background: #eeedfe; color: #534ab7; }
+
+  /* info box */
+  .info-box {
+    padding: 14px 16px; border-radius: var(--radius-md);
+    font-size: 12px; line-height: 1.65;
+  }
+  .info-box.amber   { background: #faeeda; color: #633806; }
+  .info-box.blue    { background: #e6f1fb; color: #0c447c; }
+  .info-box.green   { background: #e1f5ee; color: #085041; }
+  .info-box.red     { background: #fcebeb; color: #7a2020; }
+  .info-box.neutral { background: var(--bg-secondary); color: var(--text-secondary); }
+  .info-box strong  { font-weight: 500; }
+
+  /* deliverables list */
+  .deliverable {
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 0; font-size: 12px; color: var(--text-secondary);
+  }
+  .deliverable::before {
+    content: ''; width: 5px; height: 5px; border-radius: 50%;
+    background: var(--text-tertiary); flex-shrink: 0;
+  }
+
+  /* ─── SCROLLBAR ─── */
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+
+  /* ─── CLICKABLE REG ITEMS ─── */
+  .reg-item.clickable {
+    cursor: pointer;
+    border-radius: var(--radius-md);
+    padding: 10px 8px;
+    margin: 0 -8px;
+    transition: background 0.13s;
+  }
+  .reg-item.clickable:hover { background: var(--bg-secondary); }
+  .reg-item.clickable .reg-chevron {
+    margin-left: auto; flex-shrink: 0; align-self: center;
+    color: var(--text-tertiary); font-size: 13px;
+    transition: transform 0.15s, color 0.15s;
+  }
+  .reg-item.clickable:hover .reg-chevron { transform: translateX(3px); color: var(--text-primary); }
+
+  /* ─── REG DETAIL PANEL ─── */
+  #reg-panel-overlay {
+    position: fixed; inset: 0; background: rgba(26,26,24,0.28);
+    z-index: 100; opacity: 0; pointer-events: none;
+    transition: opacity 0.22s ease;
+  }
+  #reg-panel-overlay.open { opacity: 1; pointer-events: all; }
+
+  #reg-panel {
+    position: fixed; top: 0; right: 0; bottom: 0;
+    width: 520px; max-width: 92vw;
+    background: var(--bg-primary);
+    border-left: 0.5px solid var(--border);
+    z-index: 101;
+    display: flex; flex-direction: column;
+    transform: translateX(100%);
+    transition: transform 0.26s cubic-bezier(0.22,1,0.36,1);
+    overflow: hidden;
+  }
+  #reg-panel.open { transform: translateX(0); }
+
+  .rp-header {
+    padding: 20px 22px 16px;
+    border-bottom: 0.5px solid var(--border);
+    display: flex; align-items: flex-start; gap: 14px;
+    flex-shrink: 0;
+  }
+  .rp-icon {
+    width: 42px; height: 42px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+  }
+  .rp-header-body { flex: 1; }
+  .rp-title { font-size: 16px; font-weight: 500; color: var(--text-primary); letter-spacing: -0.02em; }
+  .rp-subtitle { font-size: 12px; color: var(--text-secondary); margin-top: 3px; }
+  .rp-close {
+    width: 28px; height: 28px; border-radius: 6px; border: 0.5px solid var(--border);
+    background: none; cursor: pointer; font-size: 14px; color: var(--text-tertiary);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; transition: background 0.12s, color 0.12s;
+  }
+  .rp-close:hover { background: var(--bg-secondary); color: var(--text-primary); }
+
+  .rp-body {
+    flex: 1; overflow-y: auto; padding: 20px 22px;
+  }
+  .rp-section { margin-bottom: 22px; }
+  .rp-section-title {
+    font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--text-tertiary); font-weight: 500; margin-bottom: 10px;
+    padding-bottom: 6px; border-bottom: 0.5px solid var(--border);
+  }
+  .rp-body p { font-size: 13px; color: var(--text-secondary); line-height: 1.7; }
+  .rp-body strong { color: var(--text-primary); font-weight: 500; }
+
+  .rp-row {
+    display: flex; gap: 10px; align-items: flex-start;
+    padding: 8px 0; border-bottom: 0.5px solid var(--border);
+    font-size: 12px;
+  }
+  .rp-row:last-child { border-bottom: none; }
+  .rp-row-label { color: var(--text-secondary); min-width: 130px; flex-shrink: 0; }
+  .rp-row-val { color: var(--text-primary); font-weight: 500; flex: 1; }
+
+  .rp-link {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px; border-radius: var(--radius-md);
+    background: var(--bg-secondary); text-decoration: none;
+    border: 0.5px solid var(--border); margin-bottom: 8px;
+    transition: background 0.12s, border-color 0.12s;
+  }
+  .rp-link:hover { background: var(--bg-tertiary); border-color: var(--border-strong); }
+  .rp-link-icon {
+    width: 30px; height: 30px; border-radius: 7px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; flex-shrink: 0;
+  }
+  .rp-link-body { flex: 1; }
+  .rp-link-name { font-size: 13px; font-weight: 500; color: var(--text-primary); }
+  .rp-link-url  { font-size: 11px; color: var(--text-tertiary); margin-top: 1px; font-family: var(--font-mono); }
+  .rp-link-arrow { color: var(--text-tertiary); font-size: 12px; }
+
+  .rp-step {
+    display: flex; gap: 12px; padding: 9px 0;
+    border-bottom: 0.5px solid var(--border);
+  }
+  .rp-step:last-child { border-bottom: none; }
+  .rp-step-num {
+    width: 22px; height: 22px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 500; flex-shrink: 0; margin-top: 1px;
+  }
+  .rp-step-body { flex: 1; }
+  .rp-step-name { font-size: 13px; font-weight: 500; color: var(--text-primary); }
+  .rp-step-detail { font-size: 12px; color: var(--text-secondary); margin-top: 2px; line-height: 1.5; }
+
+  .rp-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+  .rp-tag {
+    font-size: 11px; padding: 3px 10px; border-radius: 20px;
+    border: 0.5px solid var(--border);
+    color: var(--text-secondary); background: var(--bg-secondary);
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══ SIDEBAR ═══ -->
+<nav id="sidebar">
+  <div class="sb-logo">
+    <h2>LabQro</h2>
+    <p>Querétaro · Business Plan 2025</p>
+  </div>
+
+  <div class="sb-section">Overview</div>
+  <button class="sb-item active" onclick="nav('dashboard',this)">
+    <div class="sb-icon" style="background:#e1f5ee;color:#0f6e56">▦</div> Dashboard
+  </button>
+
+  <div class="sb-section">Plan</div>
+  <button class="sb-item" onclick="nav('roadmap',this)">
+    <div class="sb-icon" style="background:#e6f1fb;color:#185fa5">→</div> Roadmap
+  </button>
+  <button class="sb-item" onclick="nav('timeline',this)">
+    <div class="sb-icon" style="background:#dde8f8;color:#2a5ea8">◇</div> Timeline
+  </button>
+  <button class="sb-item" onclick="nav('regulatory',this)">
+    <div class="sb-icon" style="background:#faeeda;color:#854f0b">⚖</div> Regulatory
+  </button>
+  <button class="sb-item" onclick="nav('regboard',this)">
+    <div class="sb-icon" style="background:#fcebeb;color:#a32d2d">⊞</div> Permit board
+  </button>
+  <button class="sb-item" onclick="nav('financials',this)">
+    <div class="sb-icon" style="background:#eaf3de;color:#3b6d11">$</div> Financials
+  </button>
+  <button class="sb-item" onclick="nav('calculator',this)">
+    <div class="sb-icon" style="background:#d9f0e5;color:#0f6e56">⚙</div> Calculator
+  </button>
+  <button class="sb-item" onclick="nav('market',this)">
+    <div class="sb-icon" style="background:#fbeaf0;color:#993556">◎</div> Market
+  </button>
+  <button class="sb-item" onclick="nav('pricing',this)">
+    <div class="sb-icon" style="background:#f5e6f0;color:#7a2d6b">≡</div> Pricing matrix
+  </button>
+
+  <div class="sb-section">Tools</div>
+  <button class="sb-item" onclick="nav('locations',this)">
+    <div class="sb-icon" style="background:#e6f1fb;color:#185fa5">⊕</div> Location scoring
+  </button>
+  <button class="sb-item" onclick="nav('physicians',this)">
+    <div class="sb-icon" style="background:#e1f5ee;color:#0f6e56">♦</div> Physician CRM
+  </button>
+  <button class="sb-item" onclick="nav('equipment',this)">
+    <div class="sb-icon" style="background:#eeedfe;color:#534ab7">▥</div> Equipment compare
+  </button>
+
+  <div class="sb-section">Workspace</div>
+  <button class="sb-item" onclick="nav('checklist',this)">
+    <div class="sb-icon" style="background:#f1efe8;color:#5f5e5a">✓</div> Checklist
+  </button>
+  <button class="sb-item" onclick="nav('documents',this)">
+    <div class="sb-icon" style="background:#e1f5ee;color:#0f6e56">▤</div> Documents
+  </button>
+  <button class="sb-item" onclick="nav('notes',this)">
+    <div class="sb-icon" style="background:#eeedfe;color:#534ab7">✏</div> Notes
+  </button>
+</nav>
+
+<!-- ═══ MAIN ═══ -->
+<main id="main">
+
+  <!-- ── DASHBOARD ── -->
+  <section id="page-dashboard" class="page active">
+    <div class="page-title">Good day — welcome to LabQro HQ</div>
+    <div class="page-sub">Laboratorio Clínico · Querétaro · Stage: Pre-launch</div>
+
+    <div class="metrics">
+      <div class="metric"><div class="metric-label">Overall progress</div><div class="metric-val">4%</div></div>
+      <div class="metric"><div class="metric-label">Current phase</div><div class="metric-val blue" style="font-size:15px">Research</div></div>
+      <div class="metric"><div class="metric-label">Est. startup cost</div><div class="metric-val amber" style="font-size:16px">$1.8M MXN</div></div>
+      <div class="metric"><div class="metric-label">Time to launch</div><div class="metric-val" style="font-size:16px">12–18 mo</div></div>
+    </div>
+
+    <div class="two-col">
+      <!-- Phases -->
+      <div class="card">
+        <div class="card-title">Project phases</div>
+        <div class="phase-row clickable" onclick="openPhase(1)">
+          <div class="phase-num" style="background:#e6f1fb;color:#185fa5">1</div>
+          <div class="phase-body">
+            <div class="phase-hdr"><div class="phase-name">Research & Planning</div><span class="badge badge-progress">In progress</span></div>
+            <div class="phase-desc">Market analysis, location scouting, business model</div>
+            <div class="progress-bar"><div class="progress-fill" style="width:8%;background:#185fa5"></div></div>
+          </div>
+        </div>
+        <div class="phase-row clickable" onclick="openPhase(2)">
+          <div class="phase-num" style="background:#f1efe8;color:#5f5e5a">2</div>
+          <div class="phase-body">
+            <div class="phase-hdr"><div class="phase-name">Legal & Corporate</div><span class="badge badge-todo">To do</span></div>
+            <div class="phase-desc">Constitución SA, RFC, Razón Social, IMPI</div>
+            <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
+          </div>
+        </div>
+        <div class="phase-row clickable" onclick="openPhase(3)">
+          <div class="phase-num" style="background:#f1efe8;color:#5f5e5a">3</div>
+          <div class="phase-body">
+            <div class="phase-hdr"><div class="phase-name">COFEPRIS & NOM Permits</div><span class="badge badge-todo">To do</span></div>
+            <div class="phase-desc">Licencia Sanitaria, NOM-007, NOM-166</div>
+            <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
+          </div>
+        </div>
+        <div class="phase-row clickable" onclick="openPhase(4)">
+          <div class="phase-num" style="background:#f1efe8;color:#5f5e5a">4</div>
+          <div class="phase-body">
+            <div class="phase-hdr"><div class="phase-name">Infrastructure & Equipment</div><span class="badge badge-todo">To do</span></div>
+            <div class="phase-desc">Location, lab setup, analyzers, cold chain</div>
+            <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
+          </div>
+        </div>
+        <div class="phase-row clickable" onclick="openPhase(5)">
+          <div class="phase-num" style="background:#f1efe8;color:#5f5e5a">5</div>
+          <div class="phase-body">
+            <div class="phase-hdr"><div class="phase-name">Staffing & Training</div><span class="badge badge-todo">To do</span></div>
+            <div class="phase-desc">QFB, lab techs, front desk, director técnico</div>
+            <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
+          </div>
+        </div>
+        <div class="phase-row clickable" onclick="openPhase(6)">
+          <div class="phase-num" style="background:#f1efe8;color:#5f5e5a">6</div>
+          <div class="phase-body">
+            <div class="phase-hdr"><div class="phase-name">Soft Launch & Marketing</div><span class="badge badge-todo">To do</span></div>
+            <div class="phase-desc">Médicos referentes, pricing, digital presence</div>
+            <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <!-- Next actions -->
+        <div class="card">
+          <div class="card-title">Next 5 actions</div>
+          <div class="phase-row" style="padding:8px 0">
+            <div class="action-dot"></div>
+            <div class="phase-body"><div class="phase-name" style="font-size:12px">Define lab specialty focus</div><div class="phase-desc">General, specialty, or hybrid?</div></div>
+          </div>
+          <div class="phase-row" style="padding:8px 0">
+            <div class="action-dot"></div>
+            <div class="phase-body"><div class="phase-name" style="font-size:12px">Scout 3 locations in Querétaro</div><div class="phase-desc">Juriquilla, Centro, Satélite</div></div>
+          </div>
+          <div class="phase-row" style="padding:8px 0">
+            <div class="action-dot"></div>
+            <div class="phase-body"><div class="phase-name" style="font-size:12px">Hire a notario público</div><div class="phase-desc">For constitución de la empresa</div></div>
+          </div>
+          <div class="phase-row" style="padding:8px 0">
+            <div class="action-dot"></div>
+            <div class="phase-body"><div class="phase-name" style="font-size:12px">Contact COFEPRIS Querétaro office</div><div class="phase-desc">Pre-consultation on Licencia Sanitaria</div></div>
+          </div>
+          <div class="phase-row" style="padding:8px 0">
+            <div class="action-dot"></div>
+            <div class="phase-body"><div class="phase-name" style="font-size:12px">Get 3 competitor price lists</div><div class="phase-desc">Salud Digna, Chopo, local labs</div></div>
+          </div>
+        </div>
+
+        <!-- Risks -->
+        <div class="card">
+          <div class="card-title">Key risks to watch</div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div class="risk-row"><span class="risk-icon" style="color:#a32d2d">▲</span><div><div style="font-size:12px;font-weight:500;color:var(--text-primary)">COFEPRIS timeline slippage</div><div style="font-size:11px;color:var(--text-secondary)">Budget 6–9 months for permits</div></div></div>
+            <div class="risk-row"><span class="risk-icon" style="color:#854f0b">▲</span><div><div style="font-size:12px;font-weight:500;color:var(--text-primary)">Equipment import delays</div><div style="font-size:11px;color:var(--text-secondary)">Order analyzers early</div></div></div>
+            <div class="risk-row"><span class="risk-icon" style="color:#854f0b">▲</span><div><div style="font-size:12px;font-weight:500;color:var(--text-primary)">Director Técnico requirement</div><div style="font-size:11px;color:var(--text-secondary)">Must be QFB with cédula</div></div></div>
+            <div class="risk-row"><span class="risk-icon" style="color:#3b6d11">▼</span><div><div style="font-size:12px;font-weight:500;color:var(--text-primary)">Querétaro population growth</div><div style="font-size:11px;color:var(--text-secondary)">Strong demand tailwind</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── ROADMAP ── -->
+  <section id="page-roadmap" class="page">
+    <div class="page-title">Launch roadmap</div>
+    <div class="page-sub">12–18 month timeline from idea to operations</div>
+
+    <div class="card">
+      <div class="section-hdr"><div class="card-title" style="margin:0">Phase 1 — Research & planning (Months 1–2)</div><span class="badge badge-progress">Current phase</span></div>
+      <div class="reg-item"><div class="reg-dot" style="background:#185fa5"></div><div><div class="reg-name">Market research — Querétaro</div><div class="reg-detail">Population, income levels, competitor density by zone, unmet demand analysis</div></div></div>
+      <div class="reg-item"><div class="reg-dot" style="background:#185fa5"></div><div><div class="reg-name">Define business model</div><div class="reg-detail">Direct patient, physician referral, corporate contracts, IMSS subrogación</div></div></div>
+      <div class="reg-item"><div class="reg-dot" style="background:#185fa5"></div><div><div class="reg-name">Financial modeling</div><div class="reg-detail">Startup costs, break-even, 3-year P&L, funding sources</div></div></div>
+      <div class="reg-item"><div class="reg-dot" style="background:#185fa5"></div><div><div class="reg-name">Location shortlist</div><div class="reg-detail">Min 60m², ground floor, parking, near high-traffic medical zones</div></div></div>
+    </div>
+
+    <div class="card">
+      <div class="section-hdr"><div class="card-title" style="margin:0">Phase 2 — Legal & corporate (Months 2–4)</div><span class="badge badge-todo">Upcoming</span></div>
+      <div class="reg-item"><div class="reg-dot" style="background:#888780"></div><div><div class="reg-name">Constitución de empresa (S.A. de C.V. recommended)</div><div class="reg-detail">Notario, acta constitutiva, razón social</div><div class="reg-time">~2–4 weeks · ~$15,000–25,000 MXN</div></div></div>
+      <div class="reg-item"><div class="reg-dot" style="background:#888780"></div><div><div class="reg-name">RFC ante el SAT</div><div class="reg-detail">Tax registration, CFDI setup, régimen fiscal</div></div></div>
+      <div class="reg-item"><div class="reg-dot" style="background:#888780"></div><div><div class="reg-name">IMPI trademark (optional but recommended)</div><div class="reg-detail">Register lab name and logo</div></div></div>
+      <div class="reg-item"><div class="reg-dot" style="background:#888780"></div><div><div class="reg-name">Lease contract for lab space</div><div class="reg-detail">Must specify uso de suelo: servicios médicos</div></div></div>
+    </div>
+
+    <div class="card">
+      <div class="section-hdr" style="flex-wrap:wrap;gap:6px"><div class="card-title" style="margin:0">Phase 3 — COFEPRIS & sanitary permits (Months 3–9)</div><div style="display:flex;gap:5px"><span class="badge badge-todo">Upcoming</span><span class="badge badge-urgent">Allow 6+ months</span></div></div>
+      <div class="reg-item"><div class="reg-dot" style="background:#ef9f27"></div><div><div class="reg-name">Licencia Sanitaria — COFEPRIS</div><div class="reg-detail">Main permit to operate a laboratorio clínico. Requires Director Técnico (QFB), physical inspection, equipment list</div><div class="reg-time">60–120 business days officially; plan for more</div></div></div>
+      <div class="reg-item"><div class="reg-dot" style="background:#ef9f27"></div><div><div class="reg-name">Cumplimiento NOM-007-SSA3-2011</div><div class="reg-detail">General lab organization, infrastructure standards</div></div></div>
+      <div class="reg-item"><div class="reg-dot" style="background:#ef9f27"></div><div><div class="reg-name">Cumplimiento NOM-087-SEMARNAT (RPBI)</div><div class="reg-detail">Biological hazardous waste management</div></div></div>
+      <div class="reg-item"><div class="reg-dot" style="background:#ef9f27"></div><div><div class="reg-name">Aviso de funcionamiento</div><div class="reg-detail">Filed via COFEPRIS portal (SIVISAM)</div></div></div>
+    </div>
+
+    <div class="card">
+      <div class="section-hdr"><div class="card-title" style="margin:0">Phase 4–6 — Infrastructure, staffing, launch (Months 6–18)</div><span class="badge badge-todo">Upcoming</span></div>
+      <div class="reg-item"><div class="reg-dot" style="background:#888780"></div><div><div class="reg-name">Equipment procurement</div><div class="reg-detail">Hematology, chemistry, coagulation analyzers; centrifuges, cold chain</div></div></div>
+      <div class="reg-item"><div class="reg-dot" style="background:#888780"></div><div><div class="reg-name">Hire Director Técnico (QFB cédula profesional)</div><div class="reg-detail">Required by law — cannot operate without one</div></div></div>
+      <div class="reg-item"><div class="reg-dot" style="background:#888780"></div><div><div class="reg-name">LIS / software setup</div><div class="reg-detail">Laboratory Information System, billing, patient portal</div></div></div>
+      <div class="reg-item"><div class="reg-dot" style="background:#888780"></div><div><div class="reg-name">Soft launch + physician outreach</div><div class="reg-detail">Visit 30–50 local médicos, offer resultado en 24h, free pickup</div></div></div>
+    </div>
+  </section>
+
+  <!-- ── REGULATORY ── -->
+  <section id="page-regulatory" class="page">
+    <div class="page-title">Regulatory roadmap</div>
+    <div class="page-sub">COFEPRIS, NOMs, and state requirements for Querétaro</div>
+
+    <div class="two-col">
+      <div class="card">
+        <div class="card-title">Federal requirements (COFEPRIS)</div>
+        <div class="reg-item clickable" onclick="openRegPanel('licencia-sanitaria')"><div class="reg-dot" style="background:#e24b4a"></div><div><div class="reg-name">Licencia Sanitaria</div><div class="reg-detail">Core operating license. Requires: QFB as Director Técnico, physical inspection, equipment validated, RPBI plan in place</div><div class="reg-time">Est. cost: $5,000–15,000 MXN · Time: 3–9 months</div></div><span class="reg-chevron">→</span></div>
+        <div class="reg-item clickable" onclick="openRegPanel('aviso-funcionamiento')"><div class="reg-dot" style="background:#ef9f27"></div><div><div class="reg-name">Aviso de Funcionamiento</div><div class="reg-detail">Online filing via SIVISAM portal. Must be done before opening</div><div class="reg-time">Est. cost: Minimal · Time: 1–2 weeks</div></div><span class="reg-chevron">→</span></div>
+        <div class="reg-item clickable" onclick="openRegPanel('nom-007')"><div class="reg-dot" style="background:#ef9f27"></div><div><div class="reg-name">NOM-007-SSA3-2011</div><div class="reg-detail">Lab infrastructure: space, areas de recepción, toma de muestra, análisis. Min 60m²</div></div><span class="reg-chevron">→</span></div>
+        <div class="reg-item clickable" onclick="openRegPanel('nom-166')"><div class="reg-dot" style="background:#ef9f27"></div><div><div class="reg-name">NOM-166-SSA1-1997</div><div class="reg-detail">Quality, procedures, and equipment calibration for clinical labs</div></div><span class="reg-chevron">→</span></div>
+        <div class="reg-item clickable" onclick="openRegPanel('nom-087')"><div class="reg-dot" style="background:#ef9f27"></div><div><div class="reg-name">NOM-087-SEMARNAT-SSA1-2002</div><div class="reg-detail">RPBI (biohazardous waste): separation, labeling, transport contracts with authorized carrier</div></div><span class="reg-chevron">→</span></div>
+      </div>
+
+      <div>
+        <div class="card">
+          <div class="card-title">State & municipal (Querétaro)</div>
+          <div class="reg-item clickable" onclick="openRegPanel('uso-suelo')"><div class="reg-dot" style="background:#5dcaa5"></div><div><div class="reg-name">Uso de suelo — Municipio</div><div class="reg-detail">Confirm zoning allows servicios médicos. Check with SEDESU QRO</div></div><span class="reg-chevron">→</span></div>
+          <div class="reg-item clickable" onclick="openRegPanel('licencia-apertura')"><div class="reg-dot" style="background:#5dcaa5"></div><div><div class="reg-name">Licencia de apertura municipal</div><div class="reg-detail">Municipio de Querétaro business opening permit</div><div class="reg-time">~$2,000–5,000 MXN</div></div><span class="reg-chevron">→</span></div>
+          <div class="reg-item clickable" onclick="openRegPanel('proteccion-civil')"><div class="reg-dot" style="background:#5dcaa5"></div><div><div class="reg-name">Protección Civil</div><div class="reg-detail">Fire safety, exits, extinguishers, signage inspection</div></div><span class="reg-chevron">→</span></div>
+          <div class="reg-item clickable" onclick="openRegPanel('imss-registro')"><div class="reg-dot" style="background:#5dcaa5"></div><div><div class="reg-name">IMSS/SAR registration (employer)</div><div class="reg-detail">Once you hire staff</div></div><span class="reg-chevron">→</span></div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Director Técnico requirement</div>
+          <div class="callout">This is the single most critical hire. COFEPRIS will not issue a Licencia Sanitaria without a named QFB with cédula profesional on file.</div>
+          <div class="reg-item"><div class="reg-dot" style="background:#185fa5"></div><div><div class="reg-name">QFB (Químico Farmacéutico Biólogo)</div><div class="reg-detail">Cédula profesional registered with Dirección General de Profesiones</div></div></div>
+          <div class="reg-item"><div class="reg-dot" style="background:#185fa5"></div><div><div class="reg-name">Can be part-time or shared</div><div class="reg-detail">Some small labs contract a QFB part-time. Salary: $18,000–35,000 MXN/mo full-time</div></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FINANCIALS ── -->
+  <section id="page-financials" class="page">
+    <div class="page-title">Financial projections</div>
+    <div class="page-sub">Startup costs, revenue model, and break-even — Querétaro 2025</div>
+
+    <div class="three-col" style="margin-bottom:14px">
+      <div class="card" style="margin-bottom:0"><div class="metric-label">Total startup cost est.</div><div class="metric-val amber" style="margin-top:5px">$1.8M MXN</div><div style="font-size:11px;color:var(--text-tertiary);margin-top:3px">~$90K USD</div></div>
+      <div class="card" style="margin-bottom:0"><div class="metric-label">Monthly break-even est.</div><div class="metric-val blue" style="margin-top:5px">$180K MXN</div><div style="font-size:11px;color:var(--text-tertiary);margin-top:3px">~250–300 studies/mo</div></div>
+      <div class="card" style="margin-bottom:0"><div class="metric-label">Payback period est.</div><div class="metric-val green" style="margin-top:5px">3–4 years</div><div style="font-size:11px;color:var(--text-tertiary);margin-top:3px">Conservative scenario</div></div>
+    </div>
+
+    <div class="two-col">
+      <div class="card">
+        <div class="card-title">Startup cost breakdown</div>
+        <div class="fin-row"><div class="fin-label">Equipment (analyzers, centrifuges)</div><div class="fin-val">$700,000</div></div>
+        <div class="fin-row"><div class="fin-label">Lab buildout & remodeling</div><div class="fin-val">$300,000</div></div>
+        <div class="fin-row"><div class="fin-label">COFEPRIS & legal fees</div><div class="fin-val">$80,000</div></div>
+        <div class="fin-row"><div class="fin-label">First 6 months rent</div><div class="fin-val">$150,000</div></div>
+        <div class="fin-row"><div class="fin-label">Reagents & supplies (initial)</div><div class="fin-val">$120,000</div></div>
+        <div class="fin-row"><div class="fin-label">IT / LIS / software</div><div class="fin-val">$80,000</div></div>
+        <div class="fin-row"><div class="fin-label">Furniture, fixtures, cold chain</div><div class="fin-val">$100,000</div></div>
+        <div class="fin-row"><div class="fin-label">Marketing & branding</div><div class="fin-val">$50,000</div></div>
+        <div class="fin-row"><div class="fin-label">Working capital reserve</div><div class="fin-val">$220,000</div></div>
+        <div class="fin-row" style="border-top:1.5px solid var(--border-strong);margin-top:5px;padding-top:10px">
+          <div class="fin-label" style="font-weight:500;color:var(--text-primary)">Total</div>
+          <div class="fin-val total">$1,800,000 MXN</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Revenue model (monthly steady-state, Yr 2)</div>
+        <div style="font-size:12px;color:var(--text-secondary);margin-bottom:12px">Based on 400 studies/month · avg ticket $600 MXN</div>
+        <div class="fin-row"><div class="fin-label">Patient revenue (direct)</div><div class="fin-val green">$180,000</div></div>
+        <div class="fin-row"><div class="fin-label">Corporate / empresa contracts</div><div class="fin-val green">$60,000</div></div>
+        <div class="fin-row"><div class="fin-label">Physician referral programs</div><div class="fin-val green">$30,000</div></div>
+        <div class="fin-row" style="border-top:1.5px solid var(--border-strong);margin-top:5px;padding-top:10px">
+          <div class="fin-label" style="font-weight:500;color:var(--text-primary)">Gross revenue</div>
+          <div class="fin-val total">$270,000 MXN/mo</div>
+        </div>
+        <div style="height:14px"></div>
+        <div class="fin-row"><div class="fin-label">Director Técnico + 2 staff</div><div class="fin-val red">-$75,000</div></div>
+        <div class="fin-row"><div class="fin-label">Reagents (≈35% of revenue)</div><div class="fin-val red">-$63,000</div></div>
+        <div class="fin-row"><div class="fin-label">Rent + utilities</div><div class="fin-val red">-$28,000</div></div>
+        <div class="fin-row"><div class="fin-label">Admin, waste disposal, misc</div><div class="fin-val red">-$15,000</div></div>
+        <div class="fin-row" style="border-top:1.5px solid var(--border-strong);margin-top:5px;padding-top:10px">
+          <div class="fin-label" style="font-weight:500;color:var(--text-primary)">EBITDA estimate</div>
+          <div class="fin-val total">~$89,000 MXN/mo</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── MARKET ── -->
+  <section id="page-market" class="page">
+    <div class="page-title">Market research — Querétaro</div>
+    <div class="page-sub">Competitive landscape and demand analysis</div>
+
+    <div class="two-col">
+      <div class="card">
+        <div class="card-title">Competitor landscape</div>
+        <div class="reg-item"><div class="reg-dot" style="background:#e24b4a"></div><div><div class="reg-name">Salud Digna</div><div class="reg-detail">High volume, low price, strong brand. Weakness: long waits, minimal personalization</div></div></div>
+        <div class="reg-item"><div class="reg-dot" style="background:#e24b4a"></div><div><div class="reg-name">Laboratorio Chopo</div><div class="reg-detail">Mid-range, home collection, nationwide. Strong digital presence</div></div></div>
+        <div class="reg-item"><div class="reg-dot" style="background:#ef9f27"></div><div><div class="reg-name">IMSS / ISSSTE labs</div><div class="reg-detail">Derechohabientes only, chronic backlogs. Creates overflow private demand</div></div></div>
+        <div class="reg-item"><div class="reg-dot" style="background:#5dcaa5"></div><div><div class="reg-name">Local independent labs</div><div class="reg-detail">20–30 in metro area. Generally outdated equipment, limited test menu</div></div></div>
+        <div class="reg-item"><div class="reg-dot" style="background:#5dcaa5"></div><div><div class="reg-name">Hospital in-house labs</div><div class="reg-detail">Hospital Ángeles, Star Médica — high price, not accessible to walk-ins</div></div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Querétaro market tailwinds</div>
+        <div class="mkt-row"><div class="mkt-label">Population growth rate</div><div class="mkt-bar-wrap"><div class="mkt-bar" style="width:80%;background:#1d9e75"></div></div><div class="mkt-pct">+2.8%</div></div>
+        <div class="mkt-row"><div class="mkt-label">Private health spend</div><div class="mkt-bar-wrap"><div class="mkt-bar" style="width:72%;background:#185fa5"></div></div><div class="mkt-pct">High</div></div>
+        <div class="mkt-row"><div class="mkt-label">IMSS overcapacity</div><div class="mkt-bar-wrap"><div class="mkt-bar" style="width:88%;background:#e24b4a"></div></div><div class="mkt-pct">Critical</div></div>
+        <div class="mkt-row"><div class="mkt-label">Industrial corridor demand</div><div class="mkt-bar-wrap"><div class="mkt-bar" style="width:75%;background:#854f0b"></div></div><div class="mkt-pct">Strong</div></div>
+        <div style="margin-top:16px;padding-top:14px;border-top:0.5px solid var(--border)">
+          <div class="card-title">Recommended positioning</div>
+          <p style="font-size:13px;color:var(--text-secondary);line-height:1.7">Target the <strong style="color:var(--text-primary);font-weight:500">mid-market segment</strong> — above Salud Digna on quality and speed, below hospital labs on price. Focus on <strong style="color:var(--text-primary);font-weight:500">resultado en 4 horas</strong>, home collection, and physician relationships. Juriquilla and Satélite zones are underserved for this tier.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Recommended zones for location</div>
+      <div class="three-col">
+        <div class="zone-card">
+          <div class="zone-name">Juriquilla / Zibatá</div>
+          <div class="zone-desc">Fast-growing residential. High income. Minimal lab competition. Corporate park proximity.</div>
+          <div class="zone-badge"><span class="badge" style="background:#e1f5ee;color:#085041">Recommended #1</span></div>
+        </div>
+        <div class="zone-card">
+          <div class="zone-name">Satélite / Epigmenio</div>
+          <div class="zone-desc">Dense residential. Near IMSS overflow. High foot traffic on Blvd. Bernardo Quintana.</div>
+          <div class="zone-badge"><span class="badge" style="background:#e6f1fb;color:#0c447c">Good option #2</span></div>
+        </div>
+        <div class="zone-card">
+          <div class="zone-name">Centro / Constituyentes</div>
+          <div class="zone-desc">High visibility, strong physician offices nearby. More competition but proven demand.</div>
+          <div class="zone-badge"><span class="badge" style="background:#f1efe8;color:#444441">Consider #3</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CHECKLIST ── -->
+  <section id="page-checklist" class="page">
+    <div class="page-title">Master checklist</div>
+    <div class="page-sub">Check off items as you complete them</div>
+    <div class="tab-row">
+      <div class="tab active" onclick="filterChecklist('all',this)">All</div>
+      <div class="tab" onclick="filterChecklist('legal',this)">Legal</div>
+      <div class="tab" onclick="filterChecklist('regulatory',this)">Regulatory</div>
+      <div class="tab" onclick="filterChecklist('ops',this)">Operations</div>
+    </div>
+    <div class="card" id="checklist-card"></div>
+  </section>
+
+  <!-- ── DOCUMENTS ── -->
+  <section id="page-documents" class="page">
+    <div class="page-title">Document tracker</div>
+    <div class="page-sub">Track permits, contracts, and key files</div>
+    <div class="card">
+      <div class="section-hdr"><div class="card-title" style="margin:0">Required documents</div></div>
+      <div class="doc-row"><div class="doc-icon" style="background:#faeeda;color:#854f0b">⚖</div><div><div class="doc-name">Acta Constitutiva</div><div class="doc-meta">Notario público · Legal foundation</div></div><div class="doc-status"><span class="badge badge-todo">Needed</span></div></div>
+      <div class="doc-row"><div class="doc-icon" style="background:#faeeda;color:#854f0b">⚖</div><div><div class="doc-name">RFC / Alta SAT</div><div class="doc-meta">Tax ID registration</div></div><div class="doc-status"><span class="badge badge-todo">Needed</span></div></div>
+      <div class="doc-row"><div class="doc-icon" style="background:#fcebeb;color:#a32d2d">!</div><div><div class="doc-name">Licencia Sanitaria COFEPRIS</div><div class="doc-meta">Main operating permit · Critical path</div></div><div class="doc-status"><span class="badge badge-urgent">Priority</span></div></div>
+      <div class="doc-row"><div class="doc-icon" style="background:#fcebeb;color:#a32d2d">!</div><div><div class="doc-name">Aviso de Funcionamiento</div><div class="doc-meta">SIVISAM online portal</div></div><div class="doc-status"><span class="badge badge-urgent">Priority</span></div></div>
+      <div class="doc-row"><div class="doc-icon" style="background:#eaf3de;color:#3b6d11">✓</div><div><div class="doc-name">NOM-087 RPBI Plan</div><div class="doc-meta">Biological waste management plan</div></div><div class="doc-status"><span class="badge badge-todo">Needed</span></div></div>
+      <div class="doc-row"><div class="doc-icon" style="background:#e6f1fb;color:#185fa5">Q</div><div><div class="doc-name">Cédula Director Técnico</div><div class="doc-meta">QFB professional license on file</div></div><div class="doc-status"><span class="badge badge-todo">Needed</span></div></div>
+      <div class="doc-row"><div class="doc-icon" style="background:#e1f5ee;color:#0f6e56">$</div><div><div class="doc-name">Lease Contract (uso de suelo)</div><div class="doc-meta">Must specify servicios médicos</div></div><div class="doc-status"><span class="badge badge-todo">Needed</span></div></div>
+      <div class="doc-row"><div class="doc-icon" style="background:#e1f5ee;color:#0f6e56">$</div><div><div class="doc-name">Equipment invoices & calibration certs</div><div class="doc-meta">Required for COFEPRIS inspection</div></div><div class="doc-status"><span class="badge badge-todo">Needed</span></div></div>
+      <div class="doc-row"><div class="doc-icon" style="background:#f1efe8;color:#5f5e5a">M</div><div><div class="doc-name">Licencia Municipal de Apertura</div><div class="doc-meta">Municipio de Querétaro</div></div><div class="doc-status"><span class="badge badge-todo">Needed</span></div></div>
+      <div class="doc-row"><div class="doc-icon" style="background:#f1efe8;color:#5f5e5a">M</div><div><div class="doc-name">Dictamen Protección Civil</div><div class="doc-meta">Fire safety inspection certificate</div></div><div class="doc-status"><span class="badge badge-todo">Needed</span></div></div>
+    </div>
+  </section>
+
+  <!-- ── TIMELINE (GANTT) ── -->
+  <section id="page-timeline" class="page">
+    <div class="page-title">Project timeline</div>
+    <div class="page-sub">18-month Gantt view — phases, overlaps, and milestones</div>
+    <div class="card">
+      <div class="gantt-wrap">
+        <div class="gantt">
+          <div class="gantt-header">
+            <div class="gantt-label-col">Phase</div>
+            <div class="gantt-months" id="gantt-months"></div>
+          </div>
+          <div id="gantt-rows"></div>
+        </div>
+      </div>
+      <div class="gantt-legend" id="gantt-legend"></div>
+    </div>
+    <div class="two-col" style="margin-top:14px">
+      <div class="card">
+        <div class="card-title">Critical path</div>
+        <div class="info-box red" style="margin-bottom:10px">
+          <strong>Longest sequential chain:</strong> Legal setup (M2) → COFEPRIS application (M3) → Inspection wait (M4–9) → License received → Open. Any delay in Phase 2 or 3 pushes everything.
+        </div>
+        <div style="font-size:12px;color:var(--text-secondary);line-height:1.7">
+          <strong style="color:var(--text-primary)">Parallel tracks to exploit:</strong> While waiting for COFEPRIS (3–9 months), complete: equipment procurement, buildout, staffing, physician outreach prep, branding, and LIS setup. This is why smart operators launch in 12 months, not 18.
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Key milestones</div>
+        <div class="reg-item"><div class="reg-dot" style="background:#a32d2d"></div><div><div class="reg-name">COFEPRIS application filed</div><div class="reg-detail">Month 3 · Triggers the clock on inspection</div></div></div>
+        <div class="reg-item"><div class="reg-dot" style="background:#854f0b"></div><div><div class="reg-name">Equipment installed & calibrated</div><div class="reg-detail">Month 8 · Must be ready before inspection</div></div></div>
+        <div class="reg-item"><div class="reg-dot" style="background:#185fa5"></div><div><div class="reg-name">COFEPRIS inspection passed</div><div class="reg-detail">Month 9 · Green light to operate</div></div></div>
+        <div class="reg-item"><div class="reg-dot" style="background:#1d9e75"></div><div><div class="reg-name">Soft launch — first patient</div><div class="reg-detail">Month 10 · Revenue begins</div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FINANCIAL CALCULATOR ── -->
+  <section id="page-calculator" class="page">
+    <div class="page-title">Financial calculator</div>
+    <div class="page-sub">Model scenarios — adjust inputs and see real-time P&L impact</div>
+
+    <div class="scenario-tabs">
+      <div class="scenario-tab active" onclick="setScenario('conservative',this)">Conservative</div>
+      <div class="scenario-tab" onclick="setScenario('base',this)">Base case</div>
+      <div class="scenario-tab" onclick="setScenario('optimistic',this)">Optimistic</div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="card">
+          <div class="card-title">Revenue inputs</div>
+          <div class="slider-group">
+            <div class="slider-label"><span>Monthly studies</span><span class="slider-val" id="v-studies">250</span></div>
+            <input type="range" min="50" max="800" value="250" id="s-studies" oninput="calcUpdate()">
+          </div>
+          <div class="slider-group">
+            <div class="slider-label"><span>Avg ticket (MXN)</span><span class="slider-val" id="v-ticket">600</span></div>
+            <input type="range" min="200" max="1200" step="25" value="600" id="s-ticket" oninput="calcUpdate()">
+          </div>
+          <div class="slider-group">
+            <div class="slider-label"><span>Corporate % of volume</span><span class="slider-val" id="v-corp">20%</span></div>
+            <input type="range" min="0" max="60" value="20" id="s-corp" oninput="calcUpdate()">
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Cost inputs</div>
+          <div class="slider-group">
+            <div class="slider-label"><span>Monthly rent (MXN)</span><span class="slider-val" id="v-rent">25,000</span></div>
+            <input type="range" min="12000" max="50000" step="1000" value="25000" id="s-rent" oninput="calcUpdate()">
+          </div>
+          <div class="slider-group">
+            <div class="slider-label"><span>Staff count</span><span class="slider-val" id="v-staff">4</span></div>
+            <input type="range" min="2" max="10" value="4" id="s-staff" oninput="calcUpdate()">
+          </div>
+          <div class="slider-group">
+            <div class="slider-label"><span>Reagent cost (% of revenue)</span><span class="slider-val" id="v-reagent">35%</span></div>
+            <input type="range" min="20" max="50" value="35" id="s-reagent" oninput="calcUpdate()">
+          </div>
+          <div class="slider-group">
+            <div class="slider-label"><span>Equipment model</span><span class="slider-val" id="v-eqmodel">Purchase</span></div>
+            <input type="range" min="0" max="1" value="0" id="s-eqmodel" oninput="calcUpdate()">
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card">
+          <div class="card-title">Monthly P&L projection</div>
+          <div class="three-col" style="margin-bottom:14px;grid-template-columns:1fr 1fr 1fr">
+            <div class="calc-output"><div class="calc-output-label">Gross revenue</div><div class="calc-output-val green" id="co-revenue">$150,000</div></div>
+            <div class="calc-output"><div class="calc-output-label">Total costs</div><div class="calc-output-val red" id="co-costs">$120,000</div></div>
+            <div class="calc-output"><div class="calc-output-label">EBITDA</div><div class="calc-output-val blue" id="co-ebitda">$30,000</div></div>
+          </div>
+          <div class="calc-row"><div class="calc-row-label">Patient revenue (direct)</div><div class="calc-row-val" id="cr-patient">$120,000</div></div>
+          <div class="calc-row"><div class="calc-row-label">Corporate revenue</div><div class="calc-row-val" id="cr-corp">$30,000</div></div>
+          <div class="calc-divider"></div>
+          <div class="calc-row"><div class="calc-row-label">Payroll (incl. IMSS burden)</div><div class="calc-row-val" id="cr-payroll">-$67,000</div></div>
+          <div class="calc-row"><div class="calc-row-label">Reagents</div><div class="calc-row-val" id="cr-reagent">-$52,500</div></div>
+          <div class="calc-row"><div class="calc-row-label">Rent + utilities</div><div class="calc-row-val" id="cr-rent">-$30,000</div></div>
+          <div class="calc-row"><div class="calc-row-label">Admin, waste, misc</div><div class="calc-row-val" id="cr-misc">-$15,000</div></div>
+          <div class="calc-divider"></div>
+          <div class="calc-row" style="font-weight:500"><div class="calc-row-label" style="color:var(--text-primary)">EBITDA margin</div><div class="calc-row-val" id="cr-margin" style="color:var(--blue)">20%</div></div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Break-even & payback</div>
+          <div class="two-col" style="grid-template-columns:1fr 1fr">
+            <div class="calc-output"><div class="calc-output-label">Break-even studies/mo</div><div class="calc-output-val amber" id="co-breakeven">220</div></div>
+            <div class="calc-output"><div class="calc-output-label">Payback period</div><div class="calc-output-val" id="co-payback" style="color:var(--blue)">3.2 yr</div></div>
+          </div>
+          <div style="margin-top:10px">
+            <div class="slider-label"><span>Startup investment (MXN)</span><span class="slider-val" id="v-startup">1,800,000</span></div>
+            <input type="range" min="800000" max="3000000" step="50000" value="1800000" id="s-startup" oninput="calcUpdate()">
+          </div>
+          <div style="margin-top:12px">
+            <div style="font-size:11px;color:var(--text-secondary);margin-bottom:6px">Capacity utilization</div>
+            <div class="calc-bar-wrap">
+              <div class="calc-bar" id="cb-util" style="width:31%;background:var(--green)"></div>
+              <div class="calc-bar-text" id="cb-util-text">31% of 800/mo capacity</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PRICING MATRIX ── -->
+  <section id="page-pricing" class="page">
+    <div class="page-title">Competitor pricing matrix</div>
+    <div class="page-sub">Your prices vs. competition — edit "LabQro" column to set your strategy</div>
+
+    <div class="card" style="overflow-x:auto">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+        <div class="card-title" style="margin:0">Top 25 studies — prices in MXN</div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <div style="font-size:11px;color:var(--text-tertiary)">Position:</div>
+          <div style="font-size:12px;font-weight:500;color:var(--green-dark)" id="pricing-position">Mid-market</div>
+        </div>
+      </div>
+      <table class="pricing-tbl" id="pricing-table"></table>
+    </div>
+
+    <div class="two-col" style="margin-top:14px">
+      <div class="card">
+        <div class="card-title">Pricing strategy summary</div>
+        <div id="pricing-summary"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Bundle opportunities</div>
+        <div class="info-box green" style="margin-bottom:10px">
+          <strong>Perfil Básico (checkup):</strong> BHC + QS6 + EGO + lipídico. Individual sum: ~$860. Bundle at <strong>$599</strong> — 30% discount feels like a deal, avg ticket goes up vs. single-test visits.
+        </div>
+        <div class="info-box green" style="margin-bottom:10px">
+          <strong>Perfil Tiroideo Completo:</strong> TSH + T3 + T4 + T4 libre. Individual sum: ~$920. Bundle at <strong>$699</strong>. High demand from endocrinologists.
+        </div>
+        <div class="info-box green">
+          <strong>Check-up Empresarial:</strong> BHC + QS12 + EGO + lipídico + prueba antidoping (5 panel). Bundle at <strong>$799</strong> per employee. Volume play for corporate contracts.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── LOCATION SCORING ── -->
+  <section id="page-locations" class="page">
+    <div class="page-title">Location scoring tool</div>
+    <div class="page-sub">Rate and compare potential sites — weighted scoring</div>
+
+    <div class="info-box blue" style="margin-bottom:14px">
+      <strong>How to use:</strong> Click "Add location" for each site you visit. Rate each criterion 1–5 stars. Scores are weighted by importance (shown as %). The highest total score is highlighted. Add notes for each site to capture observations during visits.
+    </div>
+
+    <div class="loc-grid" id="loc-grid">
+      <!-- locations render here -->
+    </div>
+  </section>
+
+  <!-- ── PHYSICIAN CRM ── -->
+  <section id="page-physicians" class="page">
+    <div class="page-title">Physician outreach CRM</div>
+    <div class="page-sub">Track your referral pipeline — move doctors through stages</div>
+
+    <div class="crm-stats" id="crm-stats"></div>
+
+    <div class="crm-add-form">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div class="card-title" style="margin:0">Add physician</div>
+      </div>
+      <div class="crm-input-row">
+        <input class="crm-input" id="crm-name" placeholder="Dr. name">
+        <input class="crm-input" id="crm-spec" placeholder="Specialty (e.g., Medicine General)">
+      </div>
+      <div class="crm-input-row">
+        <input class="crm-input" id="crm-clinic" placeholder="Clinic / address">
+        <input class="crm-input" id="crm-notes" placeholder="Notes (optional)">
+      </div>
+      <div style="display:flex;justify-content:flex-end;margin-top:4px">
+        <button class="btn btn-primary" onclick="addPhysician()">Add to pipeline</button>
+      </div>
+    </div>
+
+    <div class="crm-pipeline" id="crm-pipeline"></div>
+  </section>
+
+  <!-- ── EQUIPMENT COMPARE ── -->
+  <section id="page-equipment" class="page">
+    <div class="page-title">Equipment comparison</div>
+    <div class="page-sub">Compare quotes side-by-side — the best value per category is highlighted</div>
+
+    <div class="eq-cat-tabs">
+      <div class="tab active" onclick="eqCatFilter('all',this)">All categories</div>
+      <div class="tab" onclick="eqCatFilter('hematology',this)">Hematology</div>
+      <div class="tab" onclick="eqCatFilter('chemistry',this)">Chemistry</div>
+      <div class="tab" onclick="eqCatFilter('coagulation',this)">Coagulation</div>
+      <div class="tab" onclick="eqCatFilter('other',this)">Other</div>
+    </div>
+
+    <div class="card" style="overflow-x:auto">
+      <div id="eq-table-wrap"></div>
+    </div>
+
+    <div class="two-col" style="margin-top:14px">
+      <div class="card">
+        <div class="card-title">Total cost comparison</div>
+        <div id="eq-totals"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Comodato vs. purchase calculator</div>
+        <div id="eq-comodato"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── REGULATORY BOARD (KANBAN) ── -->
+  <section id="page-regboard" class="page">
+    <div class="page-title">Regulatory status board</div>
+    <div class="page-sub">Dependency-aware permit tracking — move items as you progress</div>
+
+    <div class="info-box amber" style="margin-bottom:14px">
+      <strong>Dependencies shown below each item.</strong> Items with a red left border are blocked until their dependency is completed. Move items left to right as you progress. The critical path runs through: RFC → COFEPRIS application → Inspection → Licencia Sanitaria.
+    </div>
+
+    <div class="kanban" id="kanban-board"></div>
+
+    <div class="card" style="margin-top:14px">
+      <div class="card-title">Dependency map</div>
+      <div style="font-size:12px;color:var(--text-secondary);line-height:1.8" id="dep-map"></div>
+    </div>
+  </section>
+
+  <!-- ── NOTES ── -->
+  <section id="page-notes" class="page">
+    <div class="page-title">Notes & decisions</div>
+    <div class="page-sub">Capture key decisions, contacts, and observations</div>
+    <div class="card">
+      <div class="card-title">Quick note</div>
+      <textarea class="note-area" id="note-input" placeholder="Write a note — ideas, contacts, decisions..."></textarea>
+      <div style="display:flex;justify-content:flex-end;margin-top:10px">
+        <button class="btn btn-primary" onclick="saveNote()">Save note</button>
+      </div>
+    </div>
+    <div id="notes-list"></div>
+  </section>
+
+  <!-- ── PHASE 1 DETAIL ── -->
+  <section id="page-phase-1" class="page">
+    <button class="back-btn" onclick="nav('dashboard',document.querySelector('.sb-item'))"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 3L5 8l5 5"/></svg>Back to dashboard</button>
+    <div class="phase-header">
+      <div class="phase-header-num" style="background:#e6f1fb;color:#185fa5">1</div>
+      <div><div class="phase-header-title">Research & Planning</div></div>
+    </div>
+    <div class="phase-timeline">
+      <span>Months 1–2</span><span class="sep">·</span>
+      <span class="badge badge-progress">In progress</span><span class="sep">·</span>
+      <span>Est. cost: $15,000–30,000 MXN</span>
+    </div>
+
+    <div class="info-box blue" style="margin-bottom:14px">
+      <strong>Why this matters:</strong> Everything downstream depends on getting this right. The decisions you make here — business model, location zone, test menu focus — set the ceiling for revenue and speed-to-permit. Rushing past this phase is the #1 mistake new lab operators make in Mexico.
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="card">
+          <div class="phase-section-title">Core tasks</div>
+          <div class="task-item">
+            <div class="task-icon" style="background:#e6f1fb;color:#185fa5">◎</div>
+            <div class="task-body">
+              <div class="task-name">Market research — Querétaro metro</div>
+              <div class="task-detail">Map out every competitor by zone: Juriquilla, Centro, Satélite, El Pueblito, Corregidora. Count locations, note pricing, identify wait times and test menu gaps. Visit at least 5 labs as a "mystery patient."</div>
+              <div class="task-tags"><span class="task-tag tag-time">1–2 weeks</span><span class="task-tag tag-tip">Go in person</span></div>
+            </div>
+          </div>
+          <div class="task-item">
+            <div class="task-icon" style="background:#e6f1fb;color:#185fa5">◎</div>
+            <div class="task-body">
+              <div class="task-name">Define business model</div>
+              <div class="task-detail">Decide on revenue mix: direct walk-in patients, physician referral network, corporate health contracts (empresas), IMSS subrogación (advanced). Most successful Querétaro labs start with physician referrals + walk-in, then add corporate.</div>
+              <div class="task-tags"><span class="task-tag tag-tip">Start with 2 channels max</span></div>
+            </div>
+          </div>
+          <div class="task-item">
+            <div class="task-icon" style="background:#e6f1fb;color:#185fa5">◎</div>
+            <div class="task-body">
+              <div class="task-name">Financial modeling</div>
+              <div class="task-detail">Build a 3-year P&L projection. Key inputs: avg ticket ~$500–700 MXN, 150–250 studies/mo year 1, reagent cost ~35% of revenue. Model conservative, base, and optimistic scenarios.</div>
+              <div class="task-tags"><span class="task-tag tag-cost">$5,000 if outsourced</span><span class="task-tag tag-tip">Use the Financials tab</span></div>
+            </div>
+          </div>
+          <div class="task-item">
+            <div class="task-icon" style="background:#e6f1fb;color:#185fa5">◎</div>
+            <div class="task-body">
+              <div class="task-name">Location shortlist (3 sites minimum)</div>
+              <div class="task-detail">Requirements: min 60m², ground floor preferred, parking or near public transit, zoned for servicios médicos. Check uso de suelo with Municipio before signing anything. Ideally near medical offices or clinics.</div>
+              <div class="task-tags"><span class="task-tag tag-time">2–3 weeks</span><span class="task-tag tag-critical">Verify uso de suelo first</span></div>
+            </div>
+          </div>
+          <div class="task-item">
+            <div class="task-icon" style="background:#e6f1fb;color:#185fa5">◎</div>
+            <div class="task-body">
+              <div class="task-name">Define initial test menu</div>
+              <div class="task-detail">Start with the 50–80 highest-demand studies: BHC, QS (6, 12, 27), perfil lipídico, perfil tiroideo, uroanálisis general, prueba de embarazo, cultivos básicos. Specialty panels (hormonas, tumor markers) can be added later or referred out.</div>
+              <div class="task-tags"><span class="task-tag tag-tip">Match menu to equipment</span></div>
+            </div>
+          </div>
+          <div class="task-item">
+            <div class="task-icon" style="background:#e6f1fb;color:#185fa5">◎</div>
+            <div class="task-body">
+              <div class="task-name">Get 3 competitor price lists</div>
+              <div class="task-detail">Salud Digna publishes online. For Chopo and local labs, visit or call. You need these to set your own pricing tier — aim for 20–40% above Salud Digna, 30–50% below hospital labs.</div>
+              <div class="task-tags"><span class="task-tag tag-time">1 week</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card">
+          <div class="phase-section-title">Deliverables when phase is complete</div>
+          <div class="deliverable">Competitive analysis document (zone-by-zone)</div>
+          <div class="deliverable">Business model canvas (revenue channels defined)</div>
+          <div class="deliverable">3-year financial model (3 scenarios)</div>
+          <div class="deliverable">Shortlist of 3 locations with uso de suelo status</div>
+          <div class="deliverable">Test menu v1 with equipment requirements</div>
+          <div class="deliverable">Pricing strategy (tier positioning defined)</div>
+        </div>
+
+        <div class="card">
+          <div class="phase-section-title">Key decisions to make</div>
+          <div class="info-box neutral" style="margin-bottom:10px">
+            <strong>General vs. specialty?</strong><br>General labs have broader demand but thinner margins. Specialty (e.g., hormonal panels, molecular) commands higher tickets but needs more expensive equipment and a wider referral base. Recommended: start general, layer specialty at month 12–18.
+          </div>
+          <div class="info-box neutral" style="margin-bottom:10px">
+            <strong>Own vs. lease equipment?</strong><br>Many reagent companies (Roche, Beckman, Mindray) offer comodato: free analyzer in exchange for reagent exclusivity. This slashes startup cost but locks you in. Good for year 1, renegotiate after.
+          </div>
+          <div class="info-box neutral">
+            <strong>Referral lab partnership?</strong><br>For tests you won't run in-house (PCR, specialized cultures, genetic), partner with a referral lab like Carpermor or Quest Mexico. You draw the sample, they run it, you keep the margin on the patient-facing price.
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="phase-section-title">Querétaro-specific tips</div>
+          <div class="info-box green">
+            <strong>Best zones to research:</strong> Juriquilla/Zibatá (high income, low competition), Satélite/Epigmenio (dense residential, IMSS overflow), and Centro/Constituyentes (high foot traffic, physician offices).<br><br>
+            <strong>Corporate channel:</strong> Querétaro's industrial parks (El Marqués, Aeropuerto) house 300+ manufacturing plants required by NOM to provide annual employee health screenings. This is a massive untapped B2B channel.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PHASE 2 DETAIL ── -->
+  <section id="page-phase-2" class="page">
+    <button class="back-btn" onclick="nav('dashboard',document.querySelector('.sb-item'))"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 3L5 8l5 5"/></svg>Back to dashboard</button>
+    <div class="phase-header">
+      <div class="phase-header-num" style="background:#faeeda;color:#854f0b">2</div>
+      <div><div class="phase-header-title">Legal & Corporate Setup</div></div>
+    </div>
+    <div class="phase-timeline">
+      <span>Months 2–4</span><span class="sep">·</span>
+      <span class="badge badge-todo">To do</span><span class="sep">·</span>
+      <span>Est. cost: $30,000–60,000 MXN</span>
+    </div>
+
+    <div class="info-box amber" style="margin-bottom:14px">
+      <strong>Critical path:</strong> You cannot apply for COFEPRIS permits without a legally constituted empresa and RFC. Don't delay this — every week of delay here pushes your entire launch timeline.
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="card">
+          <div class="phase-section-title">Core tasks</div>
+          <div class="task-item">
+            <div class="task-icon" style="background:#faeeda;color:#854f0b">⚖</div>
+            <div class="task-body">
+              <div class="task-name">Choose business structure</div>
+              <div class="task-detail"><strong>S.A. de C.V.</strong> is recommended for a clinical lab. It provides liability protection, a clear corporate structure for investor/partner entry, and is the expected format for COFEPRIS applications. Avoid Persona Física — too much personal liability.</div>
+              <div class="task-tags"><span class="task-tag tag-tip">S.A. de C.V. recommended</span></div>
+            </div>
+          </div>
+          <div class="task-item">
+            <div class="task-icon" style="background:#faeeda;color:#854f0b">⚖</div>
+            <div class="task-body">
+              <div class="task-name">Hire notario público</div>
+              <div class="task-detail">The notario drafts and formalizes the Acta Constitutiva (founding charter). You'll need: company name (razón social), partner details, capital structure, object social (must include "servicios de laboratorio de análisis clínicos").</div>
+              <div class="task-tags"><span class="task-tag tag-cost">$15,000–25,000 MXN</span><span class="task-tag tag-time">2–4 weeks</span></div>
+            </div>
+          </div>
+          <div class="task-item">
+            <div class="task-icon" style="background:#faeeda;color:#854f0b">⚖</div>
+            <div class="task-body">
+              <div class="task-name">Register RFC with SAT</div>
+              <div class="task-detail">Tax ID registration at sat.gob.mx. Choose régimen: likely Régimen General de Ley for an S.A. de C.V. You'll need the e.firma (formerly FIEL) and the Acta Constitutiva. This enables CFDI (electronic invoicing).</div>
+              <div class="task-tags"><span class="task-tag tag-time">1–2 weeks</span><span class="task-tag tag-resource">sat.gob.mx</span></div>
+            </div>
+          </div>
+          <div class="task-item">
+            <div class="task-icon" style="background:#faeeda;color:#854f0b">⚖</div>
+            <div class="task-body">
+              <div class="task-name">Open business bank account</div>
+              <div class="task-detail">Bring: Acta Constitutiva, RFC, official ID of legal representative, comprobante de domicilio. BBVA, Santander, and Banorte all offer PyME accounts with reasonable fees. Open before equipment purchases.</div>
+              <div class="task-tags"><span class="task-tag tag-time">1 week</span></div>
+            </div>
+          </div>
+          <div class="task-item">
+            <div class="task-icon" style="background:#faeeda;color:#854f0b">⚖</div>
+            <div class="task-body">
+              <div class="task-name">IMPI trademark registration (optional)</div>
+              <div class="task-detail">Register your lab name and logo with IMPI (Instituto Mexicano de la Propiedad Industrial). Not legally required, but protects your brand if you plan to grow or franchise. Filing online costs ~$2,500 MXN.</div>
+              <div class="task-tags"><span class="task-tag tag-cost">~$2,500 MXN</span><span class="task-tag tag-time">3–6 months for approval</span></div>
+            </div>
+          </div>
+          <div class="task-item">
+            <div class="task-icon" style="background:#faeeda;color:#854f0b">⚖</div>
+            <div class="task-body">
+              <div class="task-name">Sign lease contract</div>
+              <div class="task-detail">Critical: the lease <strong>must specify "uso de suelo: servicios médicos"</strong> or equivalent. COFEPRIS will check this. Negotiate 6-month rent-free buildout period if possible. Ensure landlord agrees to required modifications (plumbing, ventilation, waste room).</div>
+              <div class="task-tags"><span class="task-tag tag-critical">Uso de suelo required</span><span class="task-tag tag-cost">$18,000–35,000/mo in Juriquilla</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card">
+          <div class="phase-section-title">Deliverables when phase is complete</div>
+          <div class="deliverable">Acta Constitutiva (notarized)</div>
+          <div class="deliverable">RFC registration confirmation</div>
+          <div class="deliverable">e.firma (electronic signature) active</div>
+          <div class="deliverable">Business bank account open</div>
+          <div class="deliverable">Signed lease with uso de suelo confirmed</div>
+          <div class="deliverable">CFDI invoicing setup (PAC provider selected)</div>
+        </div>
+
+        <div class="card">
+          <div class="phase-section-title">Razón social — naming tips</div>
+          <div class="info-box neutral" style="margin-bottom:10px">
+            Before the notario starts, check name availability at the Secretaría de Economía portal. Avoid generic names that IMPI might reject. Include "Laboratorio" or "Lab" for instant recognition. Think about how it looks on Google Maps and lab results letterhead.
+          </div>
+          <div class="info-box neutral">
+            <strong>Object social wording:</strong> Make it broad enough to cover future services. Example: "Prestación de servicios de laboratorio de análisis clínicos, toma de muestras, imagenología, y servicios de salud en general." This avoids needing amendments later.
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="phase-section-title">Estimated costs for this phase</div>
+          <div class="fin-row"><div class="fin-label">Notario público (acta constitutiva)</div><div class="fin-val">$15,000–25,000</div></div>
+          <div class="fin-row"><div class="fin-label">RFC / e.firma (SAT)</div><div class="fin-val">$0 (free)</div></div>
+          <div class="fin-row"><div class="fin-label">IMPI trademark filing</div><div class="fin-val">~$2,500</div></div>
+          <div class="fin-row"><div class="fin-label">Lease deposit (2–3 months)</div><div class="fin-val">$36,000–105,000</div></div>
+          <div class="fin-row" style="border-top:1.5px solid var(--border-strong);margin-top:5px;padding-top:10px">
+            <div class="fin-label" style="font-weight:500;color:var(--text-primary)">Phase total</div>
+            <div class="fin-val total">$53,000–135,000 MXN</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PHASE 3 DETAIL ── -->
+  <section id="page-phase-3" class="page">
+    <button class="back-btn" onclick="nav('dashboard',document.querySelector('.sb-item'))"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 3L5 8l5 5"/></svg>Back to dashboard</button>
+    <div class="phase-header">
+      <div class="phase-header-num" style="background:#fcebeb;color:#a32d2d">3</div>
+      <div><div class="phase-header-title">COFEPRIS & NOM Permits</div></div>
+    </div>
+    <div class="phase-timeline">
+      <span>Months 3–9</span><span class="sep">·</span>
+      <span class="badge badge-urgent">Critical path — allow 6+ months</span><span class="sep">·</span>
+      <span>Est. cost: $20,000–80,000 MXN</span>
+    </div>
+
+    <div class="info-box red" style="margin-bottom:14px">
+      <strong>This is the longest and most unpredictable phase.</strong> COFEPRIS timelines are notoriously variable. Officially 60–120 business days for the Licencia Sanitaria, but real-world timelines in 2024–2025 range from 4 to 12 months. Start this the moment you have your RFC and lease. Do not wait for buildout to be complete — the application process runs in parallel.
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="card">
+          <div class="phase-section-title">Core tasks</div>
+          <div class="task-item">
+            <div class="task-icon" style="background:#fcebeb;color:#a32d2d">!</div>
+            <div class="task-body">
+              <div class="task-name">Hire / contract Director Técnico (QFB)</div>
+              <div class="task-detail">This is the single most critical hire in the entire project. COFEPRIS will <strong>not</strong> issue a Licencia Sanitaria without a named QFB (Químico Farmacéutico Biólogo) with an active cédula profesional. They can be full-time or part-time (some labs share). Salary range: $18,000–35,000 MXN/mo full-time.</div>
+              <div class="task-tags"><span class="task-tag tag-critical">Must do first</span><span class="task-tag tag-cost">$18K–35K/mo</span></div>
+            </div>
+          </div>
+          <div class="task-item">
+            <div class="task-icon" style="background:#fcebeb;color:#a32d2d">!</div>
+            <div class="task-body">
+              <div class="task-name">Licencia Sanitaria — COFEPRIS</div>
+              <div class="task-detail">The main operating permit. Application via SIVISAM portal requires: RFC, lease, floor plan, equipment list with serial numbers, QFB cédula profesional, NOM-087 RPBI plan, and proof of waste carrier contract. COFEPRIS will schedule a physical inspection of the premises.</div>
+              <div class="task-tags"><span class="task-tag tag-critical">Critical path</span><span class="task-tag tag-time">3–9 months</span><span class="task-tag tag-cost">$5,000–15,000 MXN</span></div>
+            </div>
+          </div>
+          <div class="task-item">
+            <div class="task-icon" style="background:#faeeda;color:#854f0b">⚖</div>
+            <div class="task-body">
+              <div class="task-name">Aviso de Funcionamiento</div>
+              <div class="task-detail">Filed online via the COFEPRIS SIVISAM portal. This is a notification that you intend to operate — simpler than the Licencia but must be done before opening. Requires CURP, RFC, and facility address.</div>
+              <div class="task-tags"><span class="task-tag tag-time">1–2 weeks</span><span class="task-tag tag-resource">cofepris.gob.mx</span></div>
+            </div>
+          </div>
+          <div class="task-item">
+            <div class="task-icon" style="background:#faeeda;color:#854f0b">⚖</div>
+            <div class="task-body">
+              <div class="task-name">NOM-007-SSA3-2011 compliance</div>
+              <div class="task-detail">Infrastructure standard for clinical labs. Defines minimum areas: reception, sample collection (toma de muestra), analysis, wash/sterilization, results delivery. Min 60m². Separate RPBI storage area required.</div>
+              <div class="task-tags"><span class="task-tag tag-tip">Plan floor layout early</span></div>
+            </div>
+          </div>
+          <div class="task-item">
+            <div class="task-icon" style="background:#faeeda;color:#854f0b">⚖</div>
+            <div class="task-body">
+              <div class="task-name">NOM-166-SSA1-1997 compliance</div>
+              <div class="task-detail">Quality standard: SOPs for every test, equipment calibration logs, internal quality control records, external quality assessment (EQA) participation, and staff competency documentation.</div>
+              <div class="task-tags"><span class="task-tag tag-tip">QFB usually owns this</span></div>
+            </div>
+          </div>
+          <div class="task-item">
+            <div class="task-icon" style="background:#faeeda;color:#854f0b">⚖</div>
+            <div class="task-body">
+              <div class="task-name">NOM-087 RPBI waste plan</div>
+              <div class="task-detail">Biohazardous waste (Residuos Peligrosos Biológico-Infecciosos): separation by color-coded containers, labeled sharps disposal, contracted authorized waste carrier (e.g., BioSeguridad). Carrier must have SEMARNAT permit.</div>
+              <div class="task-tags"><span class="task-tag tag-cost">Carrier: $3,000–8,000/mo</span></div>
+            </div>
+          </div>
+          <div class="task-item">
+            <div class="task-icon" style="background:#faeeda;color:#854f0b">⚖</div>
+            <div class="task-body">
+              <div class="task-name">COFEPRIS physical inspection</div>
+              <div class="task-detail">After filing, COFEPRIS schedules an on-site inspection. They check: floor plan vs. application, equipment in place and calibrated, QFB present and documented, RPBI plan posted, SOPs available. If deficiencies are found, they give a window to correct — but this adds months.</div>
+              <div class="task-tags"><span class="task-tag tag-critical">Be 100% ready</span><span class="task-tag tag-time">Scheduled 2–6 months after filing</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card">
+          <div class="phase-section-title">Deliverables when phase is complete</div>
+          <div class="deliverable">Director Técnico (QFB) contracted with cédula on file</div>
+          <div class="deliverable">SIVISAM account created and active</div>
+          <div class="deliverable">Aviso de Funcionamiento filed</div>
+          <div class="deliverable">Licencia Sanitaria application submitted</div>
+          <div class="deliverable">NOM-087 RPBI plan documented + carrier contracted</div>
+          <div class="deliverable">Floor plan meeting NOM-007 requirements</div>
+          <div class="deliverable">SOPs binder per NOM-166</div>
+          <div class="deliverable">COFEPRIS inspection passed</div>
+        </div>
+
+        <div class="card">
+          <div class="phase-section-title">State & municipal permits (parallel)</div>
+          <div class="task-item">
+            <div class="task-icon" style="background:#e1f5ee;color:#085041">M</div>
+            <div class="task-body">
+              <div class="task-name">Licencia de Apertura Municipal</div>
+              <div class="task-detail">Business opening permit from Municipio de Querétaro. Requires RFC, lease, uso de suelo confirmation. Simpler process than COFEPRIS.</div>
+              <div class="task-tags"><span class="task-tag tag-cost">$2,000–5,000 MXN</span><span class="task-tag tag-time">2–4 weeks</span></div>
+            </div>
+          </div>
+          <div class="task-item">
+            <div class="task-icon" style="background:#e1f5ee;color:#085041">M</div>
+            <div class="task-body">
+              <div class="task-name">Protección Civil inspection</div>
+              <div class="task-detail">Fire safety certification. Requires: fire extinguishers (types A, B, C), emergency exits marked and clear, evacuation plan posted, first aid kit, emergency lighting.</div>
+              <div class="task-tags"><span class="task-tag tag-time">2–3 weeks</span></div>
+            </div>
+          </div>
+          <div class="task-item">
+            <div class="task-icon" style="background:#e1f5ee;color:#085041">M</div>
+            <div class="task-body">
+              <div class="task-name">IMSS employer registration</div>
+              <div class="task-detail">Register as employer once you hire your first employee. Required for payroll compliance. Do this when you hire the QFB or first tech.</div>
+              <div class="task-tags"><span class="task-tag tag-time">1 week</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="phase-section-title">Pro tips from the field</div>
+          <div class="info-box amber">
+            <strong>Start the QFB search immediately.</strong> Good QFBs in Querétaro are in demand. Post on QFB Facebook groups, contact UAQ's Facultad de Química. Some labs hire a QFB early as a consultant ($8K–12K/mo part-time) to help prepare the COFEPRIS application — this often pays for itself by avoiding costly inspection deficiencies.<br><br>
+            <strong>Parallel track everything.</strong> While COFEPRIS processes your application (3–9 months), use that time to complete buildout, order equipment, hire staff, and build your physician referral list. Don't wait sequentially.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PHASE 4 DETAIL ── -->
+  <section id="page-phase-4" class="page">
+    <button class="back-btn" onclick="nav('dashboard',document.querySelector('.sb-item'))"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 3L5 8l5 5"/></svg>Back to dashboard</button>
+    <div class="phase-header">
+      <div class="phase-header-num" style="background:#eeedfe;color:#534ab7">4</div>
+      <div><div class="phase-header-title">Infrastructure & Equipment</div></div>
+    </div>
+    <div class="phase-timeline">
+      <span>Months 6–10</span><span class="sep">·</span>
+      <span class="badge badge-todo">To do</span><span class="sep">·</span>
+      <span>Est. cost: $900,000–1,200,000 MXN</span>
+    </div>
+
+    <div class="info-box blue" style="margin-bottom:14px">
+      <strong>Biggest capital outlay.</strong> Equipment and buildout represent 55–65% of total startup cost. The comodato (reagent-rental) model can reduce upfront equipment cost by 40–60%, but locks you into a single reagent supplier. Evaluate carefully.
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="card">
+          <div class="phase-section-title">Core tasks</div>
+          <div class="task-item">
+            <div class="task-icon" style="background:#eeedfe;color:#534ab7">▦</div>
+            <div class="task-body">
+              <div class="task-name">Lab buildout & remodeling</div>
+              <div class="task-detail">Per NOM-007: separate areas for reception/waiting, toma de muestras (phlebotomy), analytical area, wash/sterilization, RPBI storage, and restrooms. Surfaces must be non-porous, easy to disinfect. Adequate ventilation and lighting per COFEPRIS standards.</div>
+              <div class="task-tags"><span class="task-tag tag-cost">$200,000–400,000 MXN</span><span class="task-tag tag-time">4–8 weeks</span></div>
+            </div>
+          </div>
+          <div class="task-item">
+            <div class="task-icon" style="background:#eeedfe;color:#534ab7">▦</div>
+            <div class="task-body">
+              <div class="task-name">Equipment procurement — analyzers</div>
+              <div class="task-detail">Core equipment: hematology analyzer (Sysmex, Mindray), chemistry analyzer (Beckman AU480, Roche c311, Mindray BS-200), coagulation, urinalysis, centrifuges (x2 min), refrigerators (2–8°C for reagents, -20°C for samples), and microscope for manual differentials.</div>
+              <div class="task-tags"><span class="task-tag tag-cost">$500,000–800,000 MXN (purchase)</span><span class="task-tag tag-tip">Ask about comodato</span></div>
+            </div>
+          </div>
+          <div class="task-item">
+            <div class="task-icon" style="background:#eeedfe;color:#534ab7">▦</div>
+            <div class="task-body">
+              <div class="task-name">Cold chain & sample storage</div>
+              <div class="task-detail">Reagent fridge (2–8°C), sample freezer (-20°C), temperature monitoring logs (daily, documented). Some COFEPRIS inspectors now expect digital temperature logging. UPS/no-break for fridges is strongly recommended.</div>
+              <div class="task-tags"><span class="task-tag tag-cost">$40,000–80,000 MXN</span><span class="task-tag tag-critical">Temperature log required</span></div>
+            </div>
+          </div>
+          <div class="task-item">
+            <div class="task-icon" style="background:#eeedfe;color:#534ab7">▦</div>
+            <div class="task-body">
+              <div class="task-name">LIS (Laboratory Information System)</div>
+              <div class="task-detail">Software to manage orders, results, patient records, billing. Options: LabSoft, HealthPath, Labcore, or custom-built. Must support CFDI invoicing and PDF result delivery. Integration with analyzer middleware is ideal but not mandatory at launch.</div>
+              <div class="task-tags"><span class="task-tag tag-cost">$50,000–120,000 MXN</span><span class="task-tag tag-tip">Start simple, upgrade later</span></div>
+            </div>
+          </div>
+          <div class="task-item">
+            <div class="task-icon" style="background:#eeedfe;color:#534ab7">▦</div>
+            <div class="task-body">
+              <div class="task-name">IT infrastructure</div>
+              <div class="task-detail">Internet (redundant: main + backup), network for LIS, printer for results, patient check-in system. Optional: patient self-service kiosk, WhatsApp Business integration for result delivery.</div>
+              <div class="task-tags"><span class="task-tag tag-cost">$20,000–40,000 MXN</span></div>
+            </div>
+          </div>
+          <div class="task-item">
+            <div class="task-icon" style="background:#eeedfe;color:#534ab7">▦</div>
+            <div class="task-body">
+              <div class="task-name">Furniture, fixtures & signage</div>
+              <div class="task-detail">Reception desk, waiting area seating, phlebotomy chairs (reclinable, padded), lab benches (stainless or epoxy-top), external signage, and branded interior. First impression matters — patients choose with their eyes.</div>
+              <div class="task-tags"><span class="task-tag tag-cost">$60,000–120,000 MXN</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card">
+          <div class="phase-section-title">Deliverables when phase is complete</div>
+          <div class="deliverable">Lab fully built out per NOM-007 floor plan</div>
+          <div class="deliverable">All analyzers installed, calibrated, with validation records</div>
+          <div class="deliverable">Cold chain operational with temperature logs started</div>
+          <div class="deliverable">LIS software configured with test catalog</div>
+          <div class="deliverable">RPBI containers placed, waste carrier contracted</div>
+          <div class="deliverable">Signage installed, reception area ready</div>
+        </div>
+
+        <div class="card">
+          <div class="phase-section-title">Equipment decision: buy vs. comodato</div>
+          <div class="info-box neutral" style="margin-bottom:10px">
+            <strong>Purchase outright:</strong> Full control over reagent sourcing, negotiate better prices over time, no volume commitments. But: $500K–800K upfront for analyzers alone. Best if you have the capital or can finance through Nafin/bank.
+          </div>
+          <div class="info-box neutral">
+            <strong>Comodato (reagent-rental):</strong> Analyzer provided free by the reagent company (Roche, Beckman, Mindray) in exchange for exclusive reagent purchases with minimum monthly volumes. Slashes startup cost by $400K–600K. Drawback: you're locked in for 3–5 years and pay above-market reagent prices. Best for capital-constrained startups. Renegotiate aggressively at renewal.
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="phase-section-title">Estimated costs for this phase</div>
+          <div class="fin-row"><div class="fin-label">Lab buildout / remodeling</div><div class="fin-val">$200,000–400,000</div></div>
+          <div class="fin-row"><div class="fin-label">Analyzers (purchase)</div><div class="fin-val">$500,000–800,000</div></div>
+          <div class="fin-row"><div class="fin-label">Cold chain, centrifuges, misc</div><div class="fin-val">$60,000–100,000</div></div>
+          <div class="fin-row"><div class="fin-label">LIS software</div><div class="fin-val">$50,000–120,000</div></div>
+          <div class="fin-row"><div class="fin-label">IT, furniture, signage</div><div class="fin-val">$80,000–160,000</div></div>
+          <div class="fin-row" style="border-top:1.5px solid var(--border-strong);margin-top:5px;padding-top:10px">
+            <div class="fin-label" style="font-weight:500;color:var(--text-primary)">Phase total</div>
+            <div class="fin-val total">$890,000–1,580,000 MXN</div>
+          </div>
+          <div style="font-size:11px;color:var(--text-tertiary);margin-top:6px">With comodato: reduces by $400,000–600,000</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PHASE 5 DETAIL ── -->
+  <section id="page-phase-5" class="page">
+    <button class="back-btn" onclick="nav('dashboard',document.querySelector('.sb-item'))"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 3L5 8l5 5"/></svg>Back to dashboard</button>
+    <div class="phase-header">
+      <div class="phase-header-num" style="background:#eaf3de;color:#3b6d11">5</div>
+      <div><div class="phase-header-title">Staffing & Training</div></div>
+    </div>
+    <div class="phase-timeline">
+      <span>Months 8–12</span><span class="sep">·</span>
+      <span class="badge badge-todo">To do</span><span class="sep">·</span>
+      <span>Monthly payroll: $75,000–120,000 MXN</span>
+    </div>
+
+    <div class="info-box green" style="margin-bottom:14px">
+      <strong>Your team is your brand.</strong> In the mid-market segment, patient experience is the differentiator. A warm recepcionista, a skilled phlebotomist with a gentle touch, and a QFB who stands behind every result — that's what generates word-of-mouth referrals in Querétaro's tight-knit medical community.
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="card">
+          <div class="phase-section-title">Core hires</div>
+          <div class="task-item">
+            <div class="task-icon" style="background:#fcebeb;color:#a32d2d">★</div>
+            <div class="task-body">
+              <div class="task-name">Director Técnico — QFB</div>
+              <div class="task-detail">Legally required. Responsible for quality, SOPs, result validation, and COFEPRIS compliance. Must have active cédula profesional from DGP. This person's name goes on the Licencia Sanitaria — choose carefully.</div>
+              <div class="task-tags"><span class="task-tag tag-critical">Required by law</span><span class="task-tag tag-cost">$18,000–35,000/mo</span></div>
+            </div>
+          </div>
+          <div class="task-item">
+            <div class="task-icon" style="background:#eaf3de;color:#3b6d11">+</div>
+            <div class="task-body">
+              <div class="task-name">Químico / Lab technician (1–2)</div>
+              <div class="task-detail">Run day-to-day analyses, maintain equipment, prepare reagents, log QC data. Ideally QFB or TLC (Técnico Laboratorista Clínico) with cédula. Can handle phlebotomy if trained.</div>
+              <div class="task-tags"><span class="task-tag tag-cost">$10,000–18,000/mo each</span></div>
+            </div>
+          </div>
+          <div class="task-item">
+            <div class="task-icon" style="background:#eaf3de;color:#3b6d11">+</div>
+            <div class="task-body">
+              <div class="task-name">Phlebotomist (flebotomista)</div>
+              <div class="task-detail">Dedicated sample collection specialist. Critical for patient experience — a painful draw = lost patient. Training in NOM-087 handling and pediatric draws is a plus. Can also handle home collection (toma a domicilio).</div>
+              <div class="task-tags"><span class="task-tag tag-cost">$8,000–12,000/mo</span><span class="task-tag tag-tip">Hire for soft skills</span></div>
+            </div>
+          </div>
+          <div class="task-item">
+            <div class="task-icon" style="background:#eaf3de;color:#3b6d11">+</div>
+            <div class="task-body">
+              <div class="task-name">Recepcionista / Admin</div>
+              <div class="task-detail">Patient intake, scheduling, billing, CFDI issuance, result delivery coordination. This is the face of your lab. Must be organized, warm, and capable of handling LIS data entry accurately.</div>
+              <div class="task-tags"><span class="task-tag tag-cost">$8,000–12,000/mo</span></div>
+            </div>
+          </div>
+          <div class="task-item">
+            <div class="task-icon" style="background:#f1efe8;color:#5f5e5a">○</div>
+            <div class="task-body">
+              <div class="task-name">Cleaning / maintenance (part-time or outsourced)</div>
+              <div class="task-detail">Lab cleaning must follow infection control protocols — not standard janitorial. RPBI areas need specific handling. Consider outsourcing to a specialized medical cleaning company initially.</div>
+              <div class="task-tags"><span class="task-tag tag-cost">$4,000–6,000/mo</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card">
+          <div class="phase-section-title">Training requirements</div>
+          <div class="task-item">
+            <div class="task-icon" style="background:#e6f1fb;color:#185fa5">▤</div>
+            <div class="task-body">
+              <div class="task-name">NOM-087 RPBI handling</div>
+              <div class="task-detail">All staff must be trained on biohazardous waste classification, container color codes, sharps disposal, and spill protocols. Document training with dates and signatures — COFEPRIS checks this.</div>
+            </div>
+          </div>
+          <div class="task-item">
+            <div class="task-icon" style="background:#e6f1fb;color:#185fa5">▤</div>
+            <div class="task-body">
+              <div class="task-name">Quality control procedures</div>
+              <div class="task-detail">Daily QC runs on all analyzers, Levey-Jennings charts, corrective actions when out of range. The QFB should lead this training and establish SOPs before day 1 of operations.</div>
+            </div>
+          </div>
+          <div class="task-item">
+            <div class="task-icon" style="background:#e6f1fb;color:#185fa5">▤</div>
+            <div class="task-body">
+              <div class="task-name">Patient interaction & privacy</div>
+              <div class="task-detail">Confidentiality of results (NOM-004-SSA3 clinical records), proper patient identification (2 identifiers), informed consent for HIV and genetic testing, fasting verification protocols.</div>
+            </div>
+          </div>
+          <div class="task-item">
+            <div class="task-icon" style="background:#e6f1fb;color:#185fa5">▤</div>
+            <div class="task-body">
+              <div class="task-name">LIS / software training</div>
+              <div class="task-detail">All staff touching the system need training on order entry, result input, report generation, and basic troubleshooting. Schedule 2–3 days before opening with the LIS vendor.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="phase-section-title">Monthly payroll estimate (Year 1)</div>
+          <div class="fin-row"><div class="fin-label">Director Técnico (QFB)</div><div class="fin-val">$25,000</div></div>
+          <div class="fin-row"><div class="fin-label">Lab technician (x1)</div><div class="fin-val">$14,000</div></div>
+          <div class="fin-row"><div class="fin-label">Phlebotomist</div><div class="fin-val">$10,000</div></div>
+          <div class="fin-row"><div class="fin-label">Receptionist / admin</div><div class="fin-val">$10,000</div></div>
+          <div class="fin-row"><div class="fin-label">Cleaning (outsourced)</div><div class="fin-val">$5,000</div></div>
+          <div class="fin-row"><div class="fin-label">IMSS/Infonavit/ISR burden (~35%)</div><div class="fin-val">$22,400</div></div>
+          <div class="fin-row" style="border-top:1.5px solid var(--border-strong);margin-top:5px;padding-top:10px">
+            <div class="fin-label" style="font-weight:500;color:var(--text-primary)">Total monthly payroll</div>
+            <div class="fin-val total">~$86,400 MXN/mo</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="phase-section-title">Hiring tips for Querétaro</div>
+          <div class="info-box green">
+            <strong>Where to find QFBs:</strong> UAQ (Universidad Autónoma de Querétaro) Facultad de Química graduates ~40 QFBs/year. Also check UNAM distance programs, Facebook groups ("QFB Querétaro Empleos"), and LinkedIn. Offer flexible hours — many QFBs split time between multiple labs.<br><br>
+            <strong>Retain with culture:</strong> Small labs compete on culture, not salary. Offer training budgets, clear growth paths, and a say in SOPs. A QFB who feels ownership of quality stays longer.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PHASE 6 DETAIL ── -->
+  <section id="page-phase-6" class="page">
+    <button class="back-btn" onclick="nav('dashboard',document.querySelector('.sb-item'))"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 3L5 8l5 5"/></svg>Back to dashboard</button>
+    <div class="phase-header">
+      <div class="phase-header-num" style="background:#e1f5ee;color:#0f6e56">6</div>
+      <div><div class="phase-header-title">Soft Launch & Marketing</div></div>
+    </div>
+    <div class="phase-timeline">
+      <span>Months 10–18</span><span class="sep">·</span>
+      <span class="badge badge-todo">To do</span><span class="sep">·</span>
+      <span>Est. cost: $50,000–150,000 MXN</span>
+    </div>
+
+    <div class="info-box green" style="margin-bottom:14px">
+      <strong>Revenue starts here.</strong> The soft launch is your chance to iron out workflows with real patients before marketing at full volume. Start with physician referrals (your highest-trust channel), then layer in walk-ins and corporate. Your first 100 patients define your reputation.
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="card">
+          <div class="phase-section-title">Pre-launch (Month 10–12)</div>
+          <div class="task-item">
+            <div class="task-icon" style="background:#e1f5ee;color:#0f6e56">◎</div>
+            <div class="task-body">
+              <div class="task-name">Physician referral outreach (30–50 médicos)</div>
+              <div class="task-detail">Visit general practitioners, internists, gynecologists, and pediatricians within 3km of your lab. Bring: test menu, pricing sheet, turnaround time commitments, sample result report. Offer free pickup service for referred patients' samples. This is your #1 revenue driver in year 1.</div>
+              <div class="task-tags"><span class="task-tag tag-critical">Highest ROI activity</span><span class="task-tag tag-time">4–6 weeks</span></div>
+            </div>
+          </div>
+          <div class="task-item">
+            <div class="task-icon" style="background:#e1f5ee;color:#0f6e56">◎</div>
+            <div class="task-body">
+              <div class="task-name">Set pricing strategy</div>
+              <div class="task-detail">Position 20–40% above Salud Digna, 30–50% below hospital labs. Example: BHC at $120–180 (vs. Salud Digna $70, Hospital Ángeles $350). Create bundled "perfiles" (checkup packages) at attractive price points — these drive average ticket up.</div>
+              <div class="task-tags"><span class="task-tag tag-tip">Perfiles = higher ticket</span></div>
+            </div>
+          </div>
+          <div class="task-item">
+            <div class="task-icon" style="background:#e1f5ee;color:#0f6e56">◎</div>
+            <div class="task-body">
+              <div class="task-name">Google Business Profile setup</div>
+              <div class="task-detail">Critical for local discovery. Complete profile with: photos (clean, modern lab), hours, test list, phone/WhatsApp. Respond to every review. 80%+ of new walk-in patients in Querétaro find labs via Google Maps.</div>
+              <div class="task-tags"><span class="task-tag tag-tip">Free, high-impact</span></div>
+            </div>
+          </div>
+          <div class="task-item">
+            <div class="task-icon" style="background:#e1f5ee;color:#0f6e56">◎</div>
+            <div class="task-body">
+              <div class="task-name">WhatsApp Business for results delivery</div>
+              <div class="task-detail">Patients in Mexico expect WhatsApp communication. Set up a Business account for: appointment confirmations, result delivery (PDF), and follow-up. Automated messages for fasting reminders the night before.</div>
+              <div class="task-tags"><span class="task-tag tag-tip">Patient expectation in MX</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="phase-section-title">Launch marketing (Month 12–18)</div>
+          <div class="task-item">
+            <div class="task-icon" style="background:#fbeaf0;color:#993556">◎</div>
+            <div class="task-body">
+              <div class="task-name">Grand opening event</div>
+              <div class="task-detail">Invite local physicians, neighborhood residents, and press. Offer free basic checkup (BHC + glucosa) for the first 50 visitors. Creates buzz and gets patients into your LIS for follow-up.</div>
+              <div class="task-tags"><span class="task-tag tag-cost">$10,000–20,000 MXN</span></div>
+            </div>
+          </div>
+          <div class="task-item">
+            <div class="task-icon" style="background:#fbeaf0;color:#993556">◎</div>
+            <div class="task-body">
+              <div class="task-name">Social media & digital presence</div>
+              <div class="task-detail">Facebook page (still dominant in QRO for healthcare), Instagram for brand building, Google Ads for local search ("laboratorio clínico Querétaro"). Budget: $5,000–15,000/mo initially. Track cost-per-patient-acquired.</div>
+              <div class="task-tags"><span class="task-tag tag-cost">$5,000–15,000/mo</span></div>
+            </div>
+          </div>
+          <div class="task-item">
+            <div class="task-icon" style="background:#fbeaf0;color:#993556">◎</div>
+            <div class="task-body">
+              <div class="task-name">Corporate health contracts</div>
+              <div class="task-detail">Approach HR departments of manufacturing plants and offices in El Marqués industrial corridor. Offer annual employee health screening packages (NOM-030, pre-employment exams). This channel can deliver 30–50 studies in a single day.</div>
+              <div class="task-tags"><span class="task-tag tag-tip">High-volume channel</span><span class="task-tag tag-time">Month 14+</span></div>
+            </div>
+          </div>
+          <div class="task-item">
+            <div class="task-icon" style="background:#fbeaf0;color:#993556">◎</div>
+            <div class="task-body">
+              <div class="task-name">Toma a domicilio (home collection)</div>
+              <div class="task-detail">Offer home phlebotomy for $50–100 MXN surcharge. Especially valued in Juriquilla/Zibatá (gated communities, young families). Requires a trained phlebotomist with a cooler box and proper sample transport protocol.</div>
+              <div class="task-tags"><span class="task-tag tag-tip">Differentiator in Juriquilla</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card">
+          <div class="phase-section-title">Deliverables when phase is complete</div>
+          <div class="deliverable">Physician referral network active (30+ médicos visited)</div>
+          <div class="deliverable">Pricing sheet finalized and printed</div>
+          <div class="deliverable">Google Business Profile live with photos & reviews</div>
+          <div class="deliverable">WhatsApp Business configured for results</div>
+          <div class="deliverable">Social media accounts active</div>
+          <div class="deliverable">First 100 patients processed</div>
+          <div class="deliverable">At least 1 corporate contract signed</div>
+        </div>
+
+        <div class="card">
+          <div class="phase-section-title">Revenue ramp targets</div>
+          <div class="fin-row"><div class="fin-label">Month 1 (soft launch)</div><div class="fin-val">50–80 studies</div></div>
+          <div class="fin-row"><div class="fin-label">Month 3</div><div class="fin-val">120–180 studies</div></div>
+          <div class="fin-row"><div class="fin-label">Month 6</div><div class="fin-val">200–300 studies</div></div>
+          <div class="fin-row"><div class="fin-label">Month 12</div><div class="fin-val">350–500 studies</div></div>
+          <div class="fin-row" style="border-top:1.5px solid var(--border-strong);margin-top:5px;padding-top:10px">
+            <div class="fin-label" style="font-weight:500;color:var(--text-primary)">Break-even target</div>
+            <div class="fin-val total">~250–300 studies/mo</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="phase-section-title">Marketing budget estimate</div>
+          <div class="fin-row"><div class="fin-label">Grand opening event</div><div class="fin-val">$15,000</div></div>
+          <div class="fin-row"><div class="fin-label">Branding (logo, collateral, signage)</div><div class="fin-val">$20,000–40,000</div></div>
+          <div class="fin-row"><div class="fin-label">Digital ads (first 6 months)</div><div class="fin-val">$30,000–90,000</div></div>
+          <div class="fin-row"><div class="fin-label">Printed materials (physician kits)</div><div class="fin-val">$5,000–10,000</div></div>
+          <div class="fin-row" style="border-top:1.5px solid var(--border-strong);margin-top:5px;padding-top:10px">
+            <div class="fin-label" style="font-weight:500;color:var(--text-primary)">Total marketing year 1</div>
+            <div class="fin-val total">$70,000–155,000 MXN</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="phase-section-title">Competitive edge playbook</div>
+          <div class="info-box green">
+            <strong>Resultado en 4 horas:</strong> This is your killer differentiator. Salud Digna takes 24–48h. Hospital labs take 24h+. If you can promise and deliver same-morning results for common panels (BHC, QS, lipid), physicians will refer to you over everyone.<br><br>
+            <strong>WhatsApp results + home collection</strong> = the modern Mexican patient's ideal experience. No one else in mid-market Querétaro is doing both well.<br><br>
+            <strong>Physician loyalty:</strong> Send monthly "thank you" summaries to referring doctors showing volume referred. Make them feel like partners, not just referral sources.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ═══ REG DETAIL PANEL ═══ -->
+<div id="reg-panel-overlay" onclick="closeRegPanel()"></div>
+<div id="reg-panel">
+  <div class="rp-header">
+    <div class="rp-icon" id="rp-icon"></div>
+    <div class="rp-header-body">
+      <div class="rp-title" id="rp-title"></div>
+      <div class="rp-subtitle" id="rp-subtitle"></div>
+    </div>
+    <button class="rp-close" onclick="closeRegPanel()">✕</button>
+  </div>
+  <div class="rp-body" id="rp-body"></div>
+</div>
+
+<script>
+  // ── Navigation ──
+  function nav(id, el) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + id).classList.add('active');
+    document.querySelectorAll('.sb-item').forEach(b => b.classList.remove('active'));
+    if (el) el.classList.add('active');
+    // scroll to top
+    document.getElementById('main').scrollTop = 0;
+  }
+
+  // ── Phase detail pages ──
+  function openPhase(num) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-phase-' + num).classList.add('active');
+    // highlight dashboard in sidebar
+    document.querySelectorAll('.sb-item').forEach(b => b.classList.remove('active'));
+    document.querySelector('.sb-item').classList.add('active');
+    document.getElementById('main').scrollTop = 0;
+  }
+
+  // ── Checklist ──
+  const checklistData = [
+    {id:'c1',  cat:'legal',       text:'Choose business structure (S.A. de C.V.)',        sub:'Recommended for liability protection'},
+    {id:'c2',  cat:'legal',       text:'Hire a notario público',                           sub:'For acta constitutiva'},
+    {id:'c3',  cat:'legal',       text:'Register RFC with SAT',                            sub:'Online via sat.gob.mx'},
+    {id:'c4',  cat:'legal',       text:'Open business bank account',                       sub:'BBVA, Banamex, or Santander business'},
+    {id:'c5',  cat:'legal',       text:'Register employer with IMSS',                      sub:'Required once you hire staff'},
+    {id:'c6',  cat:'regulatory',  text:'Identify and contract Director Técnico (QFB)',     sub:'Most critical step for COFEPRIS'},
+    {id:'c7',  cat:'regulatory',  text:'Create COFEPRIS SIVISAM account',                  sub:'cofepris.gob.mx portal'},
+    {id:'c8',  cat:'regulatory',  text:'File Aviso de Funcionamiento',                     sub:'Via SIVISAM online'},
+    {id:'c9',  cat:'regulatory',  text:'Prepare Licencia Sanitaria application',           sub:'Equipment list, floor plan, QFB cédula'},
+    {id:'c10', cat:'regulatory',  text:'Draft NOM-087 RPBI waste management plan',         sub:'Hire authorized waste carrier'},
+    {id:'c11', cat:'regulatory',  text:'COFEPRIS physical inspection',                     sub:'Schedule after filing; allow 60–120 days'},
+    {id:'c12', cat:'regulatory',  text:'Obtain Licencia Municipal de Apertura',            sub:'Municipio de Querétaro'},
+    {id:'c13', cat:'regulatory',  text:'Protección Civil inspection',                      sub:'Fire safety, extinguishers, exits'},
+    {id:'c14', cat:'ops',         text:'Define test menu (initial 50–80 studies)',         sub:'BHC, QS, perfil lipídico, uroanálisis, etc.'},
+    {id:'c15', cat:'ops',         text:'Get 3+ equipment quotes (analyzers)',              sub:'Beckman, Roche, Sysmex, Mindray'},
+    {id:'c16', cat:'ops',         text:'Sign lease with servicios médicos uso de suelo',   sub:'Min 60m², ground floor preferred'},
+    {id:'c17', cat:'ops',         text:'Select and implement LIS software',                sub:'LabSoft, HealthPath, or custom'},
+    {id:'c18', cat:'ops',         text:'Visit 30 physicians for referral agreements',      sub:'Key revenue channel'},
+  ];
+
+  const checks = {};
+  checklistData.forEach(c => checks[c.id] = false);
+  let activeFilter = 'all';
+
+  function renderChecklist() {
+    const filtered = activeFilter === 'all'
+      ? checklistData
+      : checklistData.filter(c => c.cat === activeFilter);
+    document.getElementById('checklist-card').innerHTML = filtered.map(c => `
+      <div class="checklist-item">
+        <div class="check-box ${checks[c.id] ? 'checked' : ''}" onclick="toggleCheck('${c.id}')">
+          ${checks[c.id] ? '✓' : ''}
+        </div>
+        <div>
+          <div class="check-text ${checks[c.id] ? 'done' : ''}">${c.text}</div>
+          <div class="check-sub">${c.sub}</div>
+        </div>
+      </div>`).join('');
+  }
+
+  function toggleCheck(id) {
+    checks[id] = !checks[id];
+    renderChecklist();
+  }
+
+  function filterChecklist(f, el) {
+    activeFilter = f;
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    renderChecklist();
+  }
+
+  renderChecklist();
+
+  // ══════════════════════════════════════════
+  // ── FINANCIAL CALCULATOR ──
+  // ══════════════════════════════════════════
+  const scenarios = {
+    conservative: { studies:150, ticket:500, corp:10, rent:20000, staff:3, reagent:38, startup:1800000 },
+    base:         { studies:300, ticket:600, corp:20, rent:25000, staff:4, reagent:35, startup:1800000 },
+    optimistic:   { studies:500, ticket:700, corp:30, rent:30000, staff:6, reagent:32, startup:2000000 },
+  };
+  function setScenario(key, el) {
+    const s = scenarios[key];
+    document.getElementById('s-studies').value = s.studies;
+    document.getElementById('s-ticket').value = s.ticket;
+    document.getElementById('s-corp').value = s.corp;
+    document.getElementById('s-rent').value = s.rent;
+    document.getElementById('s-staff').value = s.staff;
+    document.getElementById('s-reagent').value = s.reagent;
+    document.getElementById('s-startup').value = s.startup;
+    document.querySelectorAll('.scenario-tab').forEach(t=>t.classList.remove('active'));
+    el.classList.add('active');
+    calcUpdate();
+  }
+  function fmt(n) { return n.toLocaleString('en-US'); }
+  function calcUpdate() {
+    const studies = +document.getElementById('s-studies').value;
+    const ticket = +document.getElementById('s-ticket').value;
+    const corpPct = +document.getElementById('s-corp').value;
+    const rent = +document.getElementById('s-rent').value;
+    const staff = +document.getElementById('s-staff').value;
+    const reagentPct = +document.getElementById('s-reagent').value;
+    const eqModel = +document.getElementById('s-eqmodel').value;
+    const startup = +document.getElementById('s-startup').value;
+
+    document.getElementById('v-studies').textContent = studies;
+    document.getElementById('v-ticket').textContent = fmt(ticket);
+    document.getElementById('v-corp').textContent = corpPct + '%';
+    document.getElementById('v-rent').textContent = fmt(rent);
+    document.getElementById('v-staff').textContent = staff;
+    document.getElementById('v-reagent').textContent = reagentPct + '%';
+    document.getElementById('v-eqmodel').textContent = eqModel === 0 ? 'Purchase' : 'Comodato';
+    document.getElementById('v-startup').textContent = fmt(startup);
+
+    const revenue = studies * ticket;
+    const corpRevenue = Math.round(revenue * corpPct / 100);
+    const patientRevenue = revenue - corpRevenue;
+    const avgPayPerPerson = Math.round(staff <= 3 ? 16000 : staff <= 5 ? 15000 : 14000);
+    const payroll = Math.round(staff * avgPayPerPerson * 1.35);
+    const reagentCost = Math.round(revenue * reagentPct / 100);
+    const rentUtil = rent + 5000;
+    const misc = 15000;
+    const totalCost = payroll + reagentCost + rentUtil + misc;
+    const ebitda = revenue - totalCost;
+    const margin = revenue > 0 ? Math.round(ebitda / revenue * 100) : 0;
+
+    const fixedCosts = payroll + rentUtil + misc;
+    const varMargin = ticket * (1 - reagentPct / 100);
+    const breakeven = varMargin > 0 ? Math.ceil(fixedCosts / varMargin) : 999;
+    const annualEbitda = ebitda * 12;
+    const payback = annualEbitda > 0 ? (startup / annualEbitda).toFixed(1) : '∞';
+    const utilPct = Math.round(studies / 800 * 100);
+
+    document.getElementById('co-revenue').textContent = '$' + fmt(revenue);
+    document.getElementById('co-revenue').style.color = 'var(--green-dark)';
+    document.getElementById('co-costs').textContent = '-$' + fmt(totalCost);
+    document.getElementById('co-costs').style.color = 'var(--red)';
+    document.getElementById('co-ebitda').textContent = (ebitda >= 0 ? '$' : '-$') + fmt(Math.abs(ebitda));
+    document.getElementById('co-ebitda').style.color = ebitda >= 0 ? 'var(--blue)' : 'var(--red)';
+
+    document.getElementById('cr-patient').textContent = '$' + fmt(patientRevenue);
+    document.getElementById('cr-corp').textContent = '$' + fmt(corpRevenue);
+    document.getElementById('cr-payroll').textContent = '-$' + fmt(payroll);
+    document.getElementById('cr-reagent').textContent = '-$' + fmt(reagentCost);
+    document.getElementById('cr-rent').textContent = '-$' + fmt(rentUtil);
+    document.getElementById('cr-misc').textContent = '-$' + fmt(misc);
+    document.getElementById('cr-margin').textContent = margin + '%';
+    document.getElementById('cr-margin').style.color = margin >= 20 ? 'var(--green-dark)' : margin >= 0 ? 'var(--amber)' : 'var(--red)';
+
+    document.getElementById('co-breakeven').textContent = breakeven;
+    document.getElementById('co-payback').textContent = payback === '∞' ? '∞' : payback + ' yr';
+
+    document.getElementById('cb-util').style.width = Math.min(utilPct, 100) + '%';
+    document.getElementById('cb-util').style.background = utilPct > 80 ? 'var(--amber)' : 'var(--green)';
+    document.getElementById('cb-util-text').textContent = utilPct + '% of 800/mo capacity';
+  }
+  calcUpdate();
+
+  // ══════════════════════════════════════════
+  // ── GANTT TIMELINE ──
+  // ══════════════════════════════════════════
+  (function(){
+    const months = ['M1','M2','M3','M4','M5','M6','M7','M8','M9','M10','M11','M12','M13','M14','M15','M16','M17','M18'];
+    const mEl = document.getElementById('gantt-months');
+    mEl.innerHTML = months.map(m=>`<div class="gantt-mo">${m}</div>`).join('');
+
+    const phases = [
+      { name:'Research & Planning', num:1, color:'#3b82f6', start:0, end:2 },
+      { name:'Legal & Corporate', num:2, color:'#f59e0b', start:1, end:4 },
+      { name:'COFEPRIS & Permits', num:3, color:'#ef4444', start:2, end:9 },
+      { name:'Infrastructure & Equip', num:4, color:'#8b5cf6', start:5, end:10 },
+      { name:'Staffing & Training', num:5, color:'#22c55e', start:7, end:12 },
+      { name:'Soft Launch & Marketing', num:6, color:'#0ea5e9', start:9, end:18 },
+    ];
+    const milestones = [
+      { name:'COFEPRIS filed', month:3, color:'#ef4444' },
+      { name:'Equipment ready', month:8, color:'#8b5cf6' },
+      { name:'Inspection', month:9, color:'#f59e0b' },
+      { name:'First patient', month:10, color:'#22c55e' },
+    ];
+
+    const rowsEl = document.getElementById('gantt-rows');
+    const cellW = 100 / 18;
+    phases.forEach(p => {
+      const barLeft = p.start * cellW;
+      const barWidth = (p.end - p.start) * cellW;
+      rowsEl.innerHTML += `
+        <div class="gantt-row">
+          <div class="gantt-row-label"><div class="gnum" style="background:${p.color}20;color:${p.color}">${p.num}</div>${p.name}</div>
+          <div class="gantt-bars">
+            ${months.map((_,i)=>`<div class="gantt-grid-line" style="left:${i*cellW}%"></div>`).join('')}
+            <div class="gantt-bar" style="left:${barLeft}%;width:${barWidth}%;background:${p.color}">M${p.start+1}–${p.end}</div>
+          </div>
+        </div>`;
+    });
+    // milestone row
+    rowsEl.innerHTML += `
+      <div class="gantt-row" style="margin-top:6px;padding-top:8px;border-top:0.5px solid var(--border)">
+        <div class="gantt-row-label" style="font-size:11px;color:var(--text-tertiary)">Milestones</div>
+        <div class="gantt-bars">
+          ${milestones.map(m=>`<div class="gantt-milestone" style="left:calc(${(m.month-0.5)*cellW}% - 7px);background:${m.color}" title="${m.name}"></div>`).join('')}
+        </div>
+      </div>`;
+
+    const legend = document.getElementById('gantt-legend');
+    phases.forEach(p => {
+      legend.innerHTML += `<div class="gantt-legend-item"><div class="gantt-legend-dot" style="background:${p.color}"></div>${p.name}</div>`;
+    });
+    legend.innerHTML += milestones.map(m=>`<div class="gantt-legend-item"><div class="gantt-legend-dot" style="background:${m.color};transform:rotate(45deg);border-radius:2px;width:8px;height:8px"></div>${m.name}</div>`).join('');
+  })();
+
+  // ══════════════════════════════════════════
+  // ── PRICING MATRIX ──
+  // ══════════════════════════════════════════
+  const pricingData = [
+    { cat:'Hematología' },
+    { study:'Biometría Hemática Completa (BHC)', sd:70, chopo:140, hospital:350, yours:150 },
+    { study:'Velocidad de Sedimentación (VSG)', sd:45, chopo:80, hospital:180, yours:90 },
+    { study:'Grupo Sanguíneo y Rh', sd:60, chopo:120, hospital:250, yours:130 },
+    { study:'Reticulocitos', sd:80, chopo:150, hospital:300, yours:160 },
+    { cat:'Química Clínica' },
+    { study:'Química Sanguínea 6', sd:90, chopo:180, hospital:400, yours:200 },
+    { study:'Química Sanguínea 12', sd:130, chopo:260, hospital:580, yours:280 },
+    { study:'Química Sanguínea 27', sd:200, chopo:400, hospital:900, yours:420 },
+    { study:'Glucosa', sd:35, chopo:70, hospital:150, yours:75 },
+    { study:'Hemoglobina Glucosilada (HbA1c)', sd:120, chopo:250, hospital:500, yours:260 },
+    { study:'Ácido Úrico', sd:40, chopo:80, hospital:180, yours:85 },
+    { study:'Perfil Lipídico (colesterol, TG, HDL, LDL)', sd:100, chopo:200, hospital:450, yours:220 },
+    { cat:'Perfil Tiroideo' },
+    { study:'TSH', sd:100, chopo:200, hospital:450, yours:210 },
+    { study:'T3 Total', sd:110, chopo:220, hospital:480, yours:230 },
+    { study:'T4 Libre', sd:110, chopo:220, hospital:480, yours:230 },
+    { cat:'Uroanálisis' },
+    { study:'Examen General de Orina (EGO)', sd:40, chopo:80, hospital:200, yours:90 },
+    { study:'Urocultivo', sd:120, chopo:250, hospital:500, yours:260 },
+    { cat:'Coagulación' },
+    { study:'Tiempo de Protrombina (TP/INR)', sd:70, chopo:140, hospital:320, yours:150 },
+    { study:'Tiempo de Tromboplastina (TTPa)', sd:70, chopo:140, hospital:320, yours:150 },
+    { cat:'Inmunología / Serología' },
+    { study:'Antígeno Prostático (PSA)', sd:140, chopo:280, hospital:600, yours:300 },
+    { study:'Prueba de Embarazo (hCG sangre)', sd:80, chopo:160, hospital:350, yours:170 },
+    { study:'VDRL', sd:60, chopo:120, hospital:280, yours:130 },
+    { study:'VIH (ELISA)', sd:100, chopo:200, hospital:450, yours:210 },
+    { cat:'Otros' },
+    { study:'Examen Coproparasitoscópico (CPS)', sd:40, chopo:80, hospital:180, yours:85 },
+    { study:'Perfil Hepático', sd:120, chopo:250, hospital:550, yours:260 },
+  ];
+
+  function renderPricingTable() {
+    const tbl = document.getElementById('pricing-table');
+    let html = '<thead><tr><th>Estudio</th><th style="text-align:right">Salud Digna</th><th style="text-align:right">Chopo</th><th style="text-align:right">Hospital</th><th style="text-align:right;color:var(--green-dark)">LabQro (editable)</th><th style="text-align:right">vs. Chopo</th></tr></thead><tbody>';
+    pricingData.forEach((row, i) => {
+      if (row.cat) {
+        html += `<tr class="cat-row"><td colspan="6">${row.cat}</td></tr>`;
+      } else {
+        const diff = row.yours && row.chopo ? Math.round((row.yours - row.chopo) / row.chopo * 100) : 0;
+        const diffColor = diff < 0 ? 'var(--green-dark)' : diff > 0 ? 'var(--red)' : 'var(--text-tertiary)';
+        const diffText = diff > 0 ? '+' + diff + '%' : diff + '%';
+        html += `<tr>
+          <td>${row.study}</td>
+          <td class="price-cell">$${row.sd}</td>
+          <td class="price-cell">$${row.chopo}</td>
+          <td class="price-cell">$${row.hospital}</td>
+          <td class="price-cell your-price"><input type="number" value="${row.yours}" data-idx="${i}" onchange="updatePricing(${i}, this.value)"></td>
+          <td class="price-cell" style="color:${diffColor};font-size:11px">${diffText}</td>
+        </tr>`;
+      }
+    });
+    html += '</tbody>';
+    tbl.innerHTML = html;
+    updatePricingSummary();
+  }
+  function updatePricing(idx, val) {
+    pricingData[idx].yours = +val;
+    renderPricingTable();
+  }
+  function updatePricingSummary() {
+    const tests = pricingData.filter(r => r.study);
+    const avgYours = Math.round(tests.reduce((s,r) => s + (r.yours||0), 0) / tests.length);
+    const avgSD = Math.round(tests.reduce((s,r) => s + (r.sd||0), 0) / tests.length);
+    const avgChopo = Math.round(tests.reduce((s,r) => s + (r.chopo||0), 0) / tests.length);
+    const avgHosp = Math.round(tests.reduce((s,r) => s + (r.hospital||0), 0) / tests.length);
+    const vsSD = Math.round((avgYours - avgSD) / avgSD * 100);
+    const vsChopo = Math.round((avgYours - avgChopo) / avgChopo * 100);
+    const vsHosp = Math.round((avgYours - avgHosp) / avgHosp * 100);
+    document.getElementById('pricing-summary').innerHTML = `
+      <div class="calc-row"><div class="calc-row-label">Avg LabQro price</div><div class="calc-row-val" style="color:var(--green-dark)">$${avgYours} MXN</div></div>
+      <div class="calc-row"><div class="calc-row-label">Avg Salud Digna</div><div class="calc-row-val">$${avgSD} MXN</div></div>
+      <div class="calc-row"><div class="calc-row-label">Avg Chopo</div><div class="calc-row-val">$${avgChopo} MXN</div></div>
+      <div class="calc-row"><div class="calc-row-label">Avg Hospital</div><div class="calc-row-val">$${avgHosp} MXN</div></div>
+      <div class="calc-divider"></div>
+      <div class="calc-row"><div class="calc-row-label">vs. Salud Digna</div><div class="calc-row-val" style="color:${vsSD>0?'var(--green-dark)':'var(--red)'}">+${vsSD}% premium</div></div>
+      <div class="calc-row"><div class="calc-row-label">vs. Chopo</div><div class="calc-row-val" style="color:${vsChopo<0?'var(--green-dark)':'var(--red)'}">${vsChopo}%</div></div>
+      <div class="calc-row"><div class="calc-row-label">vs. Hospital</div><div class="calc-row-val" style="color:${vsHosp<0?'var(--green-dark)':'var(--red)'}">${vsHosp}%</div></div>
+    `;
+    const pos = vsSD > 40 && vsChopo < 0 ? 'Mid-market ✓' : vsSD < 20 ? 'Too close to low-cost' : 'Positioned high';
+    document.getElementById('pricing-position').textContent = pos;
+  }
+  renderPricingTable();
+
+  // ══════════════════════════════════════════
+  // ── LOCATION SCORING ──
+  // ══════════════════════════════════════════
+  const locCriteria = [
+    { name: 'Monthly rent', weight: 12, inverse: true },
+    { name: 'Uso de suelo confirmed', weight: 15 },
+    { name: 'Proximity to médicos', weight: 14 },
+    { name: 'Foot traffic / visibility', weight: 12 },
+    { name: 'Parking available', weight: 8 },
+    { name: 'Public transit access', weight: 7 },
+    { name: 'Competition density (lower=better)', weight: 10, inverse: true },
+    { name: 'Space (m², layout)', weight: 10 },
+    { name: 'Condition / buildout cost', weight: 7 },
+    { name: 'Neighborhood income level', weight: 5 },
+  ];
+  let locations = [
+    { name: 'Juriquilla / Zibatá', scores: [3,0,3,2,4,2,5,4,3,5], notes:'' },
+    { name: 'Satélite / Epigmenio', scores: [4,0,4,5,3,4,2,3,4,3], notes:'' },
+    { name: 'Centro / Constituyentes', scores: [3,0,5,5,2,5,1,3,3,3], notes:'' },
+  ];
+
+  function calcLocScore(loc) {
+    let total = 0, maxTotal = 0;
+    locCriteria.forEach((c, i) => {
+      total += (loc.scores[i] || 0) * c.weight;
+      maxTotal += 5 * c.weight;
+    });
+    return Math.round(total / maxTotal * 100);
+  }
+
+  function renderLocations() {
+    const grid = document.getElementById('loc-grid');
+    const allScores = locations.map(calcLocScore);
+    const maxScore = Math.max(...allScores, 0);
+    let html = '';
+    locations.forEach((loc, li) => {
+      const score = allScores[li];
+      const isWinner = score === maxScore && score > 0;
+      const circleColor = score >= 70 ? 'background:#e1f5ee;color:#0f6e56' : score >= 45 ? 'background:#e6f1fb;color:#185fa5' : 'background:#f1efe8;color:#5f5e5a';
+      html += `<div class="loc-card ${isWinner?'winner':''}">
+        <button class="loc-remove" onclick="removeLoc(${li})" title="Remove">✕</button>
+        <div class="loc-card-header">
+          <input class="loc-name-input" value="${loc.name}" onchange="locations[${li}].name=this.value;renderLocations()" placeholder="Location name">
+          <div class="loc-score-circle" style="${circleColor}">${score}</div>
+        </div>`;
+      locCriteria.forEach((c, ci) => {
+        html += `<div class="loc-criterion">
+          <div class="loc-criterion-label">${c.name}</div>
+          <div class="loc-criterion-weight">${c.weight}%</div>
+          <div class="loc-stars">
+            ${[1,2,3,4,5].map(s=>`<button class="loc-star ${loc.scores[ci]>=s?'filled':''}" onclick="setLocScore(${li},${ci},${s})">${s}</button>`).join('')}
+          </div>
+        </div>`;
+      });
+      html += `<textarea class="loc-notes-input" placeholder="Visit notes..." onchange="locations[${li}].notes=this.value">${loc.notes}</textarea>`;
+      html += `${isWinner?'<div style="margin-top:8px"><span class="badge" style="background:#e1f5ee;color:#085041">★ Highest score</span></div>':''}`;
+      html += `</div>`;
+    });
+    html += `<button class="loc-add-btn" onclick="addLocation()"><span style="font-size:24px">+</span>Add location</button>`;
+    grid.innerHTML = html;
+  }
+  function setLocScore(li, ci, val) {
+    locations[li].scores[ci] = locations[li].scores[ci] === val ? val - 1 : val;
+    renderLocations();
+  }
+  function addLocation() {
+    locations.push({ name: '', scores: new Array(locCriteria.length).fill(0), notes: '' });
+    renderLocations();
+  }
+  function removeLoc(li) {
+    locations.splice(li, 1);
+    renderLocations();
+  }
+  renderLocations();
+
+  // ══════════════════════════════════════════
+  // ── PHYSICIAN CRM ──
+  // ══════════════════════════════════════════
+  const crmStages = ['Not contacted','Visited','Interested','Referring','Active'];
+  const crmColors = ['#999890','#185fa5','#854f0b','#1d9e75','#0f6e56'];
+  let physicians = [
+    { name:'Dr. García López', spec:'Medicina General', clinic:'Consultorio Juriquilla', notes:'', stage:0 },
+    { name:'Dr. Ramírez Soto', spec:'Ginecología', clinic:'Hospital San José', notes:'', stage:0 },
+    { name:'Dr. Hernández M.', spec:'Medicina Interna', clinic:'Centro Médico Qro', notes:'', stage:0 },
+  ];
+
+  function renderCRM() {
+    const pipeline = document.getElementById('crm-pipeline');
+    const stats = document.getElementById('crm-stats');
+    const stageCounts = crmStages.map((_, si) => physicians.filter(p => p.stage === si).length);
+
+    stats.innerHTML = crmStages.map((s, i) => `
+      <div class="crm-stat">
+        <div class="crm-stat-val" style="color:${crmColors[i]}">${stageCounts[i]}</div>
+        <div class="crm-stat-label">${s}</div>
+      </div>`).join('');
+
+    pipeline.innerHTML = crmStages.map((stage, si) => {
+      const cards = physicians.filter(p => p.stage === si);
+      return `<div class="crm-col">
+        <div class="crm-col-header" style="color:${crmColors[si]};border-color:${crmColors[si]}">
+          ${stage} <span class="crm-col-count">${cards.length}</span>
+        </div>
+        ${cards.map(p => {
+          const pi = physicians.indexOf(p);
+          return `<div class="crm-card">
+            <button class="crm-remove" onclick="removePhysician(${pi})" title="Remove">✕</button>
+            <div class="crm-card-name">${p.name}</div>
+            <div class="crm-card-spec">${p.spec}</div>
+            <div class="crm-card-clinic">${p.clinic}</div>
+            <div class="crm-card-actions">
+              ${si > 0 ? `<button class="crm-move-btn" onclick="movePhysician(${pi},${si-1})">← Back</button>` : ''}
+              ${si < 4 ? `<button class="crm-move-btn" onclick="movePhysician(${pi},${si+1})">Next →</button>` : ''}
+            </div>
+          </div>`;
+        }).join('')}
+      </div>`;
+    }).join('');
+  }
+  function addPhysician() {
+    const name = document.getElementById('crm-name').value.trim();
+    const spec = document.getElementById('crm-spec').value.trim();
+    const clinic = document.getElementById('crm-clinic').value.trim();
+    const notes = document.getElementById('crm-notes').value.trim();
+    if (!name) return;
+    physicians.push({ name, spec: spec||'General', clinic: clinic||'', notes, stage: 0 });
+    document.getElementById('crm-name').value = '';
+    document.getElementById('crm-spec').value = '';
+    document.getElementById('crm-clinic').value = '';
+    document.getElementById('crm-notes').value = '';
+    renderCRM();
+  }
+  function movePhysician(pi, newStage) {
+    physicians[pi].stage = newStage;
+    renderCRM();
+  }
+  function removePhysician(pi) {
+    physicians.splice(pi, 1);
+    renderCRM();
+  }
+  renderCRM();
+
+  // ══════════════════════════════════════════
+  // ── EQUIPMENT COMPARE ──
+  // ══════════════════════════════════════════
+  const eqCategories = ['hematology','chemistry','coagulation','other'];
+  const eqCatNames = { hematology:'Hematología', chemistry:'Química Clínica', coagulation:'Coagulación', other:'Otros' };
+  let eqData = {
+    hematology: {
+      specs: ['Brand / Model','Throughput (tests/hr)','Purchase price (MXN)','Comodato available','Min reagent volume/mo','Reagent cost/test','Maintenance (annual)','Warranty'],
+      options: [
+        ['Sysmex XN-550','60','$380,000','Yes','200 tests','$18','$25,000','2 yr'],
+        ['Mindray BC-5150','50','$220,000','Yes','150 tests','$15','$15,000','2 yr'],
+        ['Beckman DxH 520','55','$350,000','Yes','180 tests','$20','$22,000','3 yr'],
+      ]
+    },
+    chemistry: {
+      specs: ['Brand / Model','Throughput (tests/hr)','Purchase price (MXN)','Comodato available','Min reagent volume/mo','Reagent cost/test','Maintenance (annual)','Warranty'],
+      options: [
+        ['Roche c311','180','$450,000','Yes','300 tests','$12','$30,000','2 yr'],
+        ['Beckman AU480','200','$500,000','Yes','350 tests','$14','$35,000','3 yr'],
+        ['Mindray BS-230','120','$280,000','Yes','200 tests','$10','$18,000','2 yr'],
+      ]
+    },
+    coagulation: {
+      specs: ['Brand / Model','Throughput (tests/hr)','Purchase price (MXN)','Comodato available','Reagent cost/test','Warranty'],
+      options: [
+        ['Stago Start 4','40','$180,000','No','$22','2 yr'],
+        ['Sysmex CS-1600','60','$280,000','Yes','$18','3 yr'],
+        ['Mindray C3510','35','$120,000','No','$16','2 yr'],
+      ]
+    },
+    other: {
+      specs: ['Item','Brand / Model','Purchase price (MXN)','Notes'],
+      options: [
+        ['Centrifuge (x2)','Hettich EBA 200','$45,000','Need 2 minimum'],
+        ['Microscope','Olympus CX23','$35,000','For manual diff & urinalysis'],
+        ['Refrigerator 2-8°C','Thermo TSX505','$60,000','Reagent storage'],
+        ['Freezer -20°C','Thermo TFS-20','$40,000','Sample storage'],
+      ]
+    }
+  };
+  let eqCatActive = 'all';
+
+  function eqCatFilter(cat, el) {
+    eqCatActive = cat;
+    document.querySelectorAll('.eq-cat-tabs .tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    renderEquipment();
+  }
+
+  function renderEquipment() {
+    const wrap = document.getElementById('eq-table-wrap');
+    const cats = eqCatActive === 'all' ? eqCategories : [eqCatActive];
+    let html = '';
+
+    cats.forEach(cat => {
+      const d = eqData[cat];
+      html += `<div style="margin-bottom:20px">
+        <div style="font-size:13px;font-weight:500;color:var(--text-primary);margin-bottom:10px">${eqCatNames[cat]}</div>
+        <table class="eq-table"><thead><tr>`;
+      d.specs.forEach(s => { html += `<th>${s}</th>`; });
+      html += '</tr></thead><tbody>';
+
+      d.options.forEach((opt, oi) => {
+        html += '<tr>';
+        opt.forEach((val, vi) => {
+          const isPrice = val.includes('$') && vi >= 2;
+          html += `<td${isPrice?' style="font-family:var(--font-mono);font-weight:500"':''}>${val}</td>`;
+        });
+        html += '</tr>';
+      });
+      html += '</tbody></table></div>';
+    });
+
+    wrap.innerHTML = html;
+
+    // totals
+    let purchaseTotal = 0;
+    ['hematology','chemistry','coagulation'].forEach(cat => {
+      const prices = eqData[cat].options.map(o => {
+        const priceStr = o[2] || '';
+        return parseInt(priceStr.replace(/[$,]/g,'')) || 0;
+      });
+      purchaseTotal += Math.min(...prices);
+    });
+    const otherTotal = eqData.other.options.reduce((s,o) => {
+      return s + (parseInt((o[2]||'').replace(/[$,]/g,'')) || 0);
+    }, 0);
+
+    document.getElementById('eq-totals').innerHTML = `
+      <div class="calc-row"><div class="calc-row-label">Best-price analyzers (3 categories)</div><div class="calc-row-val">$${fmt(purchaseTotal)}</div></div>
+      <div class="calc-row"><div class="calc-row-label">Other equipment</div><div class="calc-row-val">$${fmt(otherTotal)}</div></div>
+      <div class="calc-divider"></div>
+      <div class="calc-row" style="font-weight:500"><div class="calc-row-label" style="color:var(--text-primary)">Total (lowest per category)</div><div class="calc-row-val" style="color:var(--blue)">$${fmt(purchaseTotal + otherTotal)} MXN</div></div>
+      <div style="font-size:11px;color:var(--text-tertiary);margin-top:6px">With comodato on analyzers: ~$${fmt(otherTotal + 50000)} MXN upfront</div>
+    `;
+
+    document.getElementById('eq-comodato').innerHTML = `
+      <div style="font-size:12px;color:var(--text-secondary);line-height:1.7;margin-bottom:12px">
+        <strong style="color:var(--text-primary)">Purchase scenario:</strong> $${fmt(purchaseTotal)} upfront for analyzers. You buy reagents at market rate (~$10–18/test). Full control, no volume commitments.
+      </div>
+      <div style="font-size:12px;color:var(--text-secondary);line-height:1.7;margin-bottom:12px">
+        <strong style="color:var(--text-primary)">Comodato scenario:</strong> $0 for analyzers. Reagent markup ~30–50% above market ($14–25/test). Locked in 3–5 years. Min volume commitments.
+      </div>
+      <div class="calc-divider"></div>
+      <div style="font-size:12px;color:var(--text-secondary);line-height:1.7">
+        <strong style="color:var(--text-primary)">Break-even analysis:</strong> At 300 tests/mo, the reagent premium costs ~$${fmt(300 * 6 * 12)}/yr extra. Analyzer savings of $${fmt(purchaseTotal)} pay off in <strong>${(purchaseTotal / (300 * 6 * 12)).toFixed(1)} years</strong>. If volume stays below 200 tests/mo, comodato wins. Above 400, purchase wins.
+      </div>
+    `;
+  }
+  renderEquipment();
+
+  // ══════════════════════════════════════════
+  // ── REGULATORY KANBAN BOARD ──
+  // ══════════════════════════════════════════
+  const kanbanCols = ['Not started','In progress','Submitted / Waiting','Complete'];
+  const kanbanColors = ['#999890','#185fa5','#854f0b','#1d9e75'];
+  let permits = [
+    { name:'Acta Constitutiva', dep:null, time:'2–4 weeks', col:0, critical:false },
+    { name:'RFC / Alta SAT', dep:'Acta Constitutiva', time:'1–2 weeks', col:0, critical:true },
+    { name:'e.firma (FIEL)', dep:'RFC / Alta SAT', time:'1 week', col:0, critical:false },
+    { name:'Lease (uso de suelo)', dep:null, time:'2–4 weeks', col:0, critical:true },
+    { name:'IMPI trademark', dep:'Acta Constitutiva', time:'3–6 months', col:0, critical:false },
+    { name:'Director Técnico (QFB)', dep:null, time:'2–8 weeks', col:0, critical:true },
+    { name:'Aviso de Funcionamiento', dep:'RFC / Alta SAT', time:'1–2 weeks', col:0, critical:true },
+    { name:'Licencia Sanitaria COFEPRIS', dep:'Director Técnico (QFB)', time:'3–9 months', col:0, critical:true },
+    { name:'NOM-087 RPBI Plan', dep:'Lease (uso de suelo)', time:'1–2 weeks', col:0, critical:false },
+    { name:'Licencia Municipal', dep:'RFC / Alta SAT', time:'2–4 weeks', col:0, critical:false },
+    { name:'Protección Civil', dep:'Lease (uso de suelo)', time:'2–3 weeks', col:0, critical:false },
+    { name:'IMSS employer registration', dep:'RFC / Alta SAT', time:'1 week', col:0, critical:false },
+    { name:'COFEPRIS inspection', dep:'Licencia Sanitaria COFEPRIS', time:'2–6 months', col:0, critical:true },
+  ];
+
+  function isBlocked(permit) {
+    if (!permit.dep) return false;
+    const depPermit = permits.find(p => p.name === permit.dep);
+    return depPermit && depPermit.col < 3;
+  }
+
+  function renderKanban() {
+    const board = document.getElementById('kanban-board');
+    board.innerHTML = kanbanCols.map((col, ci) => {
+      const items = permits.filter(p => p.col === ci);
+      return `<div class="kanban-col">
+        <div class="kanban-col-header" style="color:${kanbanColors[ci]};border-color:${kanbanColors[ci]}">
+          ${col} <span class="crm-col-count">${items.length}</span>
+        </div>
+        ${items.map(p => {
+          const pi = permits.indexOf(p);
+          const blocked = isBlocked(p);
+          return `<div class="kanban-card ${blocked?'kanban-blocked':''} ${p.critical?'kanban-critical':''}">
+            <div class="kanban-card-name">${p.name}</div>
+            ${p.dep ? `<div class="kanban-card-dep">${blocked?'Blocked by':'Depends on'}: ${p.dep}</div>` : ''}
+            <div class="kanban-card-time">${p.time}</div>
+            <div class="kanban-card-actions">
+              ${ci > 0 ? `<button class="kanban-move" onclick="movePermit(${pi},${ci-1})">←</button>` : ''}
+              ${ci < 3 ? `<button class="kanban-move" onclick="movePermit(${pi},${ci+1})" ${blocked?'disabled style="opacity:0.4;cursor:not-allowed"':''}>→</button>` : ''}
+            </div>
+          </div>`;
+        }).join('')}
+      </div>`;
+    }).join('');
+
+    // dependency map
+    const depMap = document.getElementById('dep-map');
+    depMap.innerHTML = permits.filter(p=>p.dep).map(p =>
+      `<div style="padding:3px 0"><span style="color:var(--text-primary);font-weight:500">${p.name}</span> <span class="dep-arrow">←</span> <span style="color:${isBlocked(p)?'var(--red)':'var(--green-dark)'}">${p.dep} ${isBlocked(p)?'(⊘ blocked)':'(✓ ok)'}</span></div>`
+    ).join('');
+  }
+  function movePermit(pi, newCol) {
+    if (isBlocked(permits[pi]) && newCol > permits[pi].col) return;
+    permits[pi].col = newCol;
+    renderKanban();
+  }
+  renderKanban();
+  const notes = [];
+
+  function saveNote() {
+    const v = document.getElementById('note-input').value.trim();
+    if (!v) return;
+    notes.unshift({
+      text: v,
+      date: new Date().toLocaleDateString('es-MX', {day:'2-digit', month:'short', year:'numeric'})
+    });
+    document.getElementById('note-input').value = '';
+    renderNotes();
+  }
+
+  function renderNotes() {
+    document.getElementById('notes-list').innerHTML = notes.map(n => `
+      <div class="card" style="margin-bottom:10px">
+        <div style="font-size:11px;color:var(--text-tertiary);margin-bottom:6px">${n.date}</div>
+        <div style="font-size:13px;color:var(--text-primary);line-height:1.6">${n.text}</div>
+      </div>`).join('');
+  }
+
+  // ══════════════════════════════════════════
+  // ── REGULATORY DETAIL PANEL ──
+  // ══════════════════════════════════════════
+  const regDetails = {
+    'licencia-sanitaria': {
+      title: 'Licencia Sanitaria',
+      subtitle: 'Federal · COFEPRIS — Permiso principal de operación',
+      icon: '⚕', iconBg: '#fcebeb', iconColor: '#a32d2d',
+      tags: ['Federal', 'Crítico', '3–9 meses', '$5,000–15,000 MXN'],
+      summary: 'La Licencia Sanitaria es el permiso más importante para operar un laboratorio clínico en México. Sin ella, no puedes recibir muestras ni emitir resultados. Es expedida por COFEPRIS (Comisión Federal para la Protección contra Riesgos Sanitarios) y requiere una inspección física de las instalaciones.',
+      quickfacts: [
+        ['Autoridad', 'COFEPRIS (federal)'],
+        ['Tiempo oficial', '60–120 días hábiles (plan para más)'],
+        ['Costo aprox.', '$5,000–15,000 MXN en derechos + honorarios'],
+        ['Vigencia', 'Indefinida, sujeta a inspecciones'],
+        ['Renovación', 'No aplica; se mantiene activa con cumplimiento'],
+      ],
+      steps: [
+        { name: 'Aviso de Funcionamiento previo', detail: 'Debe registrarse en SIVISAM antes o junto con la solicitud de Licencia.' },
+        { name: 'Designar Director Técnico (QFB)', detail: 'Cédula profesional vigente, registrada en Dirección General de Profesiones. No puede ser el mismo que el propietario en todos los casos.' },
+        { name: 'Preparar expediente técnico', detail: 'Incluye: planos del laboratorio, lista de equipos con fichas técnicas, plan RPBI, manual de procedimientos, y contrato del Director Técnico.' },
+        { name: 'Solicitud en portal COFEPRIS / VUCE', detail: 'Ingresar solicitud, adjuntar documentos digitalizados, pagar derechos.' },
+        { name: 'Inspección física', detail: 'COFEPRIS agenda visita. Inspector verifica que instalaciones, equipos y personal coincidan con el expediente presentado.' },
+        { name: 'Resolución y expedición', detail: 'Si todo está en orden, se emite la Licencia. Pueden solicitar subsanaciones.' },
+      ],
+      links: [
+        { name: 'Portal COFEPRIS — Trámites en línea', url: 'https://www.gob.mx/cofepris', icon: '🏛', iconBg: '#fcebeb', iconColor: '#a32d2d' },
+        { name: 'VUCE — Ventanilla Única de Comercio Exterior', url: 'https://www.vuce.gob.mx', icon: '🖥', iconBg: '#e6f1fb', iconColor: '#185fa5' },
+        { name: 'SIVISAM — Sistema de Vigilancia Sanitaria', url: 'https://sivisam.cofepris.gob.mx', icon: '📋', iconBg: '#faeeda', iconColor: '#854f0b' },
+        { name: 'DOF — Ley General de Salud (Art. 198–200)', url: 'https://www.diputados.gob.mx/LeyesBiblio/pdf/LGS.pdf', icon: '📄', iconBg: '#eaf3de', iconColor: '#3b6d11' },
+        { name: 'Guía de trámites COFEPRIS para laboratorios', url: 'https://www.gob.mx/cofepris/acciones-y-programas/establecimientos-de-salud', icon: '📑', iconBg: '#f1efe8', iconColor: '#5f5e5a' },
+      ],
+      warning: 'El tiempo real puede exceder los 9 meses si hay observaciones. Iniciar el trámite lo antes posible es crítico para tu cronograma general.'
+    },
+    'aviso-funcionamiento': {
+      title: 'Aviso de Funcionamiento',
+      subtitle: 'Federal · COFEPRIS — Registro previo obligatorio',
+      icon: '📋', iconBg: '#faeeda', iconColor: '#854f0b',
+      tags: ['Federal', 'Online', '1–2 semanas', 'Costo mínimo'],
+      summary: 'El Aviso de Funcionamiento es un trámite electrónico obligatorio ante COFEPRIS que debe presentarse antes de iniciar operaciones. Es diferente a la Licencia Sanitaria — es un aviso, no un permiso. Se presenta en el portal SIVISAM y genera un número de registro oficial.',
+      quickfacts: [
+        ['Autoridad', 'COFEPRIS vía SIVISAM (federal)'],
+        ['Tiempo', '1–2 semanas hábiles'],
+        ['Costo', 'Mínimo (derechos de presentación)'],
+        ['Vigencia', 'Permanente mientras el establecimiento opere'],
+        ['Requisito previo', 'RFC activo de la empresa'],
+      ],
+      steps: [
+        { name: 'Ingresar a SIVISAM', detail: 'Crear cuenta como establecimiento de salud en sivisam.cofepris.gob.mx.' },
+        { name: 'Completar datos del establecimiento', detail: 'Razón social, RFC, domicilio, tipo de establecimiento (Laboratorio Clínico), actividades.' },
+        { name: 'Designar responsable sanitario', detail: 'Nombre y cédula del Director Técnico (QFB).' },
+        { name: 'Enviar y obtener acuse', detail: 'COFEPRIS emite acuse con número de aviso. Guarda este documento.' },
+      ],
+      links: [
+        { name: 'SIVISAM — Portal oficial COFEPRIS', url: 'https://sivisam.cofepris.gob.mx', icon: '🖥', iconBg: '#faeeda', iconColor: '#854f0b' },
+        { name: 'Guía COFEPRIS: Aviso de Funcionamiento', url: 'https://www.gob.mx/cofepris/documentos/aviso-de-funcionamiento', icon: '📄', iconBg: '#e6f1fb', iconColor: '#185fa5' },
+      ],
+      tip: 'El número de aviso es requerido para la solicitud de Licencia Sanitaria. No pueden tramitarse de forma completamente independiente.'
+    },
+    'nom-007': {
+      title: 'NOM-007-SSA3-2011',
+      subtitle: 'Norma Oficial Mexicana — Infraestructura de laboratorio clínico',
+      icon: '🏗', iconBg: '#e6f1fb', iconColor: '#185fa5',
+      tags: ['Federal', 'Infraestructura', 'Cumplimiento continuo'],
+      summary: 'Esta NOM establece los criterios funcionales y sanitarios mínimos para la organización y funcionamiento de laboratorios clínicos. Define las áreas físicas requeridas, los flujos de trabajo, equipamiento mínimo, y controles de calidad.',
+      quickfacts: [
+        ['Publicación DOF', '23 de noviembre de 2012'],
+        ['Secretaría', 'SSA — Secretaría de Salud'],
+        ['Superficie mínima', '~60 m² (varía según servicios ofrecidos)'],
+        ['Aplica a', 'Todo laboratorio clínico en México'],
+        ['Verificación', 'Durante inspección COFEPRIS'],
+      ],
+      steps: [
+        { name: 'Área de recepción y toma de muestra', detail: 'Zona separada, silla de flebotomía, lavamanos, privacidad para el paciente.' },
+        { name: 'Área de análisis', detail: 'Ventilación adecuada, pisos y paredes lavables, iluminación suficiente, bancas de trabajo.' },
+        { name: 'Área de lavado y esterilización', detail: 'Separada del área de análisis, con tarja especial.' },
+        { name: 'Almacén de reactivos y muestras', detail: 'Refrigeradores a 2–8°C, congelador -20°C, identificación clara.' },
+        { name: 'Baño para personal y pacientes', detail: 'Obligatorio. El del paciente debe estar accesible desde recepción.' },
+      ],
+      links: [
+        { name: 'DOF — NOM-007-SSA3-2011 texto completo', url: 'https://dof.gob.mx/nota_detalle.php?codigo=5284949&fecha=23/11/2012', icon: '📄', iconBg: '#e6f1fb', iconColor: '#185fa5' },
+        { name: 'Catálogo de NOMs SSA — Laboratorio', url: 'https://www.dof.gob.mx/busqueda_detalle.php', icon: '🔍', iconBg: '#f1efe8', iconColor: '#5f5e5a' },
+      ],
+      tip: 'Contratar un arquitecto o asesor que conozca esta NOM antes de firmar el contrato de arrendamiento puede ahorrarte meses de retrasos y adaptaciones costosas.'
+    },
+    'nom-166': {
+      title: 'NOM-166-SSA1-1997',
+      subtitle: 'Norma Oficial Mexicana — Organización y funcionamiento de laboratorios clínicos',
+      icon: '🔬', iconBg: '#eeedfe', iconColor: '#534ab7',
+      tags: ['Federal', 'Calidad y procedimientos', 'Cumplimiento continuo'],
+      summary: 'La NOM-166 es el estándar de calidad operativa para laboratorios clínicos. Establece requisitos para procedimientos analíticos, calibración y mantenimiento de equipos, control de calidad interno y externo, y manejo de muestras.',
+      quickfacts: [
+        ['Publicación DOF', '17 de julio de 1998'],
+        ['Secretaría', 'SSA'],
+        ['Aplica a', 'Todos los procesos analíticos del laboratorio'],
+        ['Control de calidad', 'Requiere programa documentado interno y externo'],
+        ['Calibración', 'Certificados vigentes para todos los equipos'],
+      ],
+      steps: [
+        { name: 'Manual de procedimientos analíticos', detail: 'Documento escrito para cada prueba: principio, reactivos, procedimiento, valores de referencia, interferencias.' },
+        { name: 'Programa de control de calidad interno', detail: 'Uso de sueros control (nivel normal y patológico) en cada corrida analítica. Gráficas de Levey-Jennings.' },
+        { name: 'Control de calidad externo (encuesta)', detail: 'Participar en al menos un programa de evaluación externa. RIQAS, Bio-Rad o similar.' },
+        { name: 'Registros de calibración y mantenimiento', detail: 'Bitácoras por equipo con fechas, valores, firma del responsable.' },
+        { name: 'Manejo y trazabilidad de muestras', detail: 'Registro de recepción, condiciones de transporte, tiempo de estabilidad.' },
+      ],
+      links: [
+        { name: 'DOF — NOM-166-SSA1-1997 texto completo', url: 'https://dof.gob.mx/nota_detalle.php?codigo=4905982&fecha=16/07/1998', icon: '📄', iconBg: '#eeedfe', iconColor: '#534ab7' },
+        { name: 'RIQAS — Programa de control de calidad externo', url: 'https://www.riqas.com', icon: '🌐', iconBg: '#e6f1fb', iconColor: '#185fa5' },
+        { name: 'Bio-Rad Unity — Control de calidad interlaboratorio', url: 'https://www.bio-rad.com/unity', icon: '🔬', iconBg: '#e1f5ee', iconColor: '#0f6e56' },
+      ]
+    },
+    'nom-087': {
+      title: 'NOM-087-SEMARNAT-SSA1-2002',
+      subtitle: 'Residuos Peligrosos Biológico-Infecciosos (RPBI)',
+      icon: '♻', iconBg: '#eaf3de', iconColor: '#3b6d11',
+      tags: ['Federal', 'SEMARNAT + SSA', 'Contrato con transportista', 'Cumplimiento continuo'],
+      summary: 'Esta NOM regula la clasificación, manejo, recolección, almacenamiento, transporte y disposición final de los Residuos Peligrosos Biológico-Infecciosos generados en establecimientos de salud, incluyendo laboratorios clínicos.',
+      quickfacts: [
+        ['Autoridad', 'SEMARNAT y SSA conjuntamente'],
+        ['Publicación DOF', '17 de febrero de 2003'],
+        ['Obligación principal', 'Contrato con empresa transportista y disposición final autorizada'],
+        ['Generación mínima', 'Aplica a todos los generadores, sin importar volumen'],
+        ['Registros', 'Bitácora mensual de generación de RPBI obligatoria'],
+      ],
+      steps: [
+        { name: 'Clasificar residuos generados', detail: 'Punzocortantes (agujas, lancetas), no anatómicos (sangre, cultivos), líquidos corporales.' },
+        { name: 'Contenedores correctos', detail: 'Contenedor rígido rojo para punzocortantes. Bolsa roja para material contaminado. Ambos con símbolo universal de biorriesgo.' },
+        { name: 'Área de almacenamiento temporal', detail: 'Zona delimitada, ventilada, con acceso controlado, en área segregada del laboratorio.' },
+        { name: 'Contratar empresa transportista autorizada', detail: 'Debe tener autorización SEMARNAT vigente. El contrato es documento requerido por COFEPRIS.' },
+        { name: 'Llevar bitácora de generación', detail: 'Registro mensual de kilogramos generados y entregados al transportista. Guardar manifiestos de entrega.' },
+      ],
+      links: [
+        { name: 'DOF — NOM-087-SEMARNAT-SSA1-2002', url: 'https://www.profepa.gob.mx/innovaportal/file/1353/1/nom-087-semarnat-ssa1-2002.pdf', icon: '📄', iconBg: '#eaf3de', iconColor: '#3b6d11' },
+        { name: 'SEMARNAT — Registro de empresas transportistas RPBI', url: 'https://tramites.semarnat.gob.mx', icon: '🏛', iconBg: '#e6f1fb', iconColor: '#185fa5' },
+        { name: 'PROFEPA — Normatividad residuos peligrosos', url: 'https://www.profepa.gob.mx/innovaportal/v/435/1/mx/residuos_peligrosos.html', icon: '🌿', iconBg: '#eaf3de', iconColor: '#3b6d11' },
+      ],
+      tip: 'En Querétaro, empresas como ECOQUIM y STERICYCLE son transportistas RPBI autorizados. Solicitar cotización antes de abrir para incluir este costo en el presupuesto.'
+    },
+    'uso-suelo': {
+      title: 'Uso de Suelo — Municipio de Querétaro',
+      subtitle: 'Estatal/Municipal · SEDESU QRO — Zonificación para servicios médicos',
+      icon: '🗺', iconBg: '#e1f5ee', iconColor: '#0f6e56',
+      tags: ['Municipal', 'Previo al contrato de renta', 'Gratuito', '1–2 semanas'],
+      summary: 'Antes de firmar el contrato de arrendamiento del local, debes verificar que el uso de suelo permita actividades de "servicios médicos" o "salud" en esa dirección específica. Este trámite lo realiza el Municipio de Querétaro a través de la Secretaría de Desarrollo Sustentable (SEDESU) o Dirección de Desarrollo Urbano.',
+      quickfacts: [
+        ['Autoridad', 'Municipio de Querétaro — Desarrollo Urbano'],
+        ['Costo', 'Gratuito a bajo costo (consulta de uso)'],
+        ['Tiempo', '1–2 semanas para constancia escrita'],
+        ['Documento resultado', 'Constancia de Uso de Suelo o Factibilidad de Uso'],
+        ['Obligatorio para', 'Licencia de Apertura Municipal y COFEPRIS'],
+      ],
+      steps: [
+        { name: 'Identificar el predio exacto', detail: 'Clave catastral del inmueble, dirección completa. Puedes obtenerla del dueño del local o en el municipio.' },
+        { name: 'Consulta en línea (opcional)', detail: 'El Municipio de Querétaro tiene portal de consulta de zonificación. Es orientativo; la constancia oficial es vinculante.' },
+        { name: 'Solicitar Constancia de Uso de Suelo', detail: 'Presentar solicitud en Dirección de Desarrollo Urbano del Municipio, con clave catastral y memoria descriptiva de la actividad.' },
+        { name: 'Recibir constancia', detail: 'Documento oficial que confirma que el uso "servicios médicos" es permitido en ese predio. Requieres este papel para la Licencia de Apertura.' },
+      ],
+      links: [
+        { name: 'Municipio de Querétaro — Trámites en línea', url: 'https://www.queretaro.gob.mx/tramites', icon: '🏛', iconBg: '#e1f5ee', iconColor: '#0f6e56' },
+        { name: 'SEDESU Querétaro — Desarrollo Urbano', url: 'https://sedesu.queretaro.gob.mx', icon: '🌐', iconBg: '#e6f1fb', iconColor: '#185fa5' },
+        { name: 'Portal catastral Querétaro', url: 'https://catastro.queretaro.gob.mx', icon: '📍', iconBg: '#faeeda', iconColor: '#854f0b' },
+      ],
+      warning: 'No firmes el contrato de arrendamiento sin antes confirmar el uso de suelo. Un cambio de uso puede costar meses y decenas de miles de pesos.'
+    },
+    'licencia-apertura': {
+      title: 'Licencia de Apertura Municipal',
+      subtitle: 'Municipal · Municipio de Querétaro — Permiso de operación comercial',
+      icon: '🔑', iconBg: '#f5e6f0', iconColor: '#7a2d6b',
+      tags: ['Municipal', '2–4 semanas', '$2,000–5,000 MXN', 'Anual'],
+      summary: 'La Licencia Municipal de Apertura (también llamada Licencia de Funcionamiento) es el permiso del Municipio de Querétaro para operar un establecimiento comercial. Es independiente de la Licencia Sanitaria de COFEPRIS — ambas son obligatorias.',
+      quickfacts: [
+        ['Autoridad', 'Dirección de Gobernación / Tesorería Municipal'],
+        ['Costo', '$2,000–5,000 MXN (depende del giro y superficie)'],
+        ['Tiempo', '2–4 semanas hábiles'],
+        ['Vigencia', 'Anual, con renovación cada año'],
+        ['Requisitos clave', 'Uso de suelo, Protección Civil, RFC, CURP del representante'],
+      ],
+      steps: [
+        { name: 'Reunir documentos', detail: 'RFC, Acta Constitutiva, Constancia de Uso de Suelo, Dictamen de Protección Civil, identificación oficial del representante legal.' },
+        { name: 'Ingreso de solicitud', detail: 'En línea a través del portal del municipio o en ventanilla de Palacio Municipal, Centro Histórico de Querétaro.' },
+        { name: 'Pago de derechos', detail: 'El cálculo depende del giro (salud/servicios médicos) y los metros cuadrados del local.' },
+        { name: 'Inspección ocular', detail: 'El municipio puede enviar un inspector para verificar el establecimiento.' },
+        { name: 'Obtención de licencia', detail: 'Documento físico o digital que debe estar visible en el establecimiento.' },
+      ],
+      links: [
+        { name: 'Municipio de Querétaro — Licencia de Apertura', url: 'https://www.queretaro.gob.mx/tramites/ficha.aspx?q=licencia-apertura', icon: '🔑', iconBg: '#f5e6f0', iconColor: '#7a2d6b' },
+        { name: 'Portal de trámites QRO', url: 'https://tramites.queretaro.gob.mx', icon: '🖥', iconBg: '#e6f1fb', iconColor: '#185fa5' },
+        { name: 'Contacto Dirección de Gobernación Qro.', url: 'https://www.queretaro.gob.mx/directorio', icon: '📞', iconBg: '#eaf3de', iconColor: '#3b6d11' },
+      ]
+    },
+    'proteccion-civil': {
+      title: 'Dictamen de Protección Civil',
+      subtitle: 'Municipal · Querétaro — Inspección de seguridad contra incendios',
+      icon: '🚒', iconBg: '#fcebeb', iconColor: '#a32d2d',
+      tags: ['Municipal', '2–3 semanas', '$1,500–4,000 MXN', 'Inspección física'],
+      summary: 'El Dictamen de Protección Civil certifica que las instalaciones del laboratorio cumplen con los requisitos mínimos de seguridad: extintores, señalética de emergencia, salidas de emergencia, y plan de evacuación. Es emitido por la Dirección de Protección Civil del Municipio de Querétaro.',
+      quickfacts: [
+        ['Autoridad', 'Dirección Municipal de Protección Civil'],
+        ['Costo', '$1,500–4,000 MXN (según superficie)'],
+        ['Tiempo', '2–3 semanas desde solicitud'],
+        ['Inspección', 'Física, en el local terminado'],
+        ['Vigencia', 'Anual'],
+      ],
+      steps: [
+        { name: 'Preparar instalaciones', detail: 'Extintores tipo ABC (1 por cada 200m² mínimo), señalización de salidas y rutas de evacuación, botiquín de primeros auxilios, detector de humo.' },
+        { name: 'Elaborar programa interno de protección civil', detail: 'Documento básico con rutas de evacuación, responsable de emergencias, punto de reunión. Puede ser de 2–3 páginas para un lab pequeño.' },
+        { name: 'Solicitar inspección', detail: 'En línea o presencial en la Dirección de Protección Civil. Presentar: croquis del local, programa interno, RFC.' },
+        { name: 'Inspección física', detail: 'Inspector verifica extintores, señalética, y condiciones del local.' },
+        { name: 'Obtener dictamen favorable', detail: 'Documento requerido para Licencia de Apertura Municipal.' },
+      ],
+      links: [
+        { name: 'Protección Civil Querétaro — Portal municipal', url: 'https://www.queretaro.gob.mx/proteccioncivil', icon: '🚒', iconBg: '#fcebeb', iconColor: '#a32d2d' },
+        { name: 'NOM-002-STPS-2010 — Prevención y protección contra incendios', url: 'https://dof.gob.mx/nota_detalle.php?codigo=5155484&fecha=08/12/2010', icon: '📄', iconBg: '#faeeda', iconColor: '#854f0b' },
+      ],
+      tip: 'Compra los extintores y señalética antes de la inspección, no después. Muchas rechazos son por falta de estos elementos básicos y obligan a programar una segunda visita.'
+    },
+    'imss-registro': {
+      title: 'Registro Patronal IMSS / SAR',
+      subtitle: 'Federal · IMSS — Registro como empleador',
+      icon: '👥', iconBg: '#eeedfe', iconColor: '#534ab7',
+      tags: ['Federal', 'IMSS', 'Al contratar primer empleado', 'Gratuito'],
+      summary: 'El Registro Patronal ante el IMSS es obligatorio en el momento en que contratas a tu primer empleado. Te registra como empleador y te obliga a afiliar a tus trabajadores al seguro social (IMSS), fondo de retiro (AFORE/SAR), e INFONAVIT.',
+      quickfacts: [
+        ['Autoridad', 'Instituto Mexicano del Seguro Social (IMSS)'],
+        ['Costo', 'Gratuito (el costo es la cuota obrero-patronal mensual)'],
+        ['Tiempo', '1–3 días hábiles si está todo en orden'],
+        ['Cuándo hacerlo', 'Antes o en el momento de contratar al primer trabajador'],
+        ['Cuotas aproximadas', '~30–35% del salario integrado del trabajador como costo patronal'],
+      ],
+      steps: [
+        { name: 'Obtener e.firma y RFC activos', detail: 'Son requisitos previos indispensables para cualquier trámite IMSS.' },
+        { name: 'Ingresar al portal IMSS Empresarial', detail: 'idse.imss.gob.mx — Crear cuenta como patrón persona moral.' },
+        { name: 'Registrar razón social y datos de la empresa', detail: 'Actividad económica, domicilio fiscal, número de trabajadores inicial.' },
+        { name: 'Obtener número patronal', detail: 'El IMSS asigna un Número de Registro Patronal (NRP). Guardarlo — lo usarás en cada pago mensual.' },
+        { name: 'Afiliar a cada trabajador', detail: 'Alta IMSS de cada empleado con CURP, NSS, y salario base de cotización, antes de que inicien labores.' },
+      ],
+      links: [
+        { name: 'IMSS — Portal empresarial (IDSE)', url: 'https://idse.imss.gob.mx', icon: '🏛', iconBg: '#eeedfe', iconColor: '#534ab7' },
+        { name: 'IMSS — Guía registro patronal', url: 'https://www.imss.gob.mx/patrones/registro-patronal', icon: '📄', iconBg: '#e6f1fb', iconColor: '#185fa5' },
+        { name: 'SAT — RFC persona moral (requisito previo)', url: 'https://www.sat.gob.mx/tramites/operacion/26027/inscribe-tu-empresa-en-el-rfc', icon: '💼', iconBg: '#eaf3de', iconColor: '#3b6d11' },
+      ],
+      tip: 'El costo patronal IMSS es aproximadamente 30–35% del salario del trabajador. Inclúyelo en tu modelo financiero desde el inicio — es una de las partidas subestimadas con más frecuencia.'
+    }
+  };
+
+  function openRegPanel(key) {
+    const d = regDetails[key];
+    if (!d) return;
+    document.getElementById('rp-icon').style.cssText = `background:${d.iconBg};color:${d.iconColor}`;
+    document.getElementById('rp-icon').textContent = d.icon;
+    document.getElementById('rp-title').textContent = d.title;
+    document.getElementById('rp-subtitle').textContent = d.subtitle;
+
+    let html = '';
+
+    // Tags
+    if (d.tags) {
+      html += `<div class="rp-tags">${d.tags.map(t => `<span class="rp-tag">${t}</span>`).join('')}</div><div style="margin-bottom:16px"></div>`;
+    }
+
+    // Warning / tip callout
+    if (d.warning) {
+      html += `<div class="info-box red" style="margin-bottom:16px">⚠ <strong>Atención:</strong> ${d.warning}</div>`;
+    }
+    if (d.tip) {
+      html += `<div class="info-box green" style="margin-bottom:16px">💡 <strong>Consejo:</strong> ${d.tip}</div>`;
+    }
+
+    // Summary
+    html += `<div class="rp-section"><div class="rp-section-title">Resumen</div><p>${d.summary}</p></div>`;
+
+    // Quick facts
+    if (d.quickfacts) {
+      html += `<div class="rp-section"><div class="rp-section-title">Datos clave</div>`;
+      d.quickfacts.forEach(([label, val]) => {
+        html += `<div class="rp-row"><div class="rp-row-label">${label}</div><div class="rp-row-val">${val}</div></div>`;
+      });
+      html += `</div>`;
+    }
+
+    // Steps
+    if (d.steps) {
+      html += `<div class="rp-section"><div class="rp-section-title">Pasos del trámite</div>`;
+      d.steps.forEach((s, i) => {
+        html += `<div class="rp-step">
+          <div class="rp-step-num" style="background:var(--bg-tertiary);color:var(--text-secondary)">${i+1}</div>
+          <div class="rp-step-body">
+            <div class="rp-step-name">${s.name}</div>
+            <div class="rp-step-detail">${s.detail}</div>
+          </div>
+        </div>`;
+      });
+      html += `</div>`;
+    }
+
+    // Links
+    if (d.links) {
+      html += `<div class="rp-section"><div class="rp-section-title">Fuentes y portales oficiales</div>`;
+      d.links.forEach(l => {
+        html += `<a class="rp-link" href="${l.url}" target="_blank" rel="noopener">
+          <div class="rp-link-icon" style="background:${l.iconBg};color:${l.iconColor}">${l.icon}</div>
+          <div class="rp-link-body">
+            <div class="rp-link-name">${l.name}</div>
+            <div class="rp-link-url">${l.url}</div>
+          </div>
+          <div class="rp-link-arrow">↗</div>
+        </a>`;
+      });
+      html += `</div>`;
+    }
+
+    document.getElementById('rp-body').innerHTML = html;
+    document.getElementById('reg-panel').classList.add('open');
+    document.getElementById('reg-panel-overlay').classList.add('open');
+  }
+
+  function closeRegPanel() {
+    document.getElementById('reg-panel').classList.remove('open');
+    document.getElementById('reg-panel-overlay').classList.remove('open');
+  }
+
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeRegPanel(); });
+</script>
+</body>
+</html>
