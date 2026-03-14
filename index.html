@@ -2146,72 +2146,10 @@
   <!-- ── MARKET ── -->
   <section id="page-market" class="page">
     <div class="page-title">Market research — Querétaro</div>
-    <div class="page-sub">Competitive intelligence, positioning map, and demand analysis</div>
-
-    <!-- View tabs -->
-    <div style="display:flex;gap:6px;margin-bottom:18px;flex-wrap:wrap">
-      <button class="tab active" id="mkt-tab-intel" onclick="switchMktTab('intel',this)">Competitor intelligence</button>
-      <button class="tab" id="mkt-tab-demand" onclick="switchMktTab('demand',this)">Demand analysis</button>
-    </div>
-
-    <!-- ── COMPETITOR INTELLIGENCE ── -->
-    <div id="mkt-view-intel">
-      <!-- Positioning map (SVG) -->
-      <div class="card" style="margin-bottom:14px">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
-          <div class="card-title" style="margin:0">Market positioning map</div>
-          <div style="font-size:11px;color:var(--text-tertiary)">Price (horizontal) vs. Service quality (vertical)</div>
-        </div>
-        <div id="positioning-map-wrap" style="position:relative;width:100%"></div>
-      </div>
-
-      <!-- Competitor table -->
-      <div class="card" style="margin-bottom:14px">
-        <div class="card-title">Competitor intelligence — Querétaro metro</div>
-        <div style="overflow-x:auto">
-          <table style="width:100%;border-collapse:collapse;font-size:12px" id="competitor-table">
-            <thead>
-              <tr style="border-bottom:1.5px solid var(--border-strong)">
-                <th style="text-align:left;padding:8px 10px;font-weight:500;font-size:11px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.05em">Competitor</th>
-                <th style="text-align:left;padding:8px 10px;font-weight:500;font-size:11px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.05em">Tier</th>
-                <th style="text-align:left;padding:8px 10px;font-weight:500;font-size:11px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.05em">Locations in QRO</th>
-                <th style="text-align:left;padding:8px 10px;font-weight:500;font-size:11px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.05em">Price level</th>
-                <th style="text-align:left;padding:8px 10px;font-weight:500;font-size:11px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.05em">Key strengths</th>
-                <th style="text-align:left;padding:8px 10px;font-weight:500;font-size:11px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.05em">Key weaknesses</th>
-                <th style="text-align:left;padding:8px 10px;font-weight:500;font-size:11px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.05em">Your opportunity</th>
-              </tr>
-            </thead>
-            <tbody id="competitor-tbody"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- Market tailwinds -->
-      <div class="two-col">
-        <div class="card">
-          <div class="card-title">Querétaro market tailwinds</div>
-          <div class="mkt-row"><div class="mkt-label">Population growth (annual)</div><div class="mkt-bar-wrap"><div class="mkt-bar" style="width:80%;background:#1d9e75"></div></div><div class="mkt-pct">+2.8%</div></div>
-          <div class="mkt-row"><div class="mkt-label">Private health spend (index)</div><div class="mkt-bar-wrap"><div class="mkt-bar" style="width:72%;background:#185fa5"></div></div><div class="mkt-pct">High</div></div>
-          <div class="mkt-row"><div class="mkt-label">IMSS overcapacity (% over)</div><div class="mkt-bar-wrap"><div class="mkt-bar" style="width:88%;background:#e24b4a"></div></div><div class="mkt-pct">Critical</div></div>
-          <div class="mkt-row"><div class="mkt-label">Industrial corridor growth</div><div class="mkt-bar-wrap"><div class="mkt-bar" style="width:75%;background:#854f0b"></div></div><div class="mkt-pct">Strong</div></div>
-          <div class="mkt-row"><div class="mkt-label">Digital health adoption</div><div class="mkt-bar-wrap"><div class="mkt-bar" style="width:62%;background:#7a2d6b"></div></div><div class="mkt-pct">Growing</div></div>
-        </div>
-        <div class="card">
-          <div class="card-title">Recommended positioning</div>
-          <p style="font-size:13px;color:var(--text-secondary);line-height:1.7;margin-bottom:12px">Target the <strong style="color:var(--text-primary)">mid-market segment</strong> — above Salud Digna on quality and turnaround, below hospital labs on price. Your differentiators:</p>
-          <div style="display:flex;flex-direction:column;gap:8px">
-            <div style="padding:8px 12px;background:#e1f5ee;border-radius:var(--radius-md);font-size:12px;color:#085041"><strong>Resultado en 4 horas</strong> — Salud Digna takes 24–48h. This alone wins physicians.</div>
-            <div style="padding:8px 12px;background:#e6f1fb;border-radius:var(--radius-md);font-size:12px;color:#0c447c"><strong>WhatsApp result delivery</strong> — PDF to patient + copy to physician. Industry standard, often done poorly.</div>
-            <div style="padding:8px 12px;background:#faeeda;border-radius:var(--radius-md);font-size:12px;color:#633806"><strong>Physician-first culture</strong> — Commission-free referral model with fast turnaround builds trust with médicos.</div>
-            <div style="padding:8px 12px;background:#eeedfe;border-radius:var(--radius-md);font-size:12px;color:#3b2fa0"><strong>Corporate check-ups</strong> — Querétaro's 300+ maquiladoras need NOM-mandated annual screenings. Untapped B2B.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
+    <div class="page-sub">Demand analysis and market tailwinds</div>
 
     <!-- ── DEMAND ANALYSIS ── -->
-    <div id="mkt-view-demand" style="display:none">
+    <div id="mkt-view-demand">
       <div class="two-col">
         <div class="card">
           <div class="card-title">Querétaro metro — key demand indicators</div>
@@ -4653,7 +4591,7 @@ Quedo a sus órdenes,
     if (id === 'equipment')      { setTimeout(renderTCO, 100); }
     if (id === 'mock-inspection'){ renderMockChecklist(); }
     if (id === 'sat-compliance') { renderSATPage(); }
-    if (id === 'market')         { renderPositioningMap(); renderCompetitorTable(); }
+    if (id === 'market')         { renderDemandAnalysis(); }
     if (id === 'pricing')        { renderFullPricingTable(); }
     if (id === 'revmix')         { renderSpecialtyInputs(); updateRevMix(); }
   }
@@ -7314,14 +7252,8 @@ Quedo a sus órdenes,
   let leafletMap = null;
 
   function switchMktTab(tab, el) {
-    ['intel','demand'].forEach(t => {
-      const e = document.getElementById('mkt-view-' + t);
-      if (e) e.style.display = t === tab ? 'block' : 'none';
-    });
-    document.querySelectorAll('#mkt-tab-intel,#mkt-tab-demand').forEach(b => b.classList.remove('active'));
-    if (el) el.classList.add('active');
-    if (tab === 'intel')  { renderPositioningMap(); renderCompetitorTable(); }
-    if (tab === 'demand') { renderDemandAnalysis(); }
+    // Market page now shows demand analysis only
+    renderDemandAnalysis();
   }
 
   // Competitor data
