@@ -2215,6 +2215,9 @@
     });
   }
 
+  let permits = [];
+  let physicians = [];
+
   // ── Checklist ──
   const checklistData = [
     {id:'c1',  cat:'legal',       text:'Choose business structure (S.A. de C.V.)',        sub:'Recommended for liability protection'},
@@ -2259,7 +2262,7 @@
           <div class="check-sub">${c.sub}</div>
         </div>
       </div>`).join('');
-    updateDashboard();
+    if (typeof permits !== 'undefined' && typeof physicians !== 'undefined') updateDashboard();
   }
 
   function toggleCheck(id) {
@@ -2572,11 +2575,11 @@
   // ══════════════════════════════════════════
   const crmStages = ['Not contacted','Visited','Interested','Referring','Active'];
   const crmColors = ['#999890','#185fa5','#854f0b','#1d9e75','#0f6e56'];
-  let physicians = [
+  physicians.push(
     { name:'Dr. García López', spec:'Medicina General', clinic:'Consultorio Juriquilla', notes:'', stage:0 },
     { name:'Dr. Ramírez Soto', spec:'Ginecología', clinic:'Hospital San José', notes:'', stage:0 },
-    { name:'Dr. Hernández M.', spec:'Medicina Interna', clinic:'Centro Médico Qro', notes:'', stage:0 },
-  ];
+    { name:'Dr. Hernández M.', spec:'Medicina Interna', clinic:'Centro Médico Qro', notes:'', stage:0 }
+  );
 
   function renderCRM() {
     const pipeline = document.getElementById('crm-pipeline');
@@ -2744,7 +2747,7 @@
   // ══════════════════════════════════════════
   const kanbanCols = ['Not started','In progress','Submitted / Waiting','Complete'];
   const kanbanColors = ['#999890','#185fa5','#854f0b','#1d9e75'];
-  let permits = [
+  permits.push(
     { name:'Acta Constitutiva', dep:null, time:'2–4 weeks', col:0, critical:false },
     { name:'RFC / Alta SAT', dep:'Acta Constitutiva', time:'1–2 weeks', col:0, critical:true },
     { name:'e.firma (FIEL)', dep:'RFC / Alta SAT', time:'1 week', col:0, critical:false },
@@ -2757,8 +2760,8 @@
     { name:'Licencia Municipal', dep:'RFC / Alta SAT', time:'2–4 weeks', col:0, critical:false },
     { name:'Protección Civil', dep:'Lease (uso de suelo)', time:'2–3 weeks', col:0, critical:false },
     { name:'IMSS employer registration', dep:'RFC / Alta SAT', time:'1 week', col:0, critical:false },
-    { name:'COFEPRIS inspection', dep:'Licencia Sanitaria COFEPRIS', time:'2–6 months', col:0, critical:true },
-  ];
+    { name:'COFEPRIS inspection', dep:'Licencia Sanitaria COFEPRIS', time:'2–6 months', col:0, critical:true }
+  );
 
   function isBlocked(permit) {
     if (!permit.dep) return false;
