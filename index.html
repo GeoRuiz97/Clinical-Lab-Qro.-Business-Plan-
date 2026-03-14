@@ -5,11 +5,39 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LabQro — Business Plan HQ</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style media="print">
+  /* ─── PRINT STYLES ─── */
+  #sidebar, #sync-badge, .btn, .back-btn,
+  .kanban-move, .crm-move-btn, .crm-remove, .loc-remove,
+  .check-box, .scenario-tabs, #saved-scenarios-row,
+  .tab-row, #note-tag-row, #note-filter-row,
+  .crm-add-form, .reg-panel-overlay, #reg-panel,
+  input[type=range] { display: none !important; }
+
+  body { font-size: 11pt; color: #000; background: #fff; }
+  #main { margin-left: 0 !important; padding: 20px !important; }
+  .page { display: block !important; }
+  .page:not(.active) { display: none !important; }
+
+  .card {
+    border: 0.5pt solid #ccc !important;
+    break-inside: avoid;
+    margin-bottom: 12pt;
+    background: #fff !important;
+  }
+  .metrics { grid-template-columns: repeat(3, 1fr) !important; }
+  .two-col, .three-col { grid-template-columns: 1fr 1fr !important; }
+
+  a { color: #000; text-decoration: none; }
+  .badge { border: 0.5pt solid #ccc !important; }
+
+  @page { margin: 1.5cm; size: A4; }
+</style>
 <script type="module">
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
   import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection, addDoc, deleteDoc, query, orderBy } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+  import { initializeAppCheck, ReCaptchaV3Provider } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app-check.js';
 
-  // ── Firebase config ── Replace with your own project config ──
   const firebaseConfig = {
     apiKey: "AIzaSyCm4LDkaWjGvpYsI8vEK6OeLKWyE1PCn-w",
     authDomain: "clinical-lab-qro-business-plan.firebaseapp.com",
@@ -20,9 +48,16 @@
   };
 
   const app = initializeApp(firebaseConfig);
+
+  // ── App Check (reCAPTCHA v3) ──
+  initializeAppCheck(app, {
+    provider: new ReCaptchaV3Provider('6Lf6BIosAAAAANPbqgOFNCkJrZciB0xXW4UW_NF2'),
+    isTokenAutoRefreshEnabled: true
+  });
+
   const db = getFirestore(app);
 
-  // Expose db and helpers to global scope for the rest of the app
+  // Expose db and helpers to global scope
   window._db = db;
   window._doc = doc;
   window._getDoc = getDoc;
@@ -656,6 +691,112 @@
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
 
+  /* ─── HAMBURGER ─── */
+  #hamburger {
+    display: none;
+    position: fixed; top: 12px; left: 12px; z-index: 200;
+    width: 36px; height: 36px; border-radius: 8px;
+    background: var(--bg-primary); border: 0.5px solid var(--border);
+    cursor: pointer; flex-direction: column;
+    align-items: center; justify-content: center; gap: 5px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  }
+  #hamburger span {
+    display: block; width: 16px; height: 1.5px;
+    background: var(--text-primary); border-radius: 2px;
+    transition: all 0.2s;
+  }
+  #sidebar-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(26,26,24,0.3); z-index: 11;
+  }
+
+  /* ─── MOBILE ─── */
+  @media (max-width: 768px) {
+    :root { --nav-w: 224px; }
+
+    #hamburger { display: flex; }
+
+    #sidebar {
+      transform: translateX(-100%);
+      transition: transform 0.24s cubic-bezier(0.22,1,0.36,1);
+      z-index: 12;
+    }
+    #sidebar.open { transform: translateX(0); }
+    #sidebar-overlay.open { display: block; }
+
+    #main {
+      margin-left: 0;
+      padding: 16px;
+      padding-top: 58px; /* clear hamburger */
+    }
+
+    /* Collapse all multi-col grids to single column */
+    .two-col,
+    .three-col { grid-template-columns: 1fr !important; }
+
+    /* Metrics: 2 across on mobile */
+    .metrics { grid-template-columns: 1fr 1fr !important; }
+
+    /* Kanban: horizontal scroll */
+    .kanban {
+      grid-template-columns: repeat(4, 260px);
+      overflow-x: auto;
+      padding-bottom: 8px;
+    }
+
+    /* CRM pipeline: horizontal scroll */
+    .crm-pipeline {
+      grid-template-columns: repeat(5, 220px);
+      overflow-x: auto;
+      padding-bottom: 8px;
+    }
+
+    /* CRM stats: wrap */
+    .crm-stats { grid-template-columns: repeat(3, 1fr); }
+
+    /* CRM input row: stack */
+    .crm-input-row { grid-template-columns: 1fr; }
+
+    /* Location grid: single column */
+    .loc-grid { grid-template-columns: 1fr !important; }
+
+    /* Gantt: allow horizontal scroll (already has gantt-wrap) */
+    .gantt-wrap { -webkit-overflow-scrolling: touch; }
+
+    /* Pricing table: horizontal scroll */
+    .pricing-tbl { font-size: 11px; }
+    .card[style*="overflow-x:auto"] { -webkit-overflow-scrolling: touch; }
+
+    /* Reg panel: full width on mobile */
+    #reg-panel { width: 100%; max-width: 100%; }
+
+    /* Page title sizing */
+    .page-title { font-size: 17px; }
+
+    /* Scenario save row: stack */
+    #page-calculator > div:first-child { flex-direction: column; align-items: flex-start; }
+
+    /* Tab rows: allow wrapping */
+    .tab-row, .scenario-tabs { flex-wrap: wrap; }
+
+    /* Print button: hide on very small screens */
+    #sidebar > div:last-child { display: none; }
+
+    /* Sync badge: smaller */
+    #sync-badge { font-size: 10px; padding: 3px 8px; }
+
+    /* Dashboard ring metric: keep compact */
+    .metrics > div:last-child { grid-column: span 2; }
+  }
+
+  @media (max-width: 480px) {
+    #main { padding: 12px; padding-top: 56px; }
+    .metrics { grid-template-columns: 1fr 1fr !important; }
+    .card { padding: 14px 14px; }
+    .phase-title, .page-title { font-size: 15px; }
+  }
+
   /* ─── CLICKABLE REG ITEMS ─── */
   .reg-item.clickable {
     cursor: pointer;
@@ -778,6 +919,12 @@
 </head>
 <body>
 
+<!-- ═══ MOBILE HAMBURGER ═══ -->
+<button id="hamburger" onclick="toggleSidebar()" aria-label="Menu">
+  <span></span><span></span><span></span>
+</button>
+<div id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
 <!-- ═══ SIDEBAR ═══ -->
 <nav id="sidebar">
   <div class="sb-logo">
@@ -792,10 +939,7 @@
 
   <div class="sb-section">Plan</div>
   <button class="sb-item" onclick="nav('roadmap',this)">
-    <div class="sb-icon" style="background:#e6f1fb;color:#185fa5">→</div> Roadmap
-  </button>
-  <button class="sb-item" onclick="nav('timeline',this)">
-    <div class="sb-icon" style="background:#dde8f8;color:#2a5ea8">◇</div> Timeline
+    <div class="sb-icon" style="background:#e6f1fb;color:#185fa5">→</div> Roadmap & Timeline
   </button>
   <button class="sb-item" onclick="nav('regulatory',this)">
     <div class="sb-icon" style="background:#faeeda;color:#854f0b">⚖</div> Regulatory
@@ -829,14 +973,14 @@
 
   <div class="sb-section">Workspace</div>
   <button class="sb-item" onclick="nav('checklist',this)">
-    <div class="sb-icon" style="background:#f1efe8;color:#5f5e5a">✓</div> Checklist
-  </button>
-  <button class="sb-item" onclick="nav('documents',this)">
-    <div class="sb-icon" style="background:#e1f5ee;color:#0f6e56">▤</div> Documents
+    <div class="sb-icon" style="background:#f1efe8;color:#5f5e5a">✓</div> Checklist & Docs
   </button>
   <button class="sb-item" onclick="nav('notes',this)">
     <div class="sb-icon" style="background:#eeedfe;color:#534ab7">✏</div> Notes
   </button>
+  <div style="padding:12px 18px;margin-top:auto;border-top:0.5px solid var(--border)">
+    <button class="btn" style="width:100%;font-size:12px;color:var(--text-secondary)" onclick="window.print()">⎙ Print / Save PDF</button>
+  </div>
 </nav>
 
 <!-- ═══ MAIN ═══ -->
@@ -853,11 +997,24 @@
     </div>
     <div class="page-sub" id="dash-sub">Laboratorio Clínico · Querétaro · Stage: Pre-launch</div>
 
-    <div class="metrics">
+    <div class="metrics" style="grid-template-columns: repeat(3, minmax(0,1fr)) 200px">
       <div class="metric"><div class="metric-label">Checklist progress</div><div class="metric-val" id="dash-progress">—</div></div>
       <div class="metric"><div class="metric-label">Permits completed</div><div class="metric-val blue" id="dash-permits" style="font-size:15px">—</div></div>
       <div class="metric"><div class="metric-label">Physicians in pipeline</div><div class="metric-val amber" id="dash-physicians" style="font-size:16px">—</div></div>
-      <div class="metric"><div class="metric-label">Est. startup cost</div><div class="metric-val" style="font-size:16px">$1.8M MXN</div></div>
+      <div class="metric" style="display:flex;align-items:center;gap:14px;padding:10px 16px">
+        <svg width="52" height="52" viewBox="0 0 52 52">
+          <circle cx="26" cy="26" r="22" fill="none" stroke="var(--bg-tertiary)" stroke-width="5"/>
+          <circle id="dash-ring" cx="26" cy="26" r="22" fill="none" stroke="var(--green)" stroke-width="5"
+            stroke-dasharray="138.2" stroke-dashoffset="138.2"
+            stroke-linecap="round" transform="rotate(-90 26 26)"
+            style="transition:stroke-dashoffset 0.6s ease"/>
+          <text id="dash-ring-pct" x="26" y="30" text-anchor="middle" font-size="11" font-weight="500" fill="var(--text-primary)" font-family="var(--font-mono)">0%</text>
+        </svg>
+        <div>
+          <div style="font-size:11px;color:var(--text-secondary)">Overall</div>
+          <div style="font-size:13px;font-weight:500;color:var(--text-primary)" id="dash-ring-label">Pre-launch</div>
+        </div>
+      </div>
     </div>
 
     <div class="two-col">
@@ -867,49 +1024,49 @@
         <div class="phase-row clickable" onclick="openPhase(1)">
           <div class="phase-num" style="background:#e6f1fb;color:#185fa5">1</div>
           <div class="phase-body">
-            <div class="phase-hdr"><div class="phase-name">Research & Planning</div><span class="badge badge-progress">In progress</span></div>
+            <div class="phase-hdr"><div class="phase-name">Research & Planning</div><span class="badge" id="phase-badge-1">In progress</span></div>
             <div class="phase-desc">Market analysis, location scouting, business model</div>
-            <div class="progress-bar"><div class="progress-fill" style="width:8%;background:#185fa5"></div></div>
+            <div class="progress-bar"><div class="progress-fill" id="phase-bar-1" style="width:0%;background:#185fa5"></div></div>
           </div>
         </div>
         <div class="phase-row clickable" onclick="openPhase(2)">
           <div class="phase-num" style="background:#f1efe8;color:#5f5e5a">2</div>
           <div class="phase-body">
-            <div class="phase-hdr"><div class="phase-name">Legal & Corporate</div><span class="badge badge-todo">To do</span></div>
+            <div class="phase-hdr"><div class="phase-name">Legal & Corporate</div><span class="badge" id="phase-badge-2">To do</span></div>
             <div class="phase-desc">Constitución SA, RFC, Razón Social, IMPI</div>
-            <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
+            <div class="progress-bar"><div class="progress-fill" id="phase-bar-2" style="width:0%"></div></div>
           </div>
         </div>
         <div class="phase-row clickable" onclick="openPhase(3)">
           <div class="phase-num" style="background:#f1efe8;color:#5f5e5a">3</div>
           <div class="phase-body">
-            <div class="phase-hdr"><div class="phase-name">COFEPRIS & NOM Permits</div><span class="badge badge-todo">To do</span></div>
+            <div class="phase-hdr"><div class="phase-name">COFEPRIS & NOM Permits</div><span class="badge" id="phase-badge-3">To do</span></div>
             <div class="phase-desc">Licencia Sanitaria, NOM-007, NOM-166</div>
-            <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
+            <div class="progress-bar"><div class="progress-fill" id="phase-bar-3" style="width:0%"></div></div>
           </div>
         </div>
         <div class="phase-row clickable" onclick="openPhase(4)">
           <div class="phase-num" style="background:#f1efe8;color:#5f5e5a">4</div>
           <div class="phase-body">
-            <div class="phase-hdr"><div class="phase-name">Infrastructure & Equipment</div><span class="badge badge-todo">To do</span></div>
+            <div class="phase-hdr"><div class="phase-name">Infrastructure & Equipment</div><span class="badge" id="phase-badge-4">To do</span></div>
             <div class="phase-desc">Location, lab setup, analyzers, cold chain</div>
-            <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
+            <div class="progress-bar"><div class="progress-fill" id="phase-bar-4" style="width:0%"></div></div>
           </div>
         </div>
         <div class="phase-row clickable" onclick="openPhase(5)">
           <div class="phase-num" style="background:#f1efe8;color:#5f5e5a">5</div>
           <div class="phase-body">
-            <div class="phase-hdr"><div class="phase-name">Staffing & Training</div><span class="badge badge-todo">To do</span></div>
+            <div class="phase-hdr"><div class="phase-name">Staffing & Training</div><span class="badge" id="phase-badge-5">To do</span></div>
             <div class="phase-desc">QFB, lab techs, front desk, director técnico</div>
-            <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
+            <div class="progress-bar"><div class="progress-fill" id="phase-bar-5" style="width:0%"></div></div>
           </div>
         </div>
         <div class="phase-row clickable" onclick="openPhase(6)">
           <div class="phase-num" style="background:#f1efe8;color:#5f5e5a">6</div>
           <div class="phase-body">
-            <div class="phase-hdr"><div class="phase-name">Soft Launch & Marketing</div><span class="badge badge-todo">To do</span></div>
+            <div class="phase-hdr"><div class="phase-name">Soft Launch & Marketing</div><span class="badge" id="phase-badge-6">To do</span></div>
             <div class="phase-desc">Médicos referentes, pricing, digital presence</div>
-            <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
+            <div class="progress-bar"><div class="progress-fill" id="phase-bar-6" style="width:0%"></div></div>
           </div>
         </div>
       </div>
@@ -917,26 +1074,12 @@
       <div>
         <!-- Next actions -->
         <div class="card">
-          <div class="card-title">Next 5 actions</div>
-          <div class="phase-row" style="padding:8px 0">
-            <div class="action-dot"></div>
-            <div class="phase-body"><div class="phase-name" style="font-size:12px">Define lab specialty focus</div><div class="phase-desc">General, specialty, or hybrid?</div></div>
+          <div class="section-hdr" style="margin-bottom:8px">
+            <div class="card-title" style="margin:0">Next actions</div>
+            <a onclick="nav('checklist',document.querySelectorAll('.sb-item')[document.querySelectorAll('.sb-item').length-2])" style="font-size:11px;color:var(--blue);cursor:pointer;text-decoration:none">View all →</a>
           </div>
-          <div class="phase-row" style="padding:8px 0">
-            <div class="action-dot"></div>
-            <div class="phase-body"><div class="phase-name" style="font-size:12px">Scout 3 locations in Querétaro</div><div class="phase-desc">Juriquilla, Centro, Satélite</div></div>
-          </div>
-          <div class="phase-row" style="padding:8px 0">
-            <div class="action-dot"></div>
-            <div class="phase-body"><div class="phase-name" style="font-size:12px">Hire a notario público</div><div class="phase-desc">For constitución de la empresa</div></div>
-          </div>
-          <div class="phase-row" style="padding:8px 0">
-            <div class="action-dot"></div>
-            <div class="phase-body"><div class="phase-name" style="font-size:12px">Contact COFEPRIS Querétaro office</div><div class="phase-desc">Pre-consultation on Licencia Sanitaria</div></div>
-          </div>
-          <div class="phase-row" style="padding:8px 0">
-            <div class="action-dot"></div>
-            <div class="phase-body"><div class="phase-name" style="font-size:12px">Get 3 competitor price lists</div><div class="phase-desc">Salud Digna, Chopo, local labs</div></div>
+          <div id="dash-next-actions">
+            <div style="font-size:12px;color:var(--text-tertiary);padding:8px 0">Loading…</div>
           </div>
         </div>
 
@@ -954,41 +1097,80 @@
     </div>
   </section>
 
-  <!-- ── ROADMAP ── -->
+  <!-- ── ROADMAP + TIMELINE (merged) ── -->
   <section id="page-roadmap" class="page">
-    <div class="page-title">Launch roadmap</div>
-    <div class="page-sub">12–18 month timeline from idea to operations</div>
+    <div class="page-title">Roadmap & Timeline</div>
+    <div class="page-sub">Phase plan and 18-month Gantt view</div>
 
-    <div class="card">
-      <div class="section-hdr"><div class="card-title" style="margin:0">Phase 1 — Research & planning (Months 1–2)</div><span class="badge badge-progress">Current phase</span></div>
-      <div class="reg-item"><div class="reg-dot" style="background:#185fa5"></div><div><div class="reg-name">Market research — Querétaro</div><div class="reg-detail">Population, income levels, competitor density by zone, unmet demand analysis</div></div></div>
-      <div class="reg-item"><div class="reg-dot" style="background:#185fa5"></div><div><div class="reg-name">Define business model</div><div class="reg-detail">Direct patient, physician referral, corporate contracts, IMSS subrogación</div></div></div>
-      <div class="reg-item"><div class="reg-dot" style="background:#185fa5"></div><div><div class="reg-name">Financial modeling</div><div class="reg-detail">Startup costs, break-even, 3-year P&L, funding sources</div></div></div>
-      <div class="reg-item"><div class="reg-dot" style="background:#185fa5"></div><div><div class="reg-name">Location shortlist</div><div class="reg-detail">Min 60m², ground floor, parking, near high-traffic medical zones</div></div></div>
+    <div class="tab-row" style="margin-bottom:18px">
+      <div class="tab active" id="rt-tab-roadmap" onclick="switchRTTab('roadmap')">Phase roadmap</div>
+      <div class="tab" id="rt-tab-timeline" onclick="switchRTTab('timeline')">Gantt timeline</div>
     </div>
 
-    <div class="card">
-      <div class="section-hdr"><div class="card-title" style="margin:0">Phase 2 — Legal & corporate (Months 2–4)</div><span class="badge badge-todo">Upcoming</span></div>
-      <div class="reg-item"><div class="reg-dot" style="background:#888780"></div><div><div class="reg-name">Constitución de empresa (S.A. de C.V. recommended)</div><div class="reg-detail">Notario, acta constitutiva, razón social</div><div class="reg-time">~2–4 weeks · ~$15,000–25,000 MXN</div></div></div>
-      <div class="reg-item"><div class="reg-dot" style="background:#888780"></div><div><div class="reg-name">RFC ante el SAT</div><div class="reg-detail">Tax registration, CFDI setup, régimen fiscal</div></div></div>
-      <div class="reg-item"><div class="reg-dot" style="background:#888780"></div><div><div class="reg-name">IMPI trademark (optional but recommended)</div><div class="reg-detail">Register lab name and logo</div></div></div>
-      <div class="reg-item"><div class="reg-dot" style="background:#888780"></div><div><div class="reg-name">Lease contract for lab space</div><div class="reg-detail">Must specify uso de suelo: servicios médicos</div></div></div>
+    <!-- ROADMAP TAB -->
+    <div id="rt-roadmap">
+      <div class="card">
+        <div class="section-hdr"><div class="card-title" style="margin:0">Phase 1 — Research & planning (Months 1–2)</div><span class="badge badge-progress">Current phase</span></div>
+        <div class="reg-item"><div class="reg-dot" style="background:#185fa5"></div><div><div class="reg-name">Market research — Querétaro</div><div class="reg-detail">Population, income levels, competitor density by zone, unmet demand analysis</div></div></div>
+        <div class="reg-item"><div class="reg-dot" style="background:#185fa5"></div><div><div class="reg-name">Define business model</div><div class="reg-detail">Direct patient, physician referral, corporate contracts, IMSS subrogación</div></div></div>
+        <div class="reg-item"><div class="reg-dot" style="background:#185fa5"></div><div><div class="reg-name">Financial modeling</div><div class="reg-detail">Startup costs, break-even, 3-year P&L, funding sources</div></div></div>
+        <div class="reg-item"><div class="reg-dot" style="background:#185fa5"></div><div><div class="reg-name">Location shortlist</div><div class="reg-detail">Min 60m², ground floor, parking, near high-traffic medical zones</div></div></div>
+      </div>
+      <div class="card">
+        <div class="section-hdr"><div class="card-title" style="margin:0">Phase 2 — Legal & corporate (Months 2–4)</div><span class="badge badge-todo">Upcoming</span></div>
+        <div class="reg-item"><div class="reg-dot" style="background:#888780"></div><div><div class="reg-name">Constitución de empresa (S.A. de C.V. recommended)</div><div class="reg-detail">Notario, acta constitutiva, razón social</div><div class="reg-time">~2–4 weeks · ~$15,000–25,000 MXN</div></div></div>
+        <div class="reg-item"><div class="reg-dot" style="background:#888780"></div><div><div class="reg-name">RFC ante el SAT</div><div class="reg-detail">Tax registration, CFDI setup, régimen fiscal</div></div></div>
+        <div class="reg-item"><div class="reg-dot" style="background:#888780"></div><div><div class="reg-name">IMPI trademark (optional but recommended)</div><div class="reg-detail">Register lab name and logo</div></div></div>
+        <div class="reg-item"><div class="reg-dot" style="background:#888780"></div><div><div class="reg-name">Lease contract for lab space</div><div class="reg-detail">Must specify uso de suelo: servicios médicos</div></div></div>
+      </div>
+      <div class="card">
+        <div class="section-hdr" style="flex-wrap:wrap;gap:6px"><div class="card-title" style="margin:0">Phase 3 — COFEPRIS & sanitary permits (Months 3–9)</div><div style="display:flex;gap:5px"><span class="badge badge-todo">Upcoming</span><span class="badge badge-urgent">Allow 6+ months</span></div></div>
+        <div class="reg-item"><div class="reg-dot" style="background:#ef9f27"></div><div><div class="reg-name">Licencia Sanitaria — COFEPRIS</div><div class="reg-detail">Main permit to operate a laboratorio clínico. Requires Director Técnico (QFB), physical inspection, equipment list</div><div class="reg-time">60–120 business days officially; plan for more</div></div></div>
+        <div class="reg-item"><div class="reg-dot" style="background:#ef9f27"></div><div><div class="reg-name">Cumplimiento NOM-007-SSA3-2011</div><div class="reg-detail">General lab organization, infrastructure standards</div></div></div>
+        <div class="reg-item"><div class="reg-dot" style="background:#ef9f27"></div><div><div class="reg-name">Cumplimiento NOM-087-SEMARNAT (RPBI)</div><div class="reg-detail">Biological hazardous waste management</div></div></div>
+        <div class="reg-item"><div class="reg-dot" style="background:#ef9f27"></div><div><div class="reg-name">Aviso de funcionamiento</div><div class="reg-detail">Filed via COFEPRIS portal (SIVISAM)</div></div></div>
+      </div>
+      <div class="card">
+        <div class="section-hdr"><div class="card-title" style="margin:0">Phase 4–6 — Infrastructure, staffing, launch (Months 6–18)</div><span class="badge badge-todo">Upcoming</span></div>
+        <div class="reg-item"><div class="reg-dot" style="background:#888780"></div><div><div class="reg-name">Equipment procurement</div><div class="reg-detail">Hematology, chemistry, coagulation analyzers; centrifuges, cold chain</div></div></div>
+        <div class="reg-item"><div class="reg-dot" style="background:#888780"></div><div><div class="reg-name">Hire Director Técnico (QFB cédula profesional)</div><div class="reg-detail">Required by law — cannot operate without one</div></div></div>
+        <div class="reg-item"><div class="reg-dot" style="background:#888780"></div><div><div class="reg-name">LIS / software setup</div><div class="reg-detail">Laboratory Information System, billing, patient portal</div></div></div>
+        <div class="reg-item"><div class="reg-dot" style="background:#888780"></div><div><div class="reg-name">Soft launch + physician outreach</div><div class="reg-detail">Visit 30–50 local médicos, offer resultado en 24h, free pickup</div></div></div>
+      </div>
     </div>
 
-    <div class="card">
-      <div class="section-hdr" style="flex-wrap:wrap;gap:6px"><div class="card-title" style="margin:0">Phase 3 — COFEPRIS & sanitary permits (Months 3–9)</div><div style="display:flex;gap:5px"><span class="badge badge-todo">Upcoming</span><span class="badge badge-urgent">Allow 6+ months</span></div></div>
-      <div class="reg-item"><div class="reg-dot" style="background:#ef9f27"></div><div><div class="reg-name">Licencia Sanitaria — COFEPRIS</div><div class="reg-detail">Main permit to operate a laboratorio clínico. Requires Director Técnico (QFB), physical inspection, equipment list</div><div class="reg-time">60–120 business days officially; plan for more</div></div></div>
-      <div class="reg-item"><div class="reg-dot" style="background:#ef9f27"></div><div><div class="reg-name">Cumplimiento NOM-007-SSA3-2011</div><div class="reg-detail">General lab organization, infrastructure standards</div></div></div>
-      <div class="reg-item"><div class="reg-dot" style="background:#ef9f27"></div><div><div class="reg-name">Cumplimiento NOM-087-SEMARNAT (RPBI)</div><div class="reg-detail">Biological hazardous waste management</div></div></div>
-      <div class="reg-item"><div class="reg-dot" style="background:#ef9f27"></div><div><div class="reg-name">Aviso de funcionamiento</div><div class="reg-detail">Filed via COFEPRIS portal (SIVISAM)</div></div></div>
-    </div>
-
-    <div class="card">
-      <div class="section-hdr"><div class="card-title" style="margin:0">Phase 4–6 — Infrastructure, staffing, launch (Months 6–18)</div><span class="badge badge-todo">Upcoming</span></div>
-      <div class="reg-item"><div class="reg-dot" style="background:#888780"></div><div><div class="reg-name">Equipment procurement</div><div class="reg-detail">Hematology, chemistry, coagulation analyzers; centrifuges, cold chain</div></div></div>
-      <div class="reg-item"><div class="reg-dot" style="background:#888780"></div><div><div class="reg-name">Hire Director Técnico (QFB cédula profesional)</div><div class="reg-detail">Required by law — cannot operate without one</div></div></div>
-      <div class="reg-item"><div class="reg-dot" style="background:#888780"></div><div><div class="reg-name">LIS / software setup</div><div class="reg-detail">Laboratory Information System, billing, patient portal</div></div></div>
-      <div class="reg-item"><div class="reg-dot" style="background:#888780"></div><div><div class="reg-name">Soft launch + physician outreach</div><div class="reg-detail">Visit 30–50 local médicos, offer resultado en 24h, free pickup</div></div></div>
+    <!-- TIMELINE TAB -->
+    <div id="rt-timeline" style="display:none">
+      <div class="card">
+        <div class="gantt-wrap">
+          <div class="gantt">
+            <div class="gantt-header">
+              <div class="gantt-label-col">Phase</div>
+              <div class="gantt-months" id="gantt-months"></div>
+            </div>
+            <div id="gantt-rows"></div>
+          </div>
+        </div>
+        <div class="gantt-legend" id="gantt-legend"></div>
+      </div>
+      <div class="two-col" style="margin-top:14px">
+        <div class="card">
+          <div class="card-title">Critical path</div>
+          <div class="info-box red" style="margin-bottom:10px">
+            <strong>Longest sequential chain:</strong> Legal setup (M2) → COFEPRIS application (M3) → Inspection wait (M4–9) → License received → Open. Any delay in Phase 2 or 3 pushes everything.
+          </div>
+          <div style="font-size:12px;color:var(--text-secondary);line-height:1.7">
+            <strong style="color:var(--text-primary)">Parallel tracks to exploit:</strong> While waiting for COFEPRIS (3–9 months), complete: equipment procurement, buildout, staffing, physician outreach prep, branding, and LIS setup. This is why smart operators launch in 12 months, not 18.
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Key milestones</div>
+          <div class="reg-item"><div class="reg-dot" style="background:#a32d2d"></div><div><div class="reg-name">COFEPRIS application filed</div><div class="reg-detail">Month 3 · Triggers the clock on inspection</div></div></div>
+          <div class="reg-item"><div class="reg-dot" style="background:#854f0b"></div><div><div class="reg-name">Equipment installed & calibrated</div><div class="reg-detail">Month 8 · Must be ready before inspection</div></div></div>
+          <div class="reg-item"><div class="reg-dot" style="background:#185fa5"></div><div><div class="reg-name">COFEPRIS inspection passed</div><div class="reg-detail">Month 9 · Green light to operate</div></div></div>
+          <div class="reg-item"><div class="reg-dot" style="background:#1d9e75"></div><div><div class="reg-name">Soft launch — first patient</div><div class="reg-detail">Month 10 · Revenue begins</div></div></div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -1128,63 +1310,35 @@
     </div>
   </section>
 
-  <!-- ── CHECKLIST ── -->
+  <!-- ── CHECKLIST + DOCUMENTS (merged) ── -->
   <section id="page-checklist" class="page">
-    <div class="page-title">Master checklist</div>
-    <div class="page-sub">Check off items as you complete them</div>
-    <div class="tab-row">
-      <div class="tab active" onclick="filterChecklist('all',this)">All</div>
-      <div class="tab" onclick="filterChecklist('legal',this)">Legal</div>
-      <div class="tab" onclick="filterChecklist('regulatory',this)">Regulatory</div>
-      <div class="tab" onclick="filterChecklist('ops',this)">Operations</div>
-    </div>
-    <div class="card" id="checklist-card"></div>
-  </section>
+    <div class="page-title">Checklist & Documents</div>
+    <div class="page-sub">Track tasks and permit documents in one place</div>
 
-  <!-- ── DOCUMENTS ── -->
-  <section id="page-documents" class="page">
-    <div class="page-title">Document tracker</div>
-    <div class="page-sub">Click a status badge to update it — changes save automatically</div>
-    <div class="card">
-      <div class="section-hdr"><div class="card-title" style="margin:0">Required documents</div></div>
-      <div id="doc-tracker-list">
-        <!-- rendered by JS -->
-      </div>
+    <div class="tab-row" style="margin-bottom:18px">
+      <div class="tab active" id="cd-tab-checklist" onclick="switchCDTab('checklist')">Checklist</div>
+      <div class="tab" id="cd-tab-documents" onclick="switchCDTab('documents')">Documents</div>
     </div>
-  </section>
 
-  <!-- ── TIMELINE (GANTT) ── -->
-  <section id="page-timeline" class="page">
-    <div class="page-title">Project timeline</div>
-    <div class="page-sub">18-month Gantt view — phases, overlaps, and milestones</div>
-    <div class="card">
-      <div class="gantt-wrap">
-        <div class="gantt">
-          <div class="gantt-header">
-            <div class="gantt-label-col">Phase</div>
-            <div class="gantt-months" id="gantt-months"></div>
-          </div>
-          <div id="gantt-rows"></div>
-        </div>
+    <!-- CHECKLIST TAB -->
+    <div id="cd-checklist">
+      <div class="tab-row">
+        <div class="tab active" onclick="filterChecklist('all',this)">All</div>
+        <div class="tab" onclick="filterChecklist('legal',this)">Legal</div>
+        <div class="tab" onclick="filterChecklist('regulatory',this)">Regulatory</div>
+        <div class="tab" onclick="filterChecklist('ops',this)">Operations</div>
       </div>
-      <div class="gantt-legend" id="gantt-legend"></div>
+      <div class="card" id="checklist-card"></div>
     </div>
-    <div class="two-col" style="margin-top:14px">
+
+    <!-- DOCUMENTS TAB -->
+    <div id="cd-documents" style="display:none">
       <div class="card">
-        <div class="card-title">Critical path</div>
-        <div class="info-box red" style="margin-bottom:10px">
-          <strong>Longest sequential chain:</strong> Legal setup (M2) → COFEPRIS application (M3) → Inspection wait (M4–9) → License received → Open. Any delay in Phase 2 or 3 pushes everything.
+        <div class="section-hdr">
+          <div class="card-title" style="margin:0">Required documents</div>
+          <div style="font-size:11px;color:var(--text-tertiary)">Click a badge to update status</div>
         </div>
-        <div style="font-size:12px;color:var(--text-secondary);line-height:1.7">
-          <strong style="color:var(--text-primary)">Parallel tracks to exploit:</strong> While waiting for COFEPRIS (3–9 months), complete: equipment procurement, buildout, staffing, physician outreach prep, branding, and LIS setup. This is why smart operators launch in 12 months, not 18.
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-title">Key milestones</div>
-        <div class="reg-item"><div class="reg-dot" style="background:#a32d2d"></div><div><div class="reg-name">COFEPRIS application filed</div><div class="reg-detail">Month 3 · Triggers the clock on inspection</div></div></div>
-        <div class="reg-item"><div class="reg-dot" style="background:#854f0b"></div><div><div class="reg-name">Equipment installed & calibrated</div><div class="reg-detail">Month 8 · Must be ready before inspection</div></div></div>
-        <div class="reg-item"><div class="reg-dot" style="background:#185fa5"></div><div><div class="reg-name">COFEPRIS inspection passed</div><div class="reg-detail">Month 9 · Green light to operate</div></div></div>
-        <div class="reg-item"><div class="reg-dot" style="background:#1d9e75"></div><div><div class="reg-name">Soft launch — first patient</div><div class="reg-detail">Month 10 · Revenue begins</div></div></div>
+        <div id="doc-tracker-list"></div>
       </div>
     </div>
   </section>
@@ -1194,11 +1348,18 @@
     <div class="page-title">Financial calculator</div>
     <div class="page-sub">Model scenarios — adjust inputs and see real-time P&L impact</div>
 
-    <div class="scenario-tabs">
-      <div class="scenario-tab active" onclick="setScenario('conservative',this)">Conservative</div>
-      <div class="scenario-tab" onclick="setScenario('base',this)">Base case</div>
-      <div class="scenario-tab" onclick="setScenario('optimistic',this)">Optimistic</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:14px">
+      <div class="scenario-tabs" style="margin-bottom:0">
+        <div class="scenario-tab active" onclick="setScenario('conservative',this)">Conservative</div>
+        <div class="scenario-tab" onclick="setScenario('base',this)">Base case</div>
+        <div class="scenario-tab" onclick="setScenario('optimistic',this)">Optimistic</div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <input id="scenario-save-name" placeholder="Scenario name…" style="font-size:12px;padding:5px 10px;border:0.5px solid var(--border-strong);border-radius:var(--radius-md);background:var(--bg-primary);color:var(--text-primary);font-family:var(--font);outline:none;width:150px">
+        <button class="btn btn-primary" style="font-size:12px;padding:5px 14px" onclick="saveCurrentScenario()">Save</button>
+      </div>
     </div>
+    <div id="saved-scenarios-row" style="display:none;margin-bottom:14px;display:flex;gap:8px;flex-wrap:wrap"></div>
 
     <div class="two-col">
       <div>
@@ -1287,9 +1448,10 @@
     <div class="card" style="overflow-x:auto">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
         <div class="card-title" style="margin:0">Top 25 studies — prices in MXN</div>
-        <div style="display:flex;gap:8px;align-items:center">
+        <div style="display:flex;gap:10px;align-items:center">
           <div style="font-size:11px;color:var(--text-tertiary)">Position:</div>
           <div style="font-size:12px;font-weight:500;color:var(--green-dark)" id="pricing-position">Mid-market</div>
+          <button class="btn" style="font-size:11px;padding:4px 12px;color:var(--text-tertiary)" onclick="resetPricing()">Reset to defaults</button>
         </div>
       </div>
       <table class="pricing-tbl" id="pricing-table"></table>
@@ -1405,14 +1567,37 @@
   <!-- ── NOTES ── -->
   <section id="page-notes" class="page">
     <div class="page-title">Notes & decisions</div>
-    <div class="page-sub">Capture key decisions, contacts, and observations</div>
+    <div class="page-sub">Capture key decisions, contacts, and observations — tagged by topic</div>
+
     <div class="card">
-      <div class="card-title">Quick note</div>
-      <textarea class="note-area" id="note-input" placeholder="Write a note — ideas, contacts, decisions..."></textarea>
-      <div style="display:flex;justify-content:flex-end;margin-top:10px">
-        <button class="btn btn-primary" onclick="saveNote()">Save note</button>
+      <div class="card-title">Add note</div>
+      <textarea class="note-area" id="note-input" placeholder="Write a note — ideas, contacts, decisions, blockers..."></textarea>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;flex-wrap:wrap;gap:8px">
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <span style="font-size:11px;color:var(--text-tertiary);align-self:center">Tag:</span>
+          <div id="note-tag-row" style="display:flex;gap:5px;flex-wrap:wrap">
+            <div class="tab active" style="font-size:11px;padding:3px 10px" onclick="selectNoteTag('general',this)">General</div>
+            <div class="tab" style="font-size:11px;padding:3px 10px" onclick="selectNoteTag('legal',this)">Legal</div>
+            <div class="tab" style="font-size:11px;padding:3px 10px" onclick="selectNoteTag('regulatory',this)">Regulatory</div>
+            <div class="tab" style="font-size:11px;padding:3px 10px" onclick="selectNoteTag('financial',this)">Financial</div>
+            <div class="tab" style="font-size:11px;padding:3px 10px" onclick="selectNoteTag('contacts',this)">Contacts</div>
+            <div class="tab" style="font-size:11px;padding:3px 10px" onclick="selectNoteTag('decision',this)">Decision</div>
+          </div>
+        </div>
+        <button class="btn btn-primary" style="font-size:12px" onclick="saveNote()">Save note</button>
       </div>
     </div>
+
+    <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px" id="note-filter-row">
+      <div class="tab active" style="font-size:11px;padding:3px 10px" onclick="filterNotes('all',this)">All</div>
+      <div class="tab" style="font-size:11px;padding:3px 10px" onclick="filterNotes('general',this)">General</div>
+      <div class="tab" style="font-size:11px;padding:3px 10px" onclick="filterNotes('legal',this)">Legal</div>
+      <div class="tab" style="font-size:11px;padding:3px 10px" onclick="filterNotes('regulatory',this)">Regulatory</div>
+      <div class="tab" style="font-size:11px;padding:3px 10px" onclick="filterNotes('financial',this)">Financial</div>
+      <div class="tab" style="font-size:11px;padding:3px 10px" onclick="filterNotes('contacts',this)">Contacts</div>
+      <div class="tab" style="font-size:11px;padding:3px 10px" onclick="filterNotes('decision',this)">Decision</div>
+    </div>
+
     <div id="notes-list"></div>
   </section>
 
@@ -2152,6 +2337,98 @@
 </div>
 
 <script>
+  // ── Checklist / Documents tab switcher ──
+  function switchCDTab(tab) {
+    document.getElementById('cd-checklist').style.display = tab === 'checklist' ? 'block' : 'none';
+    document.getElementById('cd-documents').style.display  = tab === 'documents'  ? 'block' : 'none';
+    document.getElementById('cd-tab-checklist').classList.toggle('active', tab === 'checklist');
+    document.getElementById('cd-tab-documents').classList.toggle('active', tab === 'documents');
+  }
+
+  // ── Roadmap / Timeline tab switcher ──
+  function switchRTTab(tab) {
+    document.getElementById('rt-roadmap').style.display = tab === 'roadmap' ? 'block' : 'none';
+    document.getElementById('rt-timeline').style.display = tab === 'timeline' ? 'block' : 'none';
+    document.getElementById('rt-tab-roadmap').classList.toggle('active', tab === 'roadmap');
+    document.getElementById('rt-tab-timeline').classList.toggle('active', tab === 'timeline');
+    if (tab === 'timeline') initGantt();
+  }
+  let ganttInited = false;
+  function initGantt() {
+    if (ganttInited) return;
+    ganttInited = true;
+    const months = ['M1','M2','M3','M4','M5','M6','M7','M8','M9','M10','M11','M12','M13','M14','M15','M16','M17','M18'];
+    document.getElementById('gantt-months').innerHTML = months.map(m=>`<div class="gantt-mo">${m}</div>`).join('');
+    const phases = [
+      { name:'Research & Planning', num:1, color:'#3b82f6', start:0, end:2 },
+      { name:'Legal & Corporate', num:2, color:'#f59e0b', start:1, end:4 },
+      { name:'COFEPRIS & Permits', num:3, color:'#ef4444', start:2, end:9 },
+      { name:'Infrastructure & Equip', num:4, color:'#8b5cf6', start:5, end:10 },
+      { name:'Staffing & Training', num:5, color:'#22c55e', start:7, end:12 },
+      { name:'Soft Launch & Marketing', num:6, color:'#0ea5e9', start:9, end:18 },
+    ];
+    const milestones = [
+      { name:'COFEPRIS filed', month:3, color:'#ef4444' },
+      { name:'Equipment ready', month:8, color:'#8b5cf6' },
+      { name:'Inspection', month:9, color:'#f59e0b' },
+      { name:'First patient', month:10, color:'#22c55e' },
+    ];
+    const rowsEl = document.getElementById('gantt-rows');
+    const cellW = 100 / 18;
+    phases.forEach(p => {
+      const barLeft = p.start * cellW;
+      const barWidth = (p.end - p.start) * cellW;
+      rowsEl.innerHTML += `
+        <div class="gantt-row">
+          <div class="gantt-row-label"><div class="gnum" style="background:${p.color}20;color:${p.color}">${p.num}</div>${p.name}</div>
+          <div class="gantt-bars">
+            ${months.map((_,i)=>`<div class="gantt-grid-line" style="left:${i*cellW}%"></div>`).join('')}
+            <div class="gantt-bar" style="left:${barLeft}%;width:${barWidth}%;background:${p.color}">M${p.start+1}–${p.end}</div>
+          </div>
+        </div>`;
+    });
+    rowsEl.innerHTML += `
+      <div class="gantt-row" style="margin-top:6px;padding-top:8px;border-top:0.5px solid var(--border)">
+        <div class="gantt-row-label" style="font-size:11px;color:var(--text-tertiary)">Milestones</div>
+        <div class="gantt-bars">
+          ${milestones.map(m=>`<div class="gantt-milestone" style="left:calc(${(m.month-0.5)*cellW}% - 7px);background:${m.color}" title="${m.name}"></div>`).join('')}
+        </div>
+      </div>`;
+    const legend = document.getElementById('gantt-legend');
+    phases.forEach(p => { legend.innerHTML += `<div class="gantt-legend-item"><div class="gantt-legend-dot" style="background:${p.color}"></div>${p.name}</div>`; });
+    legend.innerHTML += milestones.map(m=>`<div class="gantt-legend-item"><div class="gantt-legend-dot" style="background:${m.color};transform:rotate(45deg);border-radius:2px;width:8px;height:8px"></div>${m.name}</div>`).join('');
+  }
+
+  // ── Checklist → Document cross-linking ──
+  // Maps checklist IDs to document IDs they should advance when checked
+  const checkToDocMap = {
+    'c2': 'doc1',  // Hire notario → Acta Constitutiva
+    'c3': 'doc2',  // RFC → RFC/Alta SAT
+    'c8': 'doc4',  // File Aviso de Funcionamiento
+    'c9': 'doc3',  // Prepare Licencia Sanitaria application → In Progress
+    'c11':'doc3',  // COFEPRIS inspection → Submitted
+    'c12':'doc9',  // Licencia Municipal de Apertura
+    'c13':'doc10', // Protección Civil
+    'c6': 'doc6',  // Director Técnico → Cédula
+    'c16':'doc7',  // Sign lease → Lease Contract
+  };
+
+  function syncCheckToDoc(id, isChecked) {
+    const docId = checkToDocMap[id];
+    if (!docId) return;
+    if (isChecked && docStatMap[docId] === 0) {
+      docStatMap[docId] = 2;
+      renderDocTracker();
+      dbSet('docStatMap', docStatMap);
+    }
+  }
+
+  // ── Mobile sidebar ──
+  function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('sidebar-overlay').classList.toggle('open');
+  }
+
   // ── Navigation ──
   function nav(id, el) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -2159,6 +2436,10 @@
     document.querySelectorAll('.sb-item').forEach(b => b.classList.remove('active'));
     if (el) el.classList.add('active');
     document.getElementById('main').scrollTop = 0;
+    // Close sidebar on mobile after navigation
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('sidebar-overlay').classList.remove('open');
+    dbSet('lastPage', id);
   }
 
   // ── Phase detail pages ──
@@ -2267,6 +2548,7 @@
 
   function toggleCheck(id) {
     checks[id] = !checks[id];
+    syncCheckToDoc(id, checks[id]);
     renderChecklist();
     dbSet('checks', checks);
   }
@@ -2365,58 +2647,62 @@
   }
   calcUpdate();
 
-  // ══════════════════════════════════════════
-  // ── GANTT TIMELINE ──
-  // ══════════════════════════════════════════
-  (function(){
-    const months = ['M1','M2','M3','M4','M5','M6','M7','M8','M9','M10','M11','M12','M13','M14','M15','M16','M17','M18'];
-    const mEl = document.getElementById('gantt-months');
-    mEl.innerHTML = months.map(m=>`<div class="gantt-mo">${m}</div>`).join('');
+  // ── Saved calculator scenarios ──
+  let savedScenarios = [];
 
-    const phases = [
-      { name:'Research & Planning', num:1, color:'#3b82f6', start:0, end:2 },
-      { name:'Legal & Corporate', num:2, color:'#f59e0b', start:1, end:4 },
-      { name:'COFEPRIS & Permits', num:3, color:'#ef4444', start:2, end:9 },
-      { name:'Infrastructure & Equip', num:4, color:'#8b5cf6', start:5, end:10 },
-      { name:'Staffing & Training', num:5, color:'#22c55e', start:7, end:12 },
-      { name:'Soft Launch & Marketing', num:6, color:'#0ea5e9', start:9, end:18 },
-    ];
-    const milestones = [
-      { name:'COFEPRIS filed', month:3, color:'#ef4444' },
-      { name:'Equipment ready', month:8, color:'#8b5cf6' },
-      { name:'Inspection', month:9, color:'#f59e0b' },
-      { name:'First patient', month:10, color:'#22c55e' },
-    ];
+  function saveCurrentScenario() {
+    const name = document.getElementById('scenario-save-name').value.trim();
+    if (!name) return;
+    const snapshot = {
+      name,
+      studies: +document.getElementById('s-studies').value,
+      ticket:  +document.getElementById('s-ticket').value,
+      corp:    +document.getElementById('s-corp').value,
+      rent:    +document.getElementById('s-rent').value,
+      staff:   +document.getElementById('s-staff').value,
+      reagent: +document.getElementById('s-reagent').value,
+      startup: +document.getElementById('s-startup').value,
+    };
+    // Max 5 saved scenarios
+    if (savedScenarios.length >= 5) savedScenarios.pop();
+    savedScenarios.unshift(snapshot);
+    document.getElementById('scenario-save-name').value = '';
+    renderSavedScenarios();
+    dbSet('savedScenarios', savedScenarios);
+  }
 
-    const rowsEl = document.getElementById('gantt-rows');
-    const cellW = 100 / 18;
-    phases.forEach(p => {
-      const barLeft = p.start * cellW;
-      const barWidth = (p.end - p.start) * cellW;
-      rowsEl.innerHTML += `
-        <div class="gantt-row">
-          <div class="gantt-row-label"><div class="gnum" style="background:${p.color}20;color:${p.color}">${p.num}</div>${p.name}</div>
-          <div class="gantt-bars">
-            ${months.map((_,i)=>`<div class="gantt-grid-line" style="left:${i*cellW}%"></div>`).join('')}
-            <div class="gantt-bar" style="left:${barLeft}%;width:${barWidth}%;background:${p.color}">M${p.start+1}–${p.end}</div>
-          </div>
-        </div>`;
-    });
-    // milestone row
-    rowsEl.innerHTML += `
-      <div class="gantt-row" style="margin-top:6px;padding-top:8px;border-top:0.5px solid var(--border)">
-        <div class="gantt-row-label" style="font-size:11px;color:var(--text-tertiary)">Milestones</div>
-        <div class="gantt-bars">
-          ${milestones.map(m=>`<div class="gantt-milestone" style="left:calc(${(m.month-0.5)*cellW}% - 7px);background:${m.color}" title="${m.name}"></div>`).join('')}
-        </div>
-      </div>`;
+  function loadSavedScenario(idx) {
+    const s = savedScenarios[idx];
+    if (!s) return;
+    document.getElementById('s-studies').value = s.studies;
+    document.getElementById('s-ticket').value  = s.ticket;
+    document.getElementById('s-corp').value    = s.corp;
+    document.getElementById('s-rent').value    = s.rent;
+    document.getElementById('s-staff').value   = s.staff;
+    document.getElementById('s-reagent').value = s.reagent;
+    document.getElementById('s-startup').value = s.startup;
+    document.querySelectorAll('.scenario-tab').forEach(t => t.classList.remove('active'));
+    calcUpdate();
+  }
 
-    const legend = document.getElementById('gantt-legend');
-    phases.forEach(p => {
-      legend.innerHTML += `<div class="gantt-legend-item"><div class="gantt-legend-dot" style="background:${p.color}"></div>${p.name}</div>`;
-    });
-    legend.innerHTML += milestones.map(m=>`<div class="gantt-legend-item"><div class="gantt-legend-dot" style="background:${m.color};transform:rotate(45deg);border-radius:2px;width:8px;height:8px"></div>${m.name}</div>`).join('');
-  })();
+  function deleteSavedScenario(idx) {
+    savedScenarios.splice(idx, 1);
+    renderSavedScenarios();
+    dbSet('savedScenarios', savedScenarios);
+  }
+
+  function renderSavedScenarios() {
+    const row = document.getElementById('saved-scenarios-row');
+    if (!row) return;
+    if (!savedScenarios.length) { row.style.display = 'none'; return; }
+    row.style.display = 'flex';
+    row.innerHTML = `<span style="font-size:11px;color:var(--text-tertiary);align-self:center;margin-right:2px">Saved:</span>` +
+      savedScenarios.map((s, i) => `
+        <div style="display:flex;align-items:center;gap:0;border:0.5px solid var(--border);border-radius:20px;overflow:hidden">
+          <button onclick="loadSavedScenario(${i})" style="font-size:12px;padding:4px 12px;background:var(--bg-secondary);border:none;cursor:pointer;color:var(--text-primary);font-family:var(--font)">${s.name}</button>
+          <button onclick="deleteSavedScenario(${i})" style="font-size:11px;padding:4px 8px;background:var(--bg-secondary);border:none;border-left:0.5px solid var(--border);cursor:pointer;color:var(--text-tertiary);font-family:var(--font)" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--text-tertiary)'">✕</button>
+        </div>`).join('');
+  }
 
   // ══════════════════════════════════════════
   // ── PRICING MATRIX ──
@@ -2470,8 +2756,8 @@
           <td class="price-cell">$${row.sd}</td>
           <td class="price-cell">$${row.chopo}</td>
           <td class="price-cell">$${row.hospital}</td>
-          <td class="price-cell your-price"><input type="number" value="${row.yours}" data-idx="${i}" onchange="updatePricing(${i}, this.value)"></td>
-          <td class="price-cell" style="color:${diffColor};font-size:11px">${diffText}</td>
+          <td class="price-cell your-price"><input type="number" value="${row.yours}" data-idx="${i}" oninput="updatePricingLive(${i},this.value)" onchange="updatePricingSave()"></td>
+          <td class="price-cell" id="diff-${i}" style="color:${diffColor};font-size:11px">${diffText}</td>
         </tr>`;
       }
     });
@@ -2479,9 +2765,43 @@
     tbl.innerHTML = html;
     updatePricingSummary();
   }
+
+  function updatePricingLive(idx, val) {
+    // Update data and diff cell without rebuilding the whole table
+    pricingData[idx].yours = +val || 0;
+    const diff = pricingData[idx].yours && pricingData[idx].chopo
+      ? Math.round((pricingData[idx].yours - pricingData[idx].chopo) / pricingData[idx].chopo * 100) : 0;
+    const diffColor = diff < 0 ? 'var(--green-dark)' : diff > 0 ? 'var(--red)' : 'var(--text-tertiary)';
+    const diffCell = document.getElementById('diff-' + idx);
+    if (diffCell) {
+      diffCell.style.color = diffColor;
+      diffCell.textContent = diff > 0 ? '+' + diff + '%' : diff + '%';
+    }
+    updatePricingSummary();
+  }
+
+  let pricingSaveTimer = null;
+  function updatePricingSave() {
+    clearTimeout(pricingSaveTimer);
+    pricingSaveTimer = setTimeout(() => {
+      const yourPrices = pricingData.map(r => r.yours ?? null);
+      dbSet('pricingYours', yourPrices);
+    }, 800);
+  }
+
+  // Keep old name for compatibility
   function updatePricing(idx, val) {
-    pricingData[idx].yours = +val;
+    updatePricingLive(idx, val);
+    updatePricingSave();
+  }
+
+  const pricingDefaults = pricingData.map(r => r.yours ?? null);
+
+  function resetPricing() {
+    if (!confirm('Reset all LabQro prices to defaults?')) return;
+    pricingDefaults.forEach((price, i) => { if (price !== null && pricingData[i]) pricingData[i].yours = price; });
     renderPricingTable();
+    dbSet('pricingYours', pricingDefaults);
   }
   function updatePricingSummary() {
     const tests = pricingData.filter(r => r.study);
@@ -2549,7 +2869,7 @@
       html += `<div class="loc-card ${isWinner?'winner':''}">
         <button class="loc-remove" onclick="removeLoc(${li})" title="Remove">✕</button>
         <div class="loc-card-header">
-          <input class="loc-name-input" value="${loc.name}" onchange="locations[${li}].name=this.value;renderLocations()" placeholder="Location name">
+          <input class="loc-name-input" value="${loc.name}" onchange="locations[${li}].name=this.value;renderLocations();dbSet('locations',locations)" placeholder="Location name">
           <div class="loc-score-circle" style="${circleColor}">${score}</div>
         </div>`;
       locCriteria.forEach((c, ci) => {
@@ -2561,7 +2881,7 @@
           </div>
         </div>`;
       });
-      html += `<textarea class="loc-notes-input" placeholder="Visit notes..." onchange="locations[${li}].notes=this.value">${loc.notes}</textarea>`;
+      html += `<textarea class="loc-notes-input" placeholder="Visit notes..." onchange="locations[${li}].notes=this.value;dbSet('locations',locations)">${loc.notes}</textarea>`;
       html += `${isWinner?'<div style="margin-top:8px"><span class="badge" style="background:#e1f5ee;color:#085041">★ Highest score</span></div>':''}`;
       html += `</div>`;
     });
@@ -2600,11 +2920,22 @@
         </div>
         ${cards.map(p => {
           const pi = physicians.indexOf(p);
+          const hasNotes = p.notes && p.notes.trim();
           return `<div class="crm-card">
             <button class="crm-remove" onclick="removePhysician(${pi})" title="Remove">✕</button>
             <div class="crm-card-name">${p.name}</div>
             <div class="crm-card-spec">${p.spec}</div>
             <div class="crm-card-clinic">${p.clinic}</div>
+            ${hasNotes ? `
+            <div style="margin-top:6px;padding-top:6px;border-top:0.5px solid var(--border)">
+              <div style="font-size:11px;color:var(--text-tertiary);margin-bottom:3px">Notes</div>
+              <div style="font-size:12px;color:var(--text-secondary);line-height:1.5">${p.notes}</div>
+            </div>` : ''}
+            <div style="margin-top:6px">
+              <input placeholder="Add note…" value="" style="width:100%;font-size:11px;padding:4px 8px;border:0.5px solid var(--border);border-radius:5px;background:var(--bg-secondary);color:var(--text-primary);font-family:var(--font);outline:none"
+                onkeydown="if(event.key==='Enter'&&this.value.trim()){updatePhysicianNote(${pi},this.value.trim());this.value=''}"
+                placeholder="${hasNotes ? 'Update note…' : 'Add note (Enter to save)…'}">
+            </div>
             <div class="crm-card-actions">
               ${si > 0 ? `<button class="crm-move-btn" onclick="movePhysician(${pi},${si-1})">← Back</button>` : ''}
               ${si < 4 ? `<button class="crm-move-btn" onclick="movePhysician(${pi},${si+1})">Next →</button>` : ''}
@@ -2613,6 +2944,12 @@
         }).join('')}
       </div>`;
     }).join('');
+  }
+
+  function updatePhysicianNote(pi, note) {
+    physicians[pi].notes = note;
+    renderCRM();
+    dbSet('physicians', physicians);
   }
   function addPhysician() {
     const name = document.getElementById('crm-name').value.trim();
@@ -2808,12 +3145,37 @@
   }
   renderKanban();
   const notes = [];
+  let activeNoteTag = 'general';
+  let activeNoteFilter = 'all';
+
+  const noteTagColors = {
+    general:    { bg:'#f1efe8', color:'#5f5e5a' },
+    legal:      { bg:'#faeeda', color:'#854f0b' },
+    regulatory: { bg:'#fcebeb', color:'#a32d2d' },
+    financial:  { bg:'#eaf3de', color:'#3b6d11' },
+    contacts:   { bg:'#e6f1fb', color:'#185fa5' },
+    decision:   { bg:'#eeedfe', color:'#534ab7' },
+  };
+
+  function selectNoteTag(tag, el) {
+    activeNoteTag = tag;
+    document.querySelectorAll('#note-tag-row .tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  function filterNotes(tag, el) {
+    activeNoteFilter = tag;
+    document.querySelectorAll('#note-filter-row .tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    renderNotes();
+  }
 
   function saveNote() {
     const v = document.getElementById('note-input').value.trim();
     if (!v) return;
     notes.unshift({
       text: v,
+      tag: activeNoteTag,
       date: new Date().toLocaleDateString('es-MX', {day:'2-digit', month:'short', year:'numeric'})
     });
     document.getElementById('note-input').value = '';
@@ -2829,18 +3191,27 @@
 
   function renderNotes() {
     const el = document.getElementById('notes-list');
-    if (!notes.length) {
-      el.innerHTML = `<div style="font-size:13px;color:var(--text-tertiary);padding:20px 0;text-align:center">No notes yet. Add one above.</div>`;
+    if (!el) return;
+    const filtered = activeNoteFilter === 'all' ? notes : notes.filter(n => n.tag === activeNoteFilter);
+    if (!filtered.length) {
+      el.innerHTML = `<div style="font-size:13px;color:var(--text-tertiary);padding:20px 0;text-align:center">${activeNoteFilter === 'all' ? 'No notes yet. Add one above.' : 'No notes with this tag.'}</div>`;
       return;
     }
-    el.innerHTML = notes.map((n, i) => `
-      <div class="card" style="margin-bottom:10px;position:relative">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-          <div style="font-size:11px;color:var(--text-tertiary)">${n.date}</div>
-          <button onclick="deleteNote(${i})" style="font-size:11px;color:var(--text-tertiary);background:none;border:none;cursor:pointer;padding:2px 6px;border-radius:4px" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--text-tertiary)'">✕</button>
-        </div>
-        <div style="font-size:13px;color:var(--text-primary);line-height:1.6">${n.text}</div>
-      </div>`).join('');
+    el.innerHTML = filtered.map((n, i) => {
+      const tagStyle = noteTagColors[n.tag || 'general'];
+      const realIdx = notes.indexOf(n);
+      return `
+        <div class="card" style="margin-bottom:10px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:10px;font-weight:500;padding:2px 8px;border-radius:20px;background:${tagStyle.bg};color:${tagStyle.color}">${n.tag || 'general'}</span>
+              <span style="font-size:11px;color:var(--text-tertiary)">${n.date}</span>
+            </div>
+            <button onclick="deleteNote(${realIdx})" style="font-size:11px;color:var(--text-tertiary);background:none;border:none;cursor:pointer;padding:2px 6px;border-radius:4px" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--text-tertiary)'">✕</button>
+          </div>
+          <div style="font-size:13px;color:var(--text-primary);line-height:1.65">${n.text}</div>
+        </div>`;
+    }).join('');
   }
 
   // ══════════════════════════════════════════
@@ -2917,8 +3288,7 @@
       permEl.style.color = permDone === permTotal ? 'var(--green-dark)' : 'var(--blue)';
     }
 
-    // Physicians active or referring
-    const physActive = physicians.filter(p => p.stage >= 3).length;
+    // Physicians tracked
     const physTotal = physicians.length;
     const physEl = document.getElementById('dash-physicians');
     if (physEl) {
@@ -2926,11 +3296,70 @@
       physEl.style.fontSize = '15px';
     }
 
-    // Sub-line stage
+    // Overall progress ring — blend checklist + permits
+    const overallPct = Math.round((pct + Math.round(permDone / Math.max(permTotal,1) * 100)) / 2);
+    const circumference = 138.2;
+    const offset = circumference - (overallPct / 100) * circumference;
+    const ring = document.getElementById('dash-ring');
+    const ringPct = document.getElementById('dash-ring-pct');
+    const ringLabel = document.getElementById('dash-ring-label');
+    if (ring) {
+      ring.style.strokeDashoffset = offset;
+      ring.style.stroke = overallPct >= 70 ? 'var(--green)' : overallPct >= 30 ? 'var(--blue)' : 'var(--amber)';
+    }
+    if (ringPct) ringPct.textContent = overallPct + '%';
+
+    // Stage label
+    const stage = overallPct < 10 ? 'Research' : overallPct < 25 ? 'Legal' : overallPct < 50 ? 'Regulatory' : overallPct < 75 ? 'Operations' : overallPct < 95 ? 'Pre-launch' : 'Launched 🎉';
+    if (ringLabel) ringLabel.textContent = stage;
+
+    // Phase progress bars — map checklist cats + ids to phases
+    const phaseMap = {
+      1: checklistData.filter(c => c.cat === 'ops' && (c.id === 'c14' || c.id === 'c15' || c.id === 'c16')),
+      2: checklistData.filter(c => c.cat === 'legal'),
+      3: checklistData.filter(c => c.cat === 'regulatory' && ['c6','c7','c8','c9','c10','c11'].includes(c.id)),
+      4: checklistData.filter(c => c.cat === 'ops' && ['c15','c16','c17'].includes(c.id)),
+      5: checklistData.filter(c => c.cat === 'ops' && ['c17','c18'].includes(c.id)),
+      6: checklistData.filter(c => c.cat === 'ops' && c.id === 'c18'),
+    };
+    const phaseColors = { 1:'#185fa5', 2:'#f59e0b', 3:'#ef4444', 4:'#8b5cf6', 5:'#22c55e', 6:'#0ea5e9' };
+    Object.entries(phaseMap).forEach(([num, items]) => {
+      if (!items.length) return;
+      const donePct = Math.round(items.filter(c => checks[c.id]).length / items.length * 100);
+      const bar = document.getElementById('phase-bar-' + num);
+      const badge = document.getElementById('phase-badge-' + num);
+      if (bar) { bar.style.width = donePct + '%'; bar.style.background = phaseColors[num]; }
+      if (badge) {
+        if (donePct === 100) { badge.className = 'badge badge-done'; badge.textContent = 'Complete'; }
+        else if (donePct > 0) { badge.className = 'badge badge-progress'; badge.textContent = 'In progress'; }
+        else { badge.className = 'badge badge-todo'; badge.textContent = 'To do'; }
+      }
+    });
+
+    // Sub-line
     const subEl = document.getElementById('dash-sub');
-    if (subEl) {
-      const stage = pct < 10 ? 'Research' : pct < 30 ? 'Legal & Planning' : pct < 60 ? 'Regulatory' : pct < 80 ? 'Operations' : 'Pre-launch';
-      subEl.textContent = `Laboratorio Clínico · Querétaro · Stage: ${stage}`;
+    if (subEl) subEl.textContent = `Laboratorio Clínico · Querétaro · Stage: ${stage}`;
+
+    // Next actions — top 5 unchecked checklist items
+    const nextEl = document.getElementById('dash-next-actions');
+    if (nextEl) {
+      const pending = checklistData.filter(c => !checks[c.id]).slice(0, 5);
+      if (!pending.length) {
+        nextEl.innerHTML = `<div style="font-size:12px;color:var(--green-dark);padding:8px 0;font-weight:500">🎉 All checklist items complete!</div>`;
+      } else {
+        const catColors = { legal:'#854f0b', regulatory:'#a32d2d', ops:'#185fa5' };
+        nextEl.innerHTML = pending.map(c => `
+          <div class="phase-row" style="padding:8px 0;cursor:pointer" onclick="nav('checklist',document.querySelectorAll('.sb-item')[document.querySelectorAll('.sb-item').length-2])">
+            <div class="action-dot"></div>
+            <div class="phase-body">
+              <div style="display:flex;align-items:center;gap:6px">
+                <div class="phase-name" style="font-size:12px">${c.text}</div>
+                <span style="font-size:9px;padding:1px 6px;border-radius:10px;background:${catColors[c.cat]+'22'};color:${catColors[c.cat]};font-weight:500">${c.cat}</span>
+              </div>
+              <div class="phase-desc">${c.sub}</div>
+            </div>
+          </div>`).join('');
+      }
     }
   }
 
@@ -2982,10 +3411,11 @@
     setSyncStatus('connecting');
 
     // Load all keys in parallel
-    const [savedChecks, savedPermits, savedPhysicians, savedNotes, savedLocations, savedDocStatMap] =
+    const [savedChecks, savedPermits, savedPhysicians, savedNotes, savedLocations, savedDocStatMap, savedScenariosData, savedPricingYours, lastPage] =
       await Promise.all([
         dbGet('checks'), dbGet('permits'), dbGet('physicians'),
         dbGet('notes'),  dbGet('locations'), dbGet('docStatMap'),
+        dbGet('savedScenarios'), dbGet('pricingYours'), dbGet('lastPage'),
       ]);
 
     if (savedChecks) { Object.assign(checks, savedChecks); renderChecklist(); }
@@ -2994,6 +3424,21 @@
     if (savedNotes) { notes.splice(0, notes.length, ...savedNotes); renderNotes(); }
     if (savedLocations) { locations.splice(0, locations.length, ...savedLocations); renderLocations(); }
     if (savedDocStatMap) { Object.assign(docStatMap, savedDocStatMap); renderDocTracker(); }
+    if (savedScenariosData) { savedScenarios.splice(0, savedScenarios.length, ...savedScenariosData); renderSavedScenarios(); }
+    if (savedPricingYours) {
+      savedPricingYours.forEach((price, i) => { if (price !== null && pricingData[i]) pricingData[i].yours = price; });
+      renderPricingTable();
+    }
+
+    // Restore last active page — remap any stale route names from old versions
+    const pageRemaps = { documents: 'checklist', timeline: 'roadmap' };
+    const resolvedPage = pageRemaps[lastPage] || lastPage;
+    if (resolvedPage && document.getElementById('page-' + resolvedPage)) {
+      const matchingBtn = [...document.querySelectorAll('.sb-item')].find(b =>
+        b.getAttribute('onclick') && b.getAttribute('onclick').includes("'" + resolvedPage + "'")
+      );
+      nav(resolvedPage, matchingBtn || null);
+    }
 
     updateDashboard();
     setSyncStatus('live');
