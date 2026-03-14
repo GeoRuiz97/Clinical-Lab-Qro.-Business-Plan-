@@ -686,7 +686,76 @@
     background: var(--text-tertiary); flex-shrink: 0;
   }
 
-  /* ─── SCROLLBAR ─── */
+  /* ─── ROADMAP ACCORDION ─── */
+  .rm-phase {
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--bg-primary);
+    margin-bottom: 10px;
+    overflow: hidden;
+  }
+  .rm-phase-header {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 18px; cursor: pointer;
+    transition: background 0.12s;
+    user-select: none;
+  }
+  .rm-phase-header:hover { background: var(--bg-secondary); }
+  .rm-phase-num {
+    width: 30px; height: 30px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 500; flex-shrink: 0;
+  }
+  .rm-phase-title { flex: 1; }
+  .rm-phase-name { font-size: 14px; font-weight: 500; color: var(--text-primary); }
+  .rm-phase-meta { font-size: 11px; color: var(--text-tertiary); margin-top: 2px; }
+  .rm-phase-chevron {
+    font-size: 12px; color: var(--text-tertiary); flex-shrink: 0;
+    transition: transform 0.22s ease;
+  }
+  .rm-phase.open .rm-phase-chevron { transform: rotate(90deg); }
+
+  .rm-phase-body {
+    max-height: 0; overflow: hidden;
+    transition: max-height 0.3s ease;
+    border-top: 0px solid var(--border);
+  }
+  .rm-phase.open .rm-phase-body {
+    max-height: 2000px;
+    border-top: 0.5px solid var(--border);
+  }
+  .rm-phase-inner { padding: 4px 0 8px; }
+
+  .rm-item {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 10px 18px; cursor: pointer;
+    transition: background 0.12s;
+    border-bottom: 0.5px solid var(--border);
+  }
+  .rm-item:last-child { border-bottom: none; }
+  .rm-item:hover { background: var(--bg-secondary); }
+  .rm-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+  .rm-item-body { flex: 1; }
+  .rm-item-name { font-size: 13px; font-weight: 500; color: var(--text-primary); }
+  .rm-item-desc { font-size: 12px; color: var(--text-secondary); margin-top: 2px; line-height: 1.5; }
+  .rm-item-time { font-size: 11px; color: var(--text-tertiary); margin-top: 3px; }
+  .rm-item-expand {
+    max-height: 0; overflow: hidden;
+    transition: max-height 0.22s ease;
+  }
+  .rm-item.open .rm-item-expand { max-height: 400px; }
+  .rm-item-detail {
+    margin-top: 10px; padding: 10px 12px;
+    background: var(--bg-secondary); border-radius: var(--radius-md);
+    font-size: 12px; color: var(--text-secondary); line-height: 1.7;
+  }
+  .rm-item-detail strong { color: var(--text-primary); font-weight: 500; }
+  .rm-item-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 8px; }
+  .rm-item-chevron {
+    font-size: 11px; color: var(--text-tertiary); flex-shrink: 0;
+    margin-top: 3px; transition: transform 0.18s;
+  }
+  .rm-item.open .rm-item-chevron { transform: rotate(90deg); }
   ::-webkit-scrollbar { width: 5px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
@@ -1109,34 +1178,393 @@
 
     <!-- ROADMAP TAB -->
     <div id="rt-roadmap">
-      <div class="card">
-        <div class="section-hdr"><div class="card-title" style="margin:0">Phase 1 — Research & planning (Months 1–2)</div><span class="badge badge-progress">Current phase</span></div>
-        <div class="reg-item"><div class="reg-dot" style="background:#185fa5"></div><div><div class="reg-name">Market research — Querétaro</div><div class="reg-detail">Population, income levels, competitor density by zone, unmet demand analysis</div></div></div>
-        <div class="reg-item"><div class="reg-dot" style="background:#185fa5"></div><div><div class="reg-name">Define business model</div><div class="reg-detail">Direct patient, physician referral, corporate contracts, IMSS subrogación</div></div></div>
-        <div class="reg-item"><div class="reg-dot" style="background:#185fa5"></div><div><div class="reg-name">Financial modeling</div><div class="reg-detail">Startup costs, break-even, 3-year P&L, funding sources</div></div></div>
-        <div class="reg-item"><div class="reg-dot" style="background:#185fa5"></div><div><div class="reg-name">Location shortlist</div><div class="reg-detail">Min 60m², ground floor, parking, near high-traffic medical zones</div></div></div>
+
+      <!-- Phase 1 -->
+      <div class="rm-phase open" id="rm-phase-1">
+        <div class="rm-phase-header" onclick="toggleRmPhase(1)">
+          <div class="rm-phase-num" style="background:#e6f1fb;color:#185fa5">1</div>
+          <div class="rm-phase-title">
+            <div class="rm-phase-name">Research & Planning</div>
+            <div class="rm-phase-meta">Months 1–2 · Est. $15,000–30,000 MXN</div>
+          </div>
+          <span class="badge badge-progress">Current phase</span>
+          <span class="rm-phase-chevron">›</span>
+        </div>
+        <div class="rm-phase-body">
+          <div class="rm-phase-inner">
+            <div class="rm-item" onclick="toggleRmItem(this)">
+              <div class="rm-dot" style="background:#185fa5"></div>
+              <div class="rm-item-body">
+                <div class="rm-item-name">Market research — Querétaro</div>
+                <div class="rm-item-desc">Population, income levels, competitor density by zone, unmet demand analysis</div>
+                <div class="rm-item-expand">
+                  <div class="rm-item-detail">
+                    <strong>What to do:</strong> Map all existing labs within 5km of each candidate zone. Compare pricing, test menus, and hours. Survey 20–30 patients at IMSS waiting rooms about their lab habits and pain points. Pull INEGI population data for Juriquilla, Satélite, and Centro.<br><br>
+                    <strong>Key question to answer:</strong> Which zone has the highest unmet demand relative to existing supply?<br><br>
+                    <strong>Deliverable:</strong> One-page competitive map per zone with a recommendation.
+                    <div class="rm-item-tags">
+                      <span class="task-tag tag-time">2–3 weeks</span>
+                      <span class="task-tag tag-cost">Low cost</span>
+                      <span class="task-tag tag-tip">Do this before signing any lease</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <span class="rm-item-chevron">›</span>
+            </div>
+            <div class="rm-item" onclick="toggleRmItem(this)">
+              <div class="rm-dot" style="background:#185fa5"></div>
+              <div class="rm-item-body">
+                <div class="rm-item-name">Define business model</div>
+                <div class="rm-item-desc">Direct patient, physician referral, corporate contracts, IMSS subrogación</div>
+                <div class="rm-item-expand">
+                  <div class="rm-item-detail">
+                    <strong>Revenue mix to target:</strong> 60% direct patient walk-in, 30% physician referral, 10% corporate/IMSS. The physician referral channel has the highest LTV — a single referring médico can send 30–80 patients/month.<br><br>
+                    <strong>IMSS subrogación:</strong> High volume but low margin and slow payment (60–90 days). Only pursue once you have operational stability.<br><br>
+                    <strong>Deliverable:</strong> Written business model canvas with revenue assumptions.
+                    <div class="rm-item-tags">
+                      <span class="task-tag tag-time">1 week</span>
+                      <span class="task-tag tag-tip">Physician referral = highest ROI channel</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <span class="rm-item-chevron">›</span>
+            </div>
+            <div class="rm-item" onclick="toggleRmItem(this)">
+              <div class="rm-dot" style="background:#185fa5"></div>
+              <div class="rm-item-body">
+                <div class="rm-item-name">Financial modeling</div>
+                <div class="rm-item-desc">Startup costs, break-even, 3-year P&L, funding sources</div>
+                <div class="rm-item-expand">
+                  <div class="rm-item-detail">
+                    <strong>Key inputs to model:</strong> Equipment (purchase vs comodato), rent by zone, staffing (QFB + 2 techs + front desk minimum), reagent costs by test volume, and COFEPRIS permit fees.<br><br>
+                    <strong>Break-even target:</strong> ~250–300 studies/month at an avg ticket of $600 MXN. Most labs reach this in months 4–8 post-launch.<br><br>
+                    <strong>Funding options:</strong> Personal capital, NAFIN PyME loan (up to $2M MXN at ~12%), or silent partner. Use the Financial Calculator page to model scenarios.
+                    <div class="rm-item-tags">
+                      <span class="task-tag tag-time">1–2 weeks</span>
+                      <span class="task-tag tag-resource">See: Financial Calculator</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <span class="rm-item-chevron">›</span>
+            </div>
+            <div class="rm-item" onclick="toggleRmItem(this)">
+              <div class="rm-dot" style="background:#185fa5"></div>
+              <div class="rm-item-body">
+                <div class="rm-item-name">Location shortlist</div>
+                <div class="rm-item-desc">Min 60m², ground floor, parking, near high-traffic medical zones</div>
+                <div class="rm-item-expand">
+                  <div class="rm-item-detail">
+                    <strong>NOM-007 requirements:</strong> Minimum usable area ~60m². Must have separate reception, sample collection, analysis, and waste areas. Ground floor strongly preferred for patient access.<br><br>
+                    <strong>Top zones:</strong> Juriquilla/Zibatá (high income, low competition), Satélite/Epigmenio (high foot traffic, IMSS overflow), Centro/Constituyentes (visibility, médicos nearby).<br><br>
+                    <strong>Before signing:</strong> Confirm uso de suelo allows servicios médicos. Negotiate rent-free buildout period (target 2–3 months).
+                    <div class="rm-item-tags">
+                      <span class="task-tag tag-critical">Confirm uso de suelo first</span>
+                      <span class="task-tag tag-time">2–4 weeks</span>
+                      <span class="task-tag tag-resource">See: Location Scoring tool</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <span class="rm-item-chevron">›</span>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="card">
-        <div class="section-hdr"><div class="card-title" style="margin:0">Phase 2 — Legal & corporate (Months 2–4)</div><span class="badge badge-todo">Upcoming</span></div>
-        <div class="reg-item"><div class="reg-dot" style="background:#888780"></div><div><div class="reg-name">Constitución de empresa (S.A. de C.V. recommended)</div><div class="reg-detail">Notario, acta constitutiva, razón social</div><div class="reg-time">~2–4 weeks · ~$15,000–25,000 MXN</div></div></div>
-        <div class="reg-item"><div class="reg-dot" style="background:#888780"></div><div><div class="reg-name">RFC ante el SAT</div><div class="reg-detail">Tax registration, CFDI setup, régimen fiscal</div></div></div>
-        <div class="reg-item"><div class="reg-dot" style="background:#888780"></div><div><div class="reg-name">IMPI trademark (optional but recommended)</div><div class="reg-detail">Register lab name and logo</div></div></div>
-        <div class="reg-item"><div class="reg-dot" style="background:#888780"></div><div><div class="reg-name">Lease contract for lab space</div><div class="reg-detail">Must specify uso de suelo: servicios médicos</div></div></div>
+
+      <!-- Phase 2 -->
+      <div class="rm-phase" id="rm-phase-2">
+        <div class="rm-phase-header" onclick="toggleRmPhase(2)">
+          <div class="rm-phase-num" style="background:#faeeda;color:#854f0b">2</div>
+          <div class="rm-phase-title">
+            <div class="rm-phase-name">Legal & Corporate</div>
+            <div class="rm-phase-meta">Months 2–4 · Est. $53,000–135,000 MXN</div>
+          </div>
+          <span class="badge badge-todo">Upcoming</span>
+          <span class="rm-phase-chevron">›</span>
+        </div>
+        <div class="rm-phase-body">
+          <div class="rm-phase-inner">
+            <div class="rm-item" onclick="toggleRmItem(this)">
+              <div class="rm-dot" style="background:#888780"></div>
+              <div class="rm-item-body">
+                <div class="rm-item-name">Constitución de empresa (S.A. de C.V.)</div>
+                <div class="rm-item-desc">Notario, acta constitutiva, razón social</div>
+                <div class="rm-item-time">~2–4 weeks · ~$15,000–25,000 MXN</div>
+                <div class="rm-item-expand">
+                  <div class="rm-item-detail">
+                    <strong>Why S.A. de C.V.:</strong> Limits personal liability, has clean structure for partners or investors, and is the format COFEPRIS expects for clinical labs. Avoid Persona Física — too much personal exposure.<br><br>
+                    <strong>What the notario needs:</strong> Proposed razón social (check availability at SE portal first), partner names and CURP, capital split, and your objeto social — make it broad: <em>"Prestación de servicios de laboratorio de análisis clínicos, toma de muestras, y servicios de salud en general."</em><br><br>
+                    <strong>Tip:</strong> The notario process takes 2–4 weeks. Start this the moment you have your location locked.
+                    <div class="rm-item-tags">
+                      <span class="task-tag tag-cost">$15,000–25,000 MXN</span>
+                      <span class="task-tag tag-time">2–4 weeks</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <span class="rm-item-chevron">›</span>
+            </div>
+            <div class="rm-item" onclick="toggleRmItem(this)">
+              <div class="rm-dot" style="background:#888780"></div>
+              <div class="rm-item-body">
+                <div class="rm-item-name">RFC ante el SAT</div>
+                <div class="rm-item-desc">Tax registration, CFDI setup, régimen fiscal</div>
+                <div class="rm-item-expand">
+                  <div class="rm-item-detail">
+                    <strong>Process:</strong> Register online at sat.gob.mx with your Acta Constitutiva and e.firma. Choose <em>Régimen General de Ley Personas Morales</em>. This enables you to issue CFDI invoices (required for corporate clients and IMSS).<br><br>
+                    <strong>Also get:</strong> e.firma (electronic signature) — needed for virtually every government portal. Schedule appointment at your nearest SAT office.<br><br>
+                    <strong>PAC provider:</strong> You'll need a PAC (Proveedor Autorizado de Certificación) to issue CFDIs. Facturama, Finkok, and SW SAPiens are popular affordable options (~$500–2,000 MXN/year).
+                    <div class="rm-item-tags">
+                      <span class="task-tag tag-cost">Free (SAT) + PAC fee</span>
+                      <span class="task-tag tag-time">1–2 weeks</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <span class="rm-item-chevron">›</span>
+            </div>
+            <div class="rm-item" onclick="toggleRmItem(this)">
+              <div class="rm-dot" style="background:#888780"></div>
+              <div class="rm-item-body">
+                <div class="rm-item-name">IMPI trademark (recommended)</div>
+                <div class="rm-item-desc">Register lab name and logo</div>
+                <div class="rm-item-expand">
+                  <div class="rm-item-detail">
+                    <strong>Why bother:</strong> If you plan to grow to multiple locations or franchise the model, your brand is a core asset. IMPI registration is cheap insurance against a competitor copying your name.<br><br>
+                    <strong>Process:</strong> File at impi.gob.mx. Choose class 44 (servicios médicos). Search for conflicts first. Filing fee ~$2,500 MXN. Approval takes 3–6 months but the filing date is what protects you.<br><br>
+                    <strong>Not urgent</strong> but do it early so the clock starts.
+                    <div class="rm-item-tags">
+                      <span class="task-tag tag-cost">~$2,500 MXN</span>
+                      <span class="task-tag tag-time">3–6 months for approval</span>
+                      <span class="task-tag tag-tip">Optional but smart</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <span class="rm-item-chevron">›</span>
+            </div>
+            <div class="rm-item" onclick="toggleRmItem(this)">
+              <div class="rm-dot" style="background:#888780"></div>
+              <div class="rm-item-body">
+                <div class="rm-item-name">Lease contract for lab space</div>
+                <div class="rm-item-desc">Must specify uso de suelo: servicios médicos</div>
+                <div class="rm-item-expand">
+                  <div class="rm-item-detail">
+                    <strong>Critical clause:</strong> The lease must explicitly state the permitted use as <em>"servicios médicos / laboratorio clínico."</em> COFEPRIS will check this during inspection. A generic commercial lease will not be accepted.<br><br>
+                    <strong>Negotiate:</strong> Rent-free period during buildout (2–3 months is standard for commercial medical space). Permission for structural modifications (plumbing for sinks, waste room, ventilation). Long initial term (3–5 years) gives you stability and leverage.<br><br>
+                    <strong>Deposit:</strong> Typically 2 months. Factor into startup capital.
+                    <div class="rm-item-tags">
+                      <span class="task-tag tag-critical">Uso de suelo wording required</span>
+                      <span class="task-tag tag-cost">2 months deposit</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <span class="rm-item-chevron">›</span>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="card">
-        <div class="section-hdr" style="flex-wrap:wrap;gap:6px"><div class="card-title" style="margin:0">Phase 3 — COFEPRIS & sanitary permits (Months 3–9)</div><div style="display:flex;gap:5px"><span class="badge badge-todo">Upcoming</span><span class="badge badge-urgent">Allow 6+ months</span></div></div>
-        <div class="reg-item"><div class="reg-dot" style="background:#ef9f27"></div><div><div class="reg-name">Licencia Sanitaria — COFEPRIS</div><div class="reg-detail">Main permit to operate a laboratorio clínico. Requires Director Técnico (QFB), physical inspection, equipment list</div><div class="reg-time">60–120 business days officially; plan for more</div></div></div>
-        <div class="reg-item"><div class="reg-dot" style="background:#ef9f27"></div><div><div class="reg-name">Cumplimiento NOM-007-SSA3-2011</div><div class="reg-detail">General lab organization, infrastructure standards</div></div></div>
-        <div class="reg-item"><div class="reg-dot" style="background:#ef9f27"></div><div><div class="reg-name">Cumplimiento NOM-087-SEMARNAT (RPBI)</div><div class="reg-detail">Biological hazardous waste management</div></div></div>
-        <div class="reg-item"><div class="reg-dot" style="background:#ef9f27"></div><div><div class="reg-name">Aviso de funcionamiento</div><div class="reg-detail">Filed via COFEPRIS portal (SIVISAM)</div></div></div>
+
+      <!-- Phase 3 -->
+      <div class="rm-phase" id="rm-phase-3">
+        <div class="rm-phase-header" onclick="toggleRmPhase(3)">
+          <div class="rm-phase-num" style="background:#fcebeb;color:#a32d2d">3</div>
+          <div class="rm-phase-title">
+            <div class="rm-phase-name">COFEPRIS & Sanitary Permits</div>
+            <div class="rm-phase-meta">Months 3–9 · Allow 6+ months</div>
+          </div>
+          <div style="display:flex;gap:5px">
+            <span class="badge badge-todo">Upcoming</span>
+            <span class="badge badge-urgent">Critical path</span>
+          </div>
+          <span class="rm-phase-chevron">›</span>
+        </div>
+        <div class="rm-phase-body">
+          <div class="rm-phase-inner">
+            <div class="rm-item" onclick="toggleRmItem(this)">
+              <div class="rm-dot" style="background:#ef9f27"></div>
+              <div class="rm-item-body">
+                <div class="rm-item-name">Licencia Sanitaria — COFEPRIS</div>
+                <div class="rm-item-desc">Main permit to operate. Requires Director Técnico, physical inspection, equipment list</div>
+                <div class="rm-item-time">60–120 business days officially — plan for more</div>
+                <div class="rm-item-expand">
+                  <div class="rm-item-detail">
+                    <strong>This is your longest dependency.</strong> File as early as possible — everything else waits on this.<br><br>
+                    <strong>What COFEPRIS will inspect:</strong> Physical layout matching submitted floor plan, all listed equipment present and calibrated, QFB Director Técnico named and cédula on file, RPBI waste plan in place, hygiene and safety standards met.<br><br>
+                    <strong>Common rejection reasons:</strong> Floor plan mismatch, missing equipment calibration certs, incomplete RPBI contract, QFB cédula not registered with DGP.<br><br>
+                    <strong>Pre-inspection tip:</strong> Hire a COFEPRIS consultant (~$5,000–10,000 MXN) for a mock inspection before the real one. Saves months.
+                    <div class="rm-item-tags">
+                      <span class="task-tag tag-cost">$5,000–15,000 MXN in fees</span>
+                      <span class="task-tag tag-critical">Start immediately after RFC</span>
+                      <span class="task-tag tag-resource">See: Regulatory page</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <span class="rm-item-chevron">›</span>
+            </div>
+            <div class="rm-item" onclick="toggleRmItem(this)">
+              <div class="rm-dot" style="background:#ef9f27"></div>
+              <div class="rm-item-body">
+                <div class="rm-item-name">Cumplimiento NOM-007-SSA3-2011</div>
+                <div class="rm-item-desc">General lab organization and infrastructure standards</div>
+                <div class="rm-item-expand">
+                  <div class="rm-item-detail">
+                    <strong>What it covers:</strong> Physical space requirements (areas de recepción, toma de muestra, análisis, lavado, almacén), minimum equipment, lighting, ventilation, and biosafety measures.<br><br>
+                    <strong>Key requirement:</strong> Each functional area must be physically separated — you can't take samples in the same space where you run analyzers.<br><br>
+                    <strong>Architect tip:</strong> Hire a local architect familiar with this NOM before finalizing your buildout plan. Retrofitting is expensive.
+                    <div class="rm-item-tags">
+                      <span class="task-tag tag-time">Ongoing compliance</span>
+                      <span class="task-tag tag-tip">Plan buildout around this NOM</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <span class="rm-item-chevron">›</span>
+            </div>
+            <div class="rm-item" onclick="toggleRmItem(this)">
+              <div class="rm-dot" style="background:#ef9f27"></div>
+              <div class="rm-item-body">
+                <div class="rm-item-name">Cumplimiento NOM-087-SEMARNAT (RPBI)</div>
+                <div class="rm-item-desc">Biological hazardous waste management plan</div>
+                <div class="rm-item-expand">
+                  <div class="rm-item-detail">
+                    <strong>What you need:</strong> Written RPBI management plan, signed contract with an authorized waste transporter, red containers for sharps and biohazard waste, monthly generation log.<br><br>
+                    <strong>Transporters in Querétaro:</strong> ECOQUIM and STERICYCLE are authorized. Get quotes from both — pricing varies significantly by pickup frequency.<br><br>
+                    <strong>This document</strong> is required before COFEPRIS will schedule your inspection.
+                    <div class="rm-item-tags">
+                      <span class="task-tag tag-cost">~$800–1,500 MXN/mo transporter fee</span>
+                      <span class="task-tag tag-critical">Required for COFEPRIS inspection</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <span class="rm-item-chevron">›</span>
+            </div>
+            <div class="rm-item" onclick="toggleRmItem(this)">
+              <div class="rm-dot" style="background:#ef9f27"></div>
+              <div class="rm-item-body">
+                <div class="rm-item-name">Aviso de funcionamiento</div>
+                <div class="rm-item-desc">Filed via COFEPRIS portal (SIVISAM) — required before opening</div>
+                <div class="rm-item-expand">
+                  <div class="rm-item-detail">
+                    <strong>What it is:</strong> An electronic notice filed at sivisam.cofepris.gob.mx that formally registers your lab as an operational health establishment. Different from the Licencia Sanitaria — this is a notice, not a permit.<br><br>
+                    <strong>When to file:</strong> File this before or simultaneously with the Licencia Sanitaria application. The SIVISAM account and Aviso number are prerequisites for the Licencia process.<br><br>
+                    <strong>Cost:</strong> Minimal — mainly government portal fees.
+                    <div class="rm-item-tags">
+                      <span class="task-tag tag-time">1–2 weeks</span>
+                      <span class="task-tag tag-cost">Minimal cost</span>
+                      <span class="task-tag tag-resource">Portal: sivisam.cofepris.gob.mx</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <span class="rm-item-chevron">›</span>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="card">
-        <div class="section-hdr"><div class="card-title" style="margin:0">Phase 4–6 — Infrastructure, staffing, launch (Months 6–18)</div><span class="badge badge-todo">Upcoming</span></div>
-        <div class="reg-item"><div class="reg-dot" style="background:#888780"></div><div><div class="reg-name">Equipment procurement</div><div class="reg-detail">Hematology, chemistry, coagulation analyzers; centrifuges, cold chain</div></div></div>
-        <div class="reg-item"><div class="reg-dot" style="background:#888780"></div><div><div class="reg-name">Hire Director Técnico (QFB cédula profesional)</div><div class="reg-detail">Required by law — cannot operate without one</div></div></div>
-        <div class="reg-item"><div class="reg-dot" style="background:#888780"></div><div><div class="reg-name">LIS / software setup</div><div class="reg-detail">Laboratory Information System, billing, patient portal</div></div></div>
-        <div class="reg-item"><div class="reg-dot" style="background:#888780"></div><div><div class="reg-name">Soft launch + physician outreach</div><div class="reg-detail">Visit 30–50 local médicos, offer resultado en 24h, free pickup</div></div></div>
+
+      <!-- Phase 4–6 -->
+      <div class="rm-phase" id="rm-phase-4">
+        <div class="rm-phase-header" onclick="toggleRmPhase(4)">
+          <div class="rm-phase-num" style="background:#eeedfe;color:#534ab7">4–6</div>
+          <div class="rm-phase-title">
+            <div class="rm-phase-name">Infrastructure, Staffing & Launch</div>
+            <div class="rm-phase-meta">Months 6–18 · Run in parallel with permits</div>
+          </div>
+          <span class="badge badge-todo">Upcoming</span>
+          <span class="rm-phase-chevron">›</span>
+        </div>
+        <div class="rm-phase-body">
+          <div class="rm-phase-inner">
+            <div class="rm-item" onclick="toggleRmItem(this)">
+              <div class="rm-dot" style="background:#888780"></div>
+              <div class="rm-item-body">
+                <div class="rm-item-name">Equipment procurement</div>
+                <div class="rm-item-desc">Hematology, chemistry, coagulation analyzers; centrifuges, cold chain</div>
+                <div class="rm-item-expand">
+                  <div class="rm-item-detail">
+                    <strong>Order early:</strong> Import lead times for analyzers can be 8–16 weeks. Order during the COFEPRIS waiting period so equipment is ready when your license arrives.<br><br>
+                    <strong>Comodato vs purchase:</strong> At &lt;300 tests/month, comodato (free analyzer, pay reagent markup) often wins financially. Above 400 tests/month, purchase saves money long-term. Use the Equipment Compare page to model this.<br><br>
+                    <strong>Minimum setup:</strong> Hematology analyzer (BHC), chemistry analyzer (QS panels), centrifuge x2, refrigerator 2–8°C, freezer -20°C, microscope.
+                    <div class="rm-item-tags">
+                      <span class="task-tag tag-cost">$580,000–1,200,000 MXN (purchase)</span>
+                      <span class="task-tag tag-time">Order in Month 4–5</span>
+                      <span class="task-tag tag-resource">See: Equipment Compare</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <span class="rm-item-chevron">›</span>
+            </div>
+            <div class="rm-item" onclick="toggleRmItem(this)">
+              <div class="rm-dot" style="background:#888780"></div>
+              <div class="rm-item-body">
+                <div class="rm-item-name">Hire Director Técnico (QFB)</div>
+                <div class="rm-item-desc">Required by law — cannot operate without one on file with COFEPRIS</div>
+                <div class="rm-item-expand">
+                  <div class="rm-item-detail">
+                    <strong>This is your most critical hire.</strong> Without a named QFB with a valid cédula profesional registered with the Dirección General de Profesiones, COFEPRIS will not issue your Licencia Sanitaria.<br><br>
+                    <strong>Options:</strong> Full-time (most compliant, $18,000–35,000 MXN/mo), part-time shared arrangement (some labs do this legally — verify with COFEPRIS Querétaro), or a consulting QFB firm.<br><br>
+                    <strong>Start recruiting now.</strong> Good QFBs with lab director experience in Querétaro are rare. Post at UAQ, UNAM pharmacy faculty alumni networks, and LinkedIn.
+                    <div class="rm-item-tags">
+                      <span class="task-tag tag-critical">Non-negotiable requirement</span>
+                      <span class="task-tag tag-cost">$18,000–35,000 MXN/mo</span>
+                      <span class="task-tag tag-time">Start recruiting now</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <span class="rm-item-chevron">›</span>
+            </div>
+            <div class="rm-item" onclick="toggleRmItem(this)">
+              <div class="rm-dot" style="background:#888780"></div>
+              <div class="rm-item-body">
+                <div class="rm-item-name">LIS / software setup</div>
+                <div class="rm-item-desc">Laboratory Information System, billing, patient portal</div>
+                <div class="rm-item-expand">
+                  <div class="rm-item-detail">
+                    <strong>What a LIS does:</strong> Manages sample tracking, result entry, report generation (PDF with your logo), patient records, and integrates with billing/CFDI issuance.<br><br>
+                    <strong>Options for Mexico:</strong> LabSoft (popular in QRO), HealthPath, MedLab, or SistemaLAB. Expect $3,000–8,000 MXN/month SaaS or a one-time license ~$50,000–120,000 MXN.<br><br>
+                    <strong>Must-have features:</strong> WhatsApp result delivery, barcode sample labeling, CFDI-integrated billing, multi-user with role permissions.
+                    <div class="rm-item-tags">
+                      <span class="task-tag tag-cost">$3,000–8,000 MXN/mo SaaS</span>
+                      <span class="task-tag tag-tip">WhatsApp delivery is a differentiator</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <span class="rm-item-chevron">›</span>
+            </div>
+            <div class="rm-item" onclick="toggleRmItem(this)">
+              <div class="rm-dot" style="background:#888780"></div>
+              <div class="rm-item-body">
+                <div class="rm-item-name">Soft launch + physician outreach</div>
+                <div class="rm-item-desc">Visit 30–50 local médicos, offer resultado en 4h, free pickup</div>
+                <div class="rm-item-expand">
+                  <div class="rm-item-detail">
+                    <strong>Physician outreach strategy:</strong> Visit offices in person. Bring a small kit: price list, business cards, a sample result report showing your turnaround time. Offer to pick up samples from their office for the first month free.<br><br>
+                    <strong>Your pitch:</strong> "Resultados en 4 horas, recolección gratis, entrega por WhatsApp." That's it. That's what they want to hear — their patients stop calling them asking why results aren't ready.<br><br>
+                    <strong>Track every contact</strong> in the Physician CRM. Follow up monthly. It takes 3–5 touches before a médico sends their first referral.
+                    <div class="rm-item-tags">
+                      <span class="task-tag tag-time">Month 9–12</span>
+                      <span class="task-tag tag-tip">4h turnaround is your #1 differentiator</span>
+                      <span class="task-tag tag-resource">See: Physician CRM</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <span class="rm-item-chevron">›</span>
+            </div>
+          </div>
+        </div>
       </div>
+
     </div>
 
     <!-- TIMELINE TAB -->
@@ -2337,6 +2765,15 @@
 </div>
 
 <script>
+  // ── Roadmap accordion ──
+  function toggleRmPhase(num) {
+    const el = document.getElementById('rm-phase-' + num);
+    el.classList.toggle('open');
+  }
+  function toggleRmItem(el) {
+    el.classList.toggle('open');
+  }
+
   // ── Checklist / Documents tab switcher ──
   function switchCDTab(tab) {
     document.getElementById('cd-checklist').style.display = tab === 'checklist' ? 'block' : 'none';
