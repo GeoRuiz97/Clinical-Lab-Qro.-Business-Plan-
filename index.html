@@ -5,6 +5,37 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LabQro — Business Plan HQ</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+  import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection, addDoc, deleteDoc, query, orderBy } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+  // ── Firebase config ── Replace with your own project config ──
+  const firebaseConfig = {
+    apiKey: "AIzaSyCm4LDkaWjGvpYsI8vEK6OeLKWyE1PCn-w",
+    authDomain: "clinical-lab-qro-business-plan.firebaseapp.com",
+    projectId: "clinical-lab-qro-business-plan",
+    storageBucket: "clinical-lab-qro-business-plan.firebasestorage.app",
+    messagingSenderId: "548428853510",
+    appId: "1:548428853510:web:4dc5dd4e61fa5555c36e87"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // Expose db and helpers to global scope for the rest of the app
+  window._db = db;
+  window._doc = doc;
+  window._getDoc = getDoc;
+  window._setDoc = setDoc;
+  window._onSnapshot = onSnapshot;
+  window._collection = collection;
+  window._addDoc = addDoc;
+  window._deleteDoc = deleteDoc;
+  window._query = query;
+  window._orderBy = orderBy;
+  window._dbReady = true;
+  window.dispatchEvent(new Event('dbReady'));
+</script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -813,14 +844,20 @@
 
   <!-- ── DASHBOARD ── -->
   <section id="page-dashboard" class="page active">
-    <div class="page-title">Good day — welcome to LabQro HQ</div>
-    <div class="page-sub">Laboratorio Clínico · Querétaro · Stage: Pre-launch</div>
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:3px">
+      <div class="page-title">Good day — welcome to LabQro HQ</div>
+      <div id="sync-badge" style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text-tertiary);padding:4px 10px;border-radius:20px;background:var(--bg-secondary);border:0.5px solid var(--border)">
+        <span id="sync-dot" style="width:6px;height:6px;border-radius:50%;background:var(--text-tertiary);flex-shrink:0"></span>
+        <span id="sync-label">Connecting…</span>
+      </div>
+    </div>
+    <div class="page-sub" id="dash-sub">Laboratorio Clínico · Querétaro · Stage: Pre-launch</div>
 
     <div class="metrics">
-      <div class="metric"><div class="metric-label">Overall progress</div><div class="metric-val">4%</div></div>
-      <div class="metric"><div class="metric-label">Current phase</div><div class="metric-val blue" style="font-size:15px">Research</div></div>
-      <div class="metric"><div class="metric-label">Est. startup cost</div><div class="metric-val amber" style="font-size:16px">$1.8M MXN</div></div>
-      <div class="metric"><div class="metric-label">Time to launch</div><div class="metric-val" style="font-size:16px">12–18 mo</div></div>
+      <div class="metric"><div class="metric-label">Checklist progress</div><div class="metric-val" id="dash-progress">—</div></div>
+      <div class="metric"><div class="metric-label">Permits completed</div><div class="metric-val blue" id="dash-permits" style="font-size:15px">—</div></div>
+      <div class="metric"><div class="metric-label">Physicians in pipeline</div><div class="metric-val amber" id="dash-physicians" style="font-size:16px">—</div></div>
+      <div class="metric"><div class="metric-label">Est. startup cost</div><div class="metric-val" style="font-size:16px">$1.8M MXN</div></div>
     </div>
 
     <div class="two-col">
@@ -1107,19 +1144,12 @@
   <!-- ── DOCUMENTS ── -->
   <section id="page-documents" class="page">
     <div class="page-title">Document tracker</div>
-    <div class="page-sub">Track permits, contracts, and key files</div>
+    <div class="page-sub">Click a status badge to update it — changes save automatically</div>
     <div class="card">
       <div class="section-hdr"><div class="card-title" style="margin:0">Required documents</div></div>
-      <div class="doc-row"><div class="doc-icon" style="background:#faeeda;color:#854f0b">⚖</div><div><div class="doc-name">Acta Constitutiva</div><div class="doc-meta">Notario público · Legal foundation</div></div><div class="doc-status"><span class="badge badge-todo">Needed</span></div></div>
-      <div class="doc-row"><div class="doc-icon" style="background:#faeeda;color:#854f0b">⚖</div><div><div class="doc-name">RFC / Alta SAT</div><div class="doc-meta">Tax ID registration</div></div><div class="doc-status"><span class="badge badge-todo">Needed</span></div></div>
-      <div class="doc-row"><div class="doc-icon" style="background:#fcebeb;color:#a32d2d">!</div><div><div class="doc-name">Licencia Sanitaria COFEPRIS</div><div class="doc-meta">Main operating permit · Critical path</div></div><div class="doc-status"><span class="badge badge-urgent">Priority</span></div></div>
-      <div class="doc-row"><div class="doc-icon" style="background:#fcebeb;color:#a32d2d">!</div><div><div class="doc-name">Aviso de Funcionamiento</div><div class="doc-meta">SIVISAM online portal</div></div><div class="doc-status"><span class="badge badge-urgent">Priority</span></div></div>
-      <div class="doc-row"><div class="doc-icon" style="background:#eaf3de;color:#3b6d11">✓</div><div><div class="doc-name">NOM-087 RPBI Plan</div><div class="doc-meta">Biological waste management plan</div></div><div class="doc-status"><span class="badge badge-todo">Needed</span></div></div>
-      <div class="doc-row"><div class="doc-icon" style="background:#e6f1fb;color:#185fa5">Q</div><div><div class="doc-name">Cédula Director Técnico</div><div class="doc-meta">QFB professional license on file</div></div><div class="doc-status"><span class="badge badge-todo">Needed</span></div></div>
-      <div class="doc-row"><div class="doc-icon" style="background:#e1f5ee;color:#0f6e56">$</div><div><div class="doc-name">Lease Contract (uso de suelo)</div><div class="doc-meta">Must specify servicios médicos</div></div><div class="doc-status"><span class="badge badge-todo">Needed</span></div></div>
-      <div class="doc-row"><div class="doc-icon" style="background:#e1f5ee;color:#0f6e56">$</div><div><div class="doc-name">Equipment invoices & calibration certs</div><div class="doc-meta">Required for COFEPRIS inspection</div></div><div class="doc-status"><span class="badge badge-todo">Needed</span></div></div>
-      <div class="doc-row"><div class="doc-icon" style="background:#f1efe8;color:#5f5e5a">M</div><div><div class="doc-name">Licencia Municipal de Apertura</div><div class="doc-meta">Municipio de Querétaro</div></div><div class="doc-status"><span class="badge badge-todo">Needed</span></div></div>
-      <div class="doc-row"><div class="doc-icon" style="background:#f1efe8;color:#5f5e5a">M</div><div><div class="doc-name">Dictamen Protección Civil</div><div class="doc-meta">Fire safety inspection certificate</div></div><div class="doc-status"><span class="badge badge-todo">Needed</span></div></div>
+      <div id="doc-tracker-list">
+        <!-- rendered by JS -->
+      </div>
     </div>
   </section>
 
@@ -2128,7 +2158,6 @@
     document.getElementById('page-' + id).classList.add('active');
     document.querySelectorAll('.sb-item').forEach(b => b.classList.remove('active'));
     if (el) el.classList.add('active');
-    // scroll to top
     document.getElementById('main').scrollTop = 0;
   }
 
@@ -2136,10 +2165,54 @@
   function openPhase(num) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.getElementById('page-phase-' + num).classList.add('active');
-    // highlight dashboard in sidebar
     document.querySelectorAll('.sb-item').forEach(b => b.classList.remove('active'));
     document.querySelector('.sb-item').classList.add('active');
     document.getElementById('main').scrollTop = 0;
+  }
+
+  // ══════════════════════════════════════════
+  // ── FIRESTORE PERSISTENCE LAYER ──
+  // ══════════════════════════════════════════
+  let db, _doc, _getDoc, _setDoc, _onSnapshot;
+  let dbAvailable = false;
+
+  function setSyncStatus(state) {
+    const dot = document.getElementById('sync-dot');
+    const label = document.getElementById('sync-label');
+    if (!dot) return;
+    const states = {
+      connecting: { color: '#999890', text: 'Connecting…' },
+      live:       { color: '#1d9e75', text: 'Synced' },
+      saving:     { color: '#854f0b', text: 'Saving…' },
+      offline:    { color: '#a32d2d', text: 'Offline — changes not saved' },
+    };
+    const s = states[state] || states.offline;
+    dot.style.background = s.color;
+    label.textContent = s.text;
+  }
+
+  async function dbGet(key) {
+    if (!dbAvailable) return null;
+    try {
+      const snap = await _getDoc(_doc(db, 'labqro', key));
+      return snap.exists() ? snap.data().value : null;
+    } catch(e) { return null; }
+  }
+
+  async function dbSet(key, value) {
+    if (!dbAvailable) return;
+    setSyncStatus('saving');
+    try {
+      await _setDoc(_doc(db, 'labqro', key), { value });
+      setSyncStatus('live');
+    } catch(e) { setSyncStatus('offline'); }
+  }
+
+  function dbWatch(key, cb) {
+    if (!dbAvailable) return;
+    _onSnapshot(_doc(db, 'labqro', key), snap => {
+      if (snap.exists()) cb(snap.data().value);
+    });
   }
 
   // ── Checklist ──
@@ -2172,7 +2245,11 @@
     const filtered = activeFilter === 'all'
       ? checklistData
       : checklistData.filter(c => c.cat === activeFilter);
-    document.getElementById('checklist-card').innerHTML = filtered.map(c => `
+    const done = checklistData.filter(c => checks[c.id]).length;
+    const total = checklistData.length;
+    document.getElementById('checklist-card').innerHTML =
+      `<div style="font-size:11px;color:var(--text-tertiary);margin-bottom:12px;padding-bottom:10px;border-bottom:0.5px solid var(--border)">${done} of ${total} completed</div>` +
+      filtered.map(c => `
       <div class="checklist-item">
         <div class="check-box ${checks[c.id] ? 'checked' : ''}" onclick="toggleCheck('${c.id}')">
           ${checks[c.id] ? '✓' : ''}
@@ -2182,11 +2259,13 @@
           <div class="check-sub">${c.sub}</div>
         </div>
       </div>`).join('');
+    updateDashboard();
   }
 
   function toggleCheck(id) {
     checks[id] = !checks[id];
     renderChecklist();
+    dbSet('checks', checks);
   }
 
   function filterChecklist(f, el) {
@@ -2486,18 +2565,6 @@
     html += `<button class="loc-add-btn" onclick="addLocation()"><span style="font-size:24px">+</span>Add location</button>`;
     grid.innerHTML = html;
   }
-  function setLocScore(li, ci, val) {
-    locations[li].scores[ci] = locations[li].scores[ci] === val ? val - 1 : val;
-    renderLocations();
-  }
-  function addLocation() {
-    locations.push({ name: '', scores: new Array(locCriteria.length).fill(0), notes: '' });
-    renderLocations();
-  }
-  function removeLoc(li) {
-    locations.splice(li, 1);
-    renderLocations();
-  }
   renderLocations();
 
   // ══════════════════════════════════════════
@@ -2556,14 +2623,8 @@
     document.getElementById('crm-clinic').value = '';
     document.getElementById('crm-notes').value = '';
     renderCRM();
-  }
-  function movePhysician(pi, newStage) {
-    physicians[pi].stage = newStage;
-    renderCRM();
-  }
-  function removePhysician(pi) {
-    physicians.splice(pi, 1);
-    renderCRM();
+    dbSet('physicians', physicians);
+    updateDashboard();
   }
   renderCRM();
 
@@ -2739,6 +2800,8 @@
     if (isBlocked(permits[pi]) && newCol > permits[pi].col) return;
     permits[pi].col = newCol;
     renderKanban();
+    dbSet('permits', permits);
+    updateDashboard();
   }
   renderKanban();
   const notes = [];
@@ -2752,14 +2815,193 @@
     });
     document.getElementById('note-input').value = '';
     renderNotes();
+    dbSet('notes', notes);
+  }
+
+  function deleteNote(idx) {
+    notes.splice(idx, 1);
+    renderNotes();
+    dbSet('notes', notes);
   }
 
   function renderNotes() {
-    document.getElementById('notes-list').innerHTML = notes.map(n => `
-      <div class="card" style="margin-bottom:10px">
-        <div style="font-size:11px;color:var(--text-tertiary);margin-bottom:6px">${n.date}</div>
+    const el = document.getElementById('notes-list');
+    if (!notes.length) {
+      el.innerHTML = `<div style="font-size:13px;color:var(--text-tertiary);padding:20px 0;text-align:center">No notes yet. Add one above.</div>`;
+      return;
+    }
+    el.innerHTML = notes.map((n, i) => `
+      <div class="card" style="margin-bottom:10px;position:relative">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <div style="font-size:11px;color:var(--text-tertiary)">${n.date}</div>
+          <button onclick="deleteNote(${i})" style="font-size:11px;color:var(--text-tertiary);background:none;border:none;cursor:pointer;padding:2px 6px;border-radius:4px" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--text-tertiary)'">✕</button>
+        </div>
         <div style="font-size:13px;color:var(--text-primary);line-height:1.6">${n.text}</div>
       </div>`).join('');
+  }
+
+  // ══════════════════════════════════════════
+  // ── DOCUMENT TRACKER ──
+  // ══════════════════════════════════════════
+  const docList = [
+    { id:'doc1', icon:'⚖', iconBg:'#faeeda', iconColor:'#854f0b', name:'Acta Constitutiva',                   meta:'Notario público · Legal foundation',      status:0 },
+    { id:'doc2', icon:'⚖', iconBg:'#faeeda', iconColor:'#854f0b', name:'RFC / Alta SAT',                       meta:'Tax ID registration',                      status:0 },
+    { id:'doc3', icon:'!',  iconBg:'#fcebeb', iconColor:'#a32d2d', name:'Licencia Sanitaria COFEPRIS',          meta:'Main operating permit · Critical path',    status:1 },
+    { id:'doc4', icon:'!',  iconBg:'#fcebeb', iconColor:'#a32d2d', name:'Aviso de Funcionamiento',              meta:'SIVISAM online portal',                    status:1 },
+    { id:'doc5', icon:'♻', iconBg:'#eaf3de', iconColor:'#3b6d11', name:'NOM-087 RPBI Plan',                    meta:'Biological waste management plan',         status:0 },
+    { id:'doc6', icon:'Q',  iconBg:'#e6f1fb', iconColor:'#185fa5', name:'Cédula Director Técnico',             meta:'QFB professional license on file',         status:0 },
+    { id:'doc7', icon:'$',  iconBg:'#e1f5ee', iconColor:'#0f6e56', name:'Lease Contract (uso de suelo)',        meta:'Must specify servicios médicos',           status:0 },
+    { id:'doc8', icon:'$',  iconBg:'#e1f5ee', iconColor:'#0f6e56', name:'Equipment invoices & calibration certs', meta:'Required for COFEPRIS inspection',      status:0 },
+    { id:'doc9', icon:'M',  iconBg:'#f1efe8', iconColor:'#5f5e5a', name:'Licencia Municipal de Apertura',       meta:'Municipio de Querétaro',                  status:0 },
+    { id:'doc10',icon:'M',  iconBg:'#f1efe8', iconColor:'#5f5e5a', name:'Dictamen Protección Civil',            meta:'Fire safety inspection certificate',       status:0 },
+  ];
+  // status: 0=Needed, 1=Priority, 2=In Progress, 3=Submitted, 4=Received
+  const docStatuses = [
+    { label:'Needed',      cls:'badge-todo',     next:2 },
+    { label:'Priority',    cls:'badge-urgent',   next:2 },
+    { label:'In Progress', cls:'badge-progress', next:3 },
+    { label:'Submitted',   cls:'badge-urgent',   next:4 },
+    { label:'Received ✓',  cls:'badge-done',     next:0 },
+  ];
+  let docStatMap = {};
+  docList.forEach(d => { docStatMap[d.id] = d.status; });
+
+  function cycleDocStatus(id) {
+    const current = docStatMap[id];
+    const next = docStatuses[current].next;
+    docStatMap[id] = next;
+    renderDocTracker();
+    dbSet('docStatMap', docStatMap);
+  }
+
+  function renderDocTracker() {
+    const el = document.getElementById('doc-tracker-list');
+    if (!el) return;
+    el.innerHTML = docList.map(d => {
+      const s = docStatuses[docStatMap[d.id]];
+      return `<div class="doc-row">
+        <div class="doc-icon" style="background:${d.iconBg};color:${d.iconColor}">${d.icon}</div>
+        <div style="flex:1"><div class="doc-name">${d.name}</div><div class="doc-meta">${d.meta}</div></div>
+        <div class="doc-status">
+          <span class="badge ${s.cls}" style="cursor:pointer;user-select:none" onclick="cycleDocStatus('${d.id}')" title="Click to update status">${s.label}</span>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  renderDocTracker();
+
+  // ══════════════════════════════════════════
+  // ── LIVE DASHBOARD UPDATER ──
+  // ══════════════════════════════════════════
+  function updateDashboard() {
+    // Checklist progress
+    const done = checklistData.filter(c => checks[c.id]).length;
+    const total = checklistData.length;
+    const pct = Math.round(done / total * 100);
+    const progEl = document.getElementById('dash-progress');
+    if (progEl) {
+      progEl.textContent = pct + '%';
+      progEl.className = 'metric-val' + (pct >= 70 ? ' green' : pct >= 30 ? ' blue' : '');
+    }
+
+    // Permits completed (kanban col 3)
+    const permDone = permits.filter(p => p.col === 3).length;
+    const permTotal = permits.length;
+    const permEl = document.getElementById('dash-permits');
+    if (permEl) {
+      permEl.textContent = permDone + ' / ' + permTotal;
+      permEl.style.color = permDone === permTotal ? 'var(--green-dark)' : 'var(--blue)';
+    }
+
+    // Physicians active or referring
+    const physActive = physicians.filter(p => p.stage >= 3).length;
+    const physTotal = physicians.length;
+    const physEl = document.getElementById('dash-physicians');
+    if (physEl) {
+      physEl.textContent = physTotal + ' tracked';
+      physEl.style.fontSize = '15px';
+    }
+
+    // Sub-line stage
+    const subEl = document.getElementById('dash-sub');
+    if (subEl) {
+      const stage = pct < 10 ? 'Research' : pct < 30 ? 'Legal & Planning' : pct < 60 ? 'Regulatory' : pct < 80 ? 'Operations' : 'Pre-launch';
+      subEl.textContent = `Laboratorio Clínico · Querétaro · Stage: ${stage}`;
+    }
+  }
+
+  // ══════════════════════════════════════════
+  // ── PHYSICIAN CRM — persist on change ──
+  // ══════════════════════════════════════════
+  function movePhysician(pi, newStage) {
+    physicians[pi].stage = newStage;
+    renderCRM();
+    dbSet('physicians', physicians);
+    updateDashboard();
+  }
+  function removePhysician(pi) {
+    physicians.splice(pi, 1);
+    renderCRM();
+    dbSet('physicians', physicians);
+    updateDashboard();
+  }
+
+  // ══════════════════════════════════════════
+  // ── LOCATION SCORING — persist on change ──
+  // ══════════════════════════════════════════
+  function setLocScore(li, ci, val) {
+    locations[li].scores[ci] = locations[li].scores[ci] === val ? val - 1 : val;
+    renderLocations();
+    dbSet('locations', locations);
+  }
+  function addLocation() {
+    locations.push({ name: '', scores: new Array(locCriteria.length).fill(0), notes: '' });
+    renderLocations();
+    dbSet('locations', locations);
+  }
+  function removeLoc(li) {
+    locations.splice(li, 1);
+    renderLocations();
+    dbSet('locations', locations);
+  }
+
+  // ══════════════════════════════════════════
+  // ── DB INIT — load all persisted state ──
+  // ══════════════════════════════════════════
+  async function initDB() {
+    db = window._db;
+    _doc = window._doc;
+    _getDoc = window._getDoc;
+    _setDoc = window._setDoc;
+    _onSnapshot = window._onSnapshot;
+    dbAvailable = true;
+    setSyncStatus('connecting');
+
+    // Load all keys in parallel
+    const [savedChecks, savedPermits, savedPhysicians, savedNotes, savedLocations, savedDocStatMap] =
+      await Promise.all([
+        dbGet('checks'), dbGet('permits'), dbGet('physicians'),
+        dbGet('notes'),  dbGet('locations'), dbGet('docStatMap'),
+      ]);
+
+    if (savedChecks) { Object.assign(checks, savedChecks); renderChecklist(); }
+    if (savedPermits) { permits.splice(0, permits.length, ...savedPermits); renderKanban(); }
+    if (savedPhysicians) { physicians.splice(0, physicians.length, ...savedPhysicians); renderCRM(); }
+    if (savedNotes) { notes.splice(0, notes.length, ...savedNotes); renderNotes(); }
+    if (savedLocations) { locations.splice(0, locations.length, ...savedLocations); renderLocations(); }
+    if (savedDocStatMap) { Object.assign(docStatMap, savedDocStatMap); renderDocTracker(); }
+
+    updateDashboard();
+    setSyncStatus('live');
+  }
+
+  if (window._dbReady) {
+    initDB();
+  } else {
+    window.addEventListener('dbReady', initDB);
+    // Show offline status after 4s if DB never connects (e.g. no config set)
+    setTimeout(() => { if (!dbAvailable) setSyncStatus('offline'); }, 4000);
   }
 
   // ══════════════════════════════════════════
