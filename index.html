@@ -6,34 +6,74 @@
 <title>LabQro — Business Plan HQ</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style media="print">
-  /* ─── PRINT STYLES ─── */
-  #sidebar, #sync-badge, .btn, .back-btn,
-  .kanban-move, .crm-move-btn, .crm-remove, .loc-remove,
-  .check-box, .scenario-tabs, #saved-scenarios-row,
-  .tab-row, #note-tag-row, #note-filter-row,
-  .crm-add-form, .reg-panel-overlay, #reg-panel,
-  input[type=range] { display: none !important; }
+  /* ─── INVESTOR SUMMARY PRINT MODE ─── */
+  body.printing-investor #main,
+  body.printing-investor #sidebar,
+  body.printing-investor #hamburger,
+  body.printing-investor #sidebar-overlay,
+  body.printing-investor #pin-gate,
+  body.printing-investor #ai-fab,
+  body.printing-investor #ai-panel,
+  body.printing-investor #reg-panel,
+  body.printing-investor #reg-panel-overlay { display: none !important; }
 
-  body { font-size: 11pt; color: #000; background: #fff; }
-  #main { margin-left: 0 !important; padding: 20px !important; }
-  .page { display: block !important; }
-  .page:not(.active) { display: none !important; }
+  body.printing-investor #investor-overlay {
+    display: block !important;
+    position: static !important;
+    background: transparent !important;
+    padding: 0 !important;
+  }
+  body.printing-investor #investor-overlay > div {
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    max-height: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 20pt 24pt !important;
+  }
+  body.printing-investor #investor-overlay button { display: none !important; }
 
-  .card {
+  /* ─── NORMAL PAGE PRINT MODE ─── */
+  body:not(.printing-investor) #sidebar,
+  body:not(.printing-investor) #sync-badge,
+  body:not(.printing-investor) .btn,
+  body:not(.printing-investor) .back-btn,
+  body:not(.printing-investor) .kanban-move,
+  body:not(.printing-investor) .crm-move-btn,
+  body:not(.printing-investor) .crm-remove,
+  body:not(.printing-investor) .loc-remove,
+  body:not(.printing-investor) .check-box,
+  body:not(.printing-investor) .scenario-tabs,
+  body:not(.printing-investor) #saved-scenarios-row,
+  body:not(.printing-investor) .tab-row,
+  body:not(.printing-investor) #note-tag-row,
+  body:not(.printing-investor) #note-filter-row,
+  body:not(.printing-investor) .crm-add-form,
+  body:not(.printing-investor) .reg-panel-overlay,
+  body:not(.printing-investor) #reg-panel,
+  body:not(.printing-investor) #pin-gate,
+  body:not(.printing-investor) #ai-fab,
+  body:not(.printing-investor) #ai-panel,
+  body:not(.printing-investor) #investor-overlay,
+  body:not(.printing-investor) input[type=range] { display: none !important; }
+
+  body:not(.printing-investor) body { font-size: 11pt; color: #000; background: #fff; }
+  body:not(.printing-investor) #main { margin-left: 0 !important; padding: 20px !important; }
+  body:not(.printing-investor) .page { display: block !important; }
+  body:not(.printing-investor) .page:not(.active) { display: none !important; }
+  body:not(.printing-investor) .card {
     border: 0.5pt solid #ccc !important;
     break-inside: avoid;
     margin-bottom: 12pt;
     background: #fff !important;
   }
-  .metrics { grid-template-columns: repeat(3, 1fr) !important; }
-  .two-col, .three-col { grid-template-columns: 1fr 1fr !important; }
-
-  a { color: #000; text-decoration: none; }
-  .badge { border: 0.5pt solid #ccc !important; }
+  body:not(.printing-investor) .metrics { grid-template-columns: repeat(3, 1fr) !important; }
+  body:not(.printing-investor) .two-col,
+  body:not(.printing-investor) .three-col { grid-template-columns: 1fr 1fr !important; }
+  body:not(.printing-investor) a { color: #000; text-decoration: none; }
+  body:not(.printing-investor) .badge { border: 0.5pt solid #ccc !important; }
 
   @page { margin: 1.5cm; size: A4; }
-  #pin-gate, #ai-fab, #ai-panel, #investor-overlay { display: none !important; }
-  .investor-print-only { display: block !important; }
 </style>
 <script type="module">
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
@@ -2111,7 +2151,6 @@
     <!-- View tabs -->
     <div style="display:flex;gap:6px;margin-bottom:18px;flex-wrap:wrap">
       <button class="tab active" id="mkt-tab-intel" onclick="switchMktTab('intel',this)">Competitor intelligence</button>
-      <button class="tab" id="mkt-tab-map" onclick="switchMktTab('map',this)">Location map</button>
       <button class="tab" id="mkt-tab-demand" onclick="switchMktTab('demand',this)">Demand analysis</button>
     </div>
 
@@ -2123,7 +2162,7 @@
           <div class="card-title" style="margin:0">Market positioning map</div>
           <div style="font-size:11px;color:var(--text-tertiary)">Price (horizontal) vs. Service quality (vertical)</div>
         </div>
-        <div id="positioning-map-wrap" style="position:relative;width:100%;max-width:640px;margin:0 auto"></div>
+        <div id="positioning-map-wrap" style="position:relative;width:100%"></div>
       </div>
 
       <!-- Competitor table -->
@@ -2170,26 +2209,6 @@
       </div>
     </div>
 
-    <!-- ── LOCATION MAP ── -->
-    <div id="mkt-view-map" style="display:none">
-      <div class="card" style="margin-bottom:14px">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-          <div>
-            <div class="card-title" style="margin:0">Querétaro lab competitor map</div>
-            <div style="font-size:11px;color:var(--text-tertiary);margin-top:2px">Pre-populated with known labs · Add your candidate locations via the Location Scoring tool</div>
-          </div>
-          <div style="display:flex;gap:10px;font-size:11px;flex-wrap:wrap">
-            <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:50%;background:#e24b4a;display:inline-block"></span>Major chain</span>
-            <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:50%;background:#185fa5;display:inline-block"></span>Local/independent</span>
-            <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:50%;background:#1d9e75;display:inline-block"></span>Your candidate zones</span>
-          </div>
-        </div>
-        <div id="qro-map" style="height:480px;border-radius:var(--radius-md);overflow:hidden;border:0.5px solid var(--border)"></div>
-      </div>
-      <div class="info-box blue" style="font-size:11px">
-        💡 <strong>How to use:</strong> Green circles mark the 3 recommended zones (Juriquilla, Satélite, Centro). Red/blue markers show competitor locations. Use this to identify gaps — a zone with no major chain within 2km is your target.
-      </div>
-    </div>
 
     <!-- ── DEMAND ANALYSIS ── -->
     <div id="mkt-view-demand" style="display:none">
@@ -2514,15 +2533,76 @@
 
   <!-- ── LOCATION SCORING ── -->
   <section id="page-locations" class="page">
-    <div class="page-title">Location scoring tool</div>
-    <div class="page-sub">Rate and compare potential sites — weighted scoring</div>
+    <div class="page-title">Location scoring & map</div>
+    <div class="page-sub">Score candidate sites, map competitors, and analyze the Querétaro market</div>
 
-    <div class="info-box blue" style="margin-bottom:14px">
-      <strong>How to use:</strong> Click "Add location" for each site you visit. Rate each criterion 1–5 stars. Scores are weighted by importance (shown as %). The highest total score is highlighted. Add notes for each site to capture observations during visits.
+    <div style="display:flex;gap:6px;margin-bottom:18px;flex-wrap:wrap">
+      <button class="tab active" id="loc-tab-scoring" onclick="switchLocTab('scoring',this)">Site scoring</button>
+      <button class="tab" id="loc-tab-map" onclick="switchLocTab('map',this)">Competitor map</button>
+      <button class="tab" id="loc-tab-intel" onclick="switchLocTab('intel',this)">Competitor intelligence</button>
     </div>
 
-    <div class="loc-grid" id="loc-grid">
-      <!-- locations render here -->
+    <!-- ── SITE SCORING ── -->
+    <div id="loc-view-scoring">
+      <div class="info-box blue" style="margin-bottom:14px">
+        <strong>How to use:</strong> Click "Add location" for each site you visit. Rate each criterion 1–5 stars. Scores are weighted by importance (shown as %). The highest total score is highlighted. Add notes for each site to capture observations during visits.
+      </div>
+      <div class="loc-grid" id="loc-grid">
+        <!-- locations render here -->
+      </div>
+    </div>
+
+    <!-- ── COMPETITOR MAP ── -->
+    <div id="loc-view-map" style="display:none">
+      <div class="card" style="margin-bottom:14px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:10px">
+          <div>
+            <div class="card-title" style="margin:0">Querétaro lab competitor map</div>
+            <div style="font-size:11px;color:var(--text-tertiary);margin-top:2px">Pre-populated with known competitors · Green zones = recommended areas</div>
+          </div>
+          <div style="display:flex;gap:14px;font-size:11px;flex-wrap:wrap">
+            <span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:50%;background:#e24b4a;display:inline-block"></span>Major chain</span>
+            <span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:50%;background:#ef9f27;display:inline-block"></span>Chopo</span>
+            <span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:50%;background:#534ab7;display:inline-block"></span>Hospital lab</span>
+            <span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:50%;background:#185fa5;display:inline-block"></span>Local/independent</span>
+            <span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:50%;background:#999890;display:inline-block"></span>Public (IMSS)</span>
+            <span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:50%;background:#1d9e75;display:inline-block"></span>Your candidate zones</span>
+          </div>
+        </div>
+        <div id="qro-map" style="height:500px;border-radius:var(--radius-md);overflow:hidden;border:0.5px solid var(--border)"></div>
+      </div>
+      <div class="info-box blue" style="font-size:11px">
+        💡 Green numbered circles mark the 3 recommended zones. Click any marker for details. A zone with no major chain within 2km is your opportunity.
+      </div>
+    </div>
+
+    <!-- ── COMPETITOR INTELLIGENCE ── -->
+    <div id="loc-view-intel" style="display:none">
+      <div class="card" style="margin-bottom:14px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+          <div class="card-title" style="margin:0">Market positioning map</div>
+          <div style="font-size:11px;color:var(--text-tertiary)">Price (horizontal) vs. Service quality (vertical)</div>
+        </div>
+        <div id="loc-positioning-map-wrap" style="position:relative;width:100%"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Competitor analysis — Querétaro metro</div>
+        <div style="overflow-x:auto">
+          <table style="width:100%;border-collapse:collapse;font-size:12px" id="loc-competitor-table">
+            <thead>
+              <tr style="border-bottom:1.5px solid var(--border-strong)">
+                <th style="text-align:left;padding:8px 10px;font-weight:500;font-size:11px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.05em">Competitor</th>
+                <th style="text-align:left;padding:8px 10px;font-weight:500;font-size:11px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.05em">Tier</th>
+                <th style="text-align:left;padding:8px 10px;font-weight:500;font-size:11px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.05em">Locations QRO</th>
+                <th style="text-align:left;padding:8px 10px;font-weight:500;font-size:11px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.05em">Price</th>
+                <th style="text-align:left;padding:8px 10px;font-weight:500;font-size:11px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.05em">Weakness</th>
+                <th style="text-align:left;padding:8px 10px;font-weight:500;font-size:11px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.05em">Your opportunity</th>
+              </tr>
+            </thead>
+            <tbody id="loc-competitor-tbody"></tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -4569,6 +4649,7 @@ Quedo a sus órdenes,
     if (id === 'volume')    { renderVolumeConfig(); renderVolumeChart(); }
     if (id === 'cashflow')  { renderCashFlow(); }
     if (id === 'suppliers')      { renderSuppliers(); }
+    if (id === 'locations')      { /* tabs handle lazy render */ }
     if (id === 'equipment')      { setTimeout(renderTCO, 100); }
     if (id === 'mock-inspection'){ renderMockChecklist(); }
     if (id === 'sat-compliance') { renderSATPage(); }
@@ -5394,7 +5475,7 @@ Quedo a sus órdenes,
     const pos = vsSD > 40 && vsChopo < 0 ? 'Mid-market ✓' : vsSD < 20 ? 'Too close to low-cost' : 'Positioned high';
     document.getElementById('pricing-position').textContent = pos;
   }
-  renderPricingTable();
+  // Pricing table rendered after fullPricingData is declared (see renderFullPricingTable call below)
 
   // ══════════════════════════════════════════
   // ── LOCATION SCORING ──
@@ -6080,7 +6161,7 @@ Quedo a sus órdenes,
     if (savedScenariosData) { savedScenarios.splice(0, savedScenarios.length, ...savedScenariosData); renderSavedScenarios(); }
     if (savedPricingYours) {
       savedPricingYours.forEach((price, i) => { if (price !== null && pricingData[i]) pricingData[i].yours = price; });
-      renderPricingTable();
+      renderFullPricingTable();
     }
     if (savedEqData) {
       ['hematology','chemistry','coagulation','other'].forEach(cat => {
@@ -7233,14 +7314,13 @@ Quedo a sus órdenes,
   let leafletMap = null;
 
   function switchMktTab(tab, el) {
-    ['intel','map','demand'].forEach(t => {
+    ['intel','demand'].forEach(t => {
       const e = document.getElementById('mkt-view-' + t);
       if (e) e.style.display = t === tab ? 'block' : 'none';
     });
-    document.querySelectorAll('#mkt-tab-intel,#mkt-tab-map,#mkt-tab-demand').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('#mkt-tab-intel,#mkt-tab-demand').forEach(b => b.classList.remove('active'));
     if (el) el.classList.add('active');
     if (tab === 'intel')  { renderPositioningMap(); renderCompetitorTable(); }
-    if (tab === 'map')    { initLeafletMap(); }
     if (tab === 'demand') { renderDemandAnalysis(); }
   }
 
@@ -7279,55 +7359,116 @@ Quedo a sus órdenes,
   function renderPositioningMap() {
     const wrap = document.getElementById('positioning-map-wrap');
     if (!wrap) return;
-    const W = 560, H = 340, PAD = 50;
-    const plotW = W - PAD*2, plotH = H - PAD*2;
-    // x = priceScore (0-5 low to high), y = qualityScore (0-5 low to high)
-    // LabQro target: priceScore=2.5, qualityScore=4
-    const labqro = { name:'LabQro (target)', priceScore:2.5, qualityScore:4, color:'#1d9e75', star:true };
-    const allDots = [...competitors.filter(c => c.priceScore !== undefined), labqro];
-    const dots = allDots.map(c => ({
-      ...c,
-      cx: PAD + (c.priceScore / 5) * plotW,
-      cy: (H - PAD) - (c.qualityScore / 5) * plotH,
+
+    // Canvas dimensions — wider, more breathing room
+    const W = 700, H = 420;
+    const L = 70, R = 30, T = 30, B = 50; // margins
+    const plotW = W - L - R, plotH = H - T - B;
+
+    // Competitors + LabQro target
+    // priceScore: 1=budget … 5=premium  |  qualityScore: 1=low … 5=high
+    // cx/cy computed: x = left→right (low→high price), y = bottom→top (low→high quality)
+    const dots = [
+      { name:'IMSS / ISSSTE',        short:'IMSS',       priceScore:0.5, qualityScore:1.8, color:'#999890', r:10 },
+      { name:'Salud Digna',          short:'Salud Digna',priceScore:1.4, qualityScore:2.2, color:'#e24b4a', r:13 },
+      { name:'Local independents',   short:'Locales',    priceScore:2.2, qualityScore:2.8, color:'#185fa5', r:10 },
+      { name:'Laboratorio Chopo',    short:'Chopo',      priceScore:3.2, qualityScore:3.5, color:'#ef9f27', r:12 },
+      { name:'Hospital Ángeles / Star Médica', short:'Hospitales', priceScore:4.6, qualityScore:4.2, color:'#534ab7', r:11 },
+      { name:'LabQro (target)',       short:'LabQro ★',  priceScore:2.5, qualityScore:4.1, color:'#1d9e75', r:14, star:true },
+    ].map(d => ({
+      ...d,
+      cx: L + (d.priceScore / 5) * plotW,
+      cy: T + plotH - (d.qualityScore / 5) * plotH,  // flip: high quality = top
     }));
 
-    let svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg" style="width:100%;font-family:var(--font)">';
-    // Background quadrants
-    svg += '<rect x="' + PAD + '" y="' + PAD + '" width="' + (plotW/2) + '" height="' + (plotH/2) + '" fill="#fcebeb" opacity="0.35" rx="4"/>';
-    svg += '<rect x="' + (PAD+plotW/2) + '" y="' + PAD + '" width="' + (plotW/2) + '" height="' + (plotH/2) + '" fill="#faeeda" opacity="0.35" rx="4"/>';
-    svg += '<rect x="' + PAD + '" y="' + (PAD+plotH/2) + '" width="' + (plotW/2) + '" height="' + (plotH/2) + '" fill="#f1efe8" opacity="0.35" rx="4"/>';
-    svg += '<rect x="' + (PAD+plotW/2) + '" y="' + (PAD+plotH/2) + '" width="' + (plotW/2) + '" height="' + (plotH/2) + '" fill="#e1f5ee" opacity="0.35" rx="4"/>';
-    // Quadrant labels
-    svg += '<text x="' + (PAD+8) + '" y="' + (PAD+16) + '" font-size="9" fill="#a32d2d" opacity="0.7">Low price · Low quality</text>';
-    svg += '<text x="' + (PAD+plotW-8) + '" y="' + (PAD+16) + '" font-size="9" fill="#854f0b" opacity="0.7" text-anchor="end">High price · Low quality</text>';
-    svg += '<text x="' + (PAD+8) + '" y="' + (H-PAD-6) + '" font-size="9" fill="#5f5e5a" opacity="0.7">Low price · High quality</text>';
-    svg += '<text x="' + (PAD+plotW-8) + '" y="' + (H-PAD-6) + '" font-size="9" fill="#085041" opacity="0.7" text-anchor="end">Premium segment</text>';
-    // Axes
-    svg += '<line x1="' + PAD + '" y1="' + (H-PAD) + '" x2="' + (W-PAD) + '" y2="' + (H-PAD) + '" stroke="var(--border-strong)" stroke-width="1"/>';
-    svg += '<line x1="' + PAD + '" y1="' + PAD + '" x2="' + PAD + '" y2="' + (H-PAD) + '" stroke="var(--border-strong)" stroke-width="1"/>';
-    svg += '<text x="' + (W/2) + '" y="' + (H-8) + '" font-size="10" fill="var(--text-tertiary)" text-anchor="middle">Price →</text>';
-    svg += '<text x="14" y="' + (H/2) + '" font-size="10" fill="var(--text-tertiary)" text-anchor="middle" transform="rotate(-90 14 ' + (H/2) + ')">Quality / Service →</text>';
-    // Grid lines
-    for (let i=1;i<=4;i++) {
-      const gx = PAD + (i/5)*plotW, gy = PAD + (i/5)*plotH;
-      svg += '<line x1="' + gx + '" y1="' + PAD + '" x2="' + gx + '" y2="' + (H-PAD) + '" stroke="var(--border)" stroke-width="0.5" stroke-dasharray="3,3"/>';
-      svg += '<line x1="' + PAD + '" y1="' + gy + '" x2="' + (W-PAD) + '" y2="' + gy + '" stroke="var(--border)" stroke-width="0.5" stroke-dasharray="3,3"/>';
-    }
-    // Dots
-    dots.forEach(d => {
-      const r = d.star ? 10 : 8;
-      if (d.star) {
-        svg += '<circle cx="' + d.cx + '" cy="' + d.cy + '" r="14" fill="#1d9e75" opacity="0.15"/>';
-        svg += '<circle cx="' + d.cx + '" cy="' + d.cy + '" r="' + r + '" fill="#1d9e75" stroke="#fff" stroke-width="2"/>';
-        svg += '<text x="' + d.cx + '" y="' + (d.cy+4) + '" font-size="9" fill="#fff" text-anchor="middle" font-weight="600">★</text>';
-      } else {
-        svg += '<circle cx="' + d.cx + '" cy="' + d.cy + '" r="' + r + '" fill="' + d.color + '" opacity="0.85" stroke="#fff" stroke-width="1.5"/>';
-      }
-      const labelY = d.cy > H-PAD-20 ? d.cy - 14 : d.cy + 20;
-      svg += '<text x="' + d.cx + '" y="' + labelY + '" font-size="9" fill="var(--text-primary)" text-anchor="middle" font-weight="500">' + d.name.split(' ')[0] + '</text>';
+    let svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg" ' +
+      'style="width:100%;border-radius:8px;background:#fafaf8">';
+
+    // ── Quadrant fills ──
+    const mx = L + plotW/2, my = T + plotH/2;
+    // Top-left: Low price, High quality (value zone — light green)
+    svg += '<rect x="' + L + '" y="' + T + '" width="' + (plotW/2) + '" height="' + (plotH/2) + '" fill="#d4edda" opacity="0.5"/>';
+    // Top-right: High price, High quality (premium — light blue)
+    svg += '<rect x="' + mx + '" y="' + T + '" width="' + (plotW/2) + '" height="' + (plotH/2) + '" fill="#dce8f7" opacity="0.5"/>';
+    // Bottom-left: Low price, Low quality (budget — light red)
+    svg += '<rect x="' + L + '" y="' + my + '" width="' + (plotW/2) + '" height="' + (plotH/2) + '" fill="#fde8e8" opacity="0.5"/>';
+    // Bottom-right: High price, Low quality (avoid — light amber)
+    svg += '<rect x="' + mx + '" y="' + my + '" width="' + (plotW/2) + '" height="' + (plotH/2) + '" fill="#fef0d6" opacity="0.45"/>';
+
+    // ── Quadrant border lines ──
+    svg += '<line x1="' + mx + '" y1="' + T + '" x2="' + mx + '" y2="' + (T+plotH) + '" stroke="#ddd" stroke-width="1" stroke-dasharray="4,4"/>';
+    svg += '<line x1="' + L + '" y1="' + my + '" x2="' + (L+plotW) + '" y2="' + my + '" stroke="#ddd" stroke-width="1" stroke-dasharray="4,4"/>';
+
+    // ── Quadrant labels ──
+    const ql = (x, y, text, color) =>
+      '<text x="' + x + '" y="' + y + '" font-size="10" fill="' + color + '" opacity="0.75" font-family="system-ui,sans-serif">' + text + '</text>';
+    svg += ql(L + 10, T + 18, 'Value zone', '#2d6e40');
+    svg += ql(L + plotW - 10, T + 18, 'Premium', '#1a4a80');
+    svg += '<text x="' + (L+plotW-10) + '" y="' + (T+18) + '" font-size="10" fill="#1a4a80" opacity="0.75" text-anchor="end" font-family="system-ui,sans-serif">Premium</text>';
+    svg += '<text x="' + (L+10) + '" y="' + (T+plotH-10) + '" font-size="10" fill="#7a2020" opacity="0.65" font-family="system-ui,sans-serif">Budget</text>';
+    svg += '<text x="' + (L+plotW-10) + '" y="' + (T+plotH-10) + '" font-size="10" fill="#7a4400" opacity="0.65" text-anchor="end" font-family="system-ui,sans-serif">Overpriced</text>';
+
+    // ── Axes ──
+    svg += '<line x1="' + L + '" y1="' + (T+plotH) + '" x2="' + (L+plotW) + '" y2="' + (T+plotH) + '" stroke="#aaa" stroke-width="1.5"/>';
+    svg += '<line x1="' + L + '" y1="' + T + '" x2="' + L + '" y2="' + (T+plotH) + '" stroke="#aaa" stroke-width="1.5"/>';
+
+    // Axis labels
+    svg += '<text x="' + (L + plotW/2) + '" y="' + (H-8) + '" font-size="11" fill="#888" text-anchor="middle" font-family="system-ui,sans-serif">Price →</text>';
+    svg += '<text x="16" y="' + (T + plotH/2) + '" font-size="11" fill="#888" text-anchor="middle" transform="rotate(-90 16 ' + (T+plotH/2) + ')" font-family="system-ui,sans-serif">Quality / Service →</text>';
+
+    // Axis tick labels
+    const priceLabels = ['Free', 'Budget', 'Mid', 'Premium', 'Hospital'];
+    priceLabels.forEach((lbl, i) => {
+      const tx = L + ((i+0.5) / 5) * plotW;
+      svg += '<text x="' + tx + '" y="' + (T+plotH+14) + '" font-size="9" fill="#bbb" text-anchor="middle" font-family="system-ui,sans-serif">' + lbl + '</text>';
     });
+
+    // ── Dots ──
+    // Resolve label positions to avoid overlap — simple offset based on position
+    dots.forEach(d => {
+      // Glow for LabQro
+      if (d.star) {
+        svg += '<circle cx="' + d.cx + '" cy="' + d.cy + '" r="' + (d.r+8) + '" fill="#1d9e75" opacity="0.12"/>';
+        svg += '<circle cx="' + d.cx + '" cy="' + d.cy + '" r="' + (d.r+4) + '" fill="#1d9e75" opacity="0.18"/>';
+      }
+      svg += '<circle cx="' + d.cx + '" cy="' + d.cy + '" r="' + d.r + '" fill="' + d.color + '" stroke="#fff" stroke-width="2" opacity="0.92"/>';
+      if (d.star) {
+        svg += '<text x="' + d.cx + '" y="' + (d.cy + 4) + '" font-size="11" fill="#fff" text-anchor="middle" font-weight="700" font-family="system-ui,sans-serif">★</text>';
+      }
+
+      // Smart label placement: above if near bottom, below if near top, offset if crowded
+      const nearBottom = d.cy > T + plotH * 0.75;
+      const nearTop    = d.cy < T + plotH * 0.25;
+      const labelY = nearBottom ? d.cy - d.r - 6 : d.cy + d.r + 14;
+      const labelAnchor = 'middle';
+
+      // Background pill for readability
+      const lblW = d.short.length * 5.8 + 10;
+      const lblX = d.cx - lblW/2;
+      const lblY = nearBottom ? d.cy - d.r - 20 : d.cy + d.r + 4;
+      svg += '<rect x="' + lblX + '" y="' + lblY + '" width="' + lblW + '" height="14" rx="7" fill="' + (d.star ? '#1d9e75' : '#fff') + '" opacity="' + (d.star ? '1' : '0.85') + '" stroke="' + d.color + '" stroke-width="0.5"/>';
+      svg += '<text x="' + d.cx + '" y="' + (lblY+10) + '" font-size="9" fill="' + (d.star ? '#fff' : '#333') + '" text-anchor="' + labelAnchor + '" font-weight="' + (d.star ? '600' : '500') + '" font-family="system-ui,sans-serif">' + d.short + '</text>';
+    });
+
     svg += '</svg>';
-    wrap.innerHTML = svg;
+
+    // Legend rendered as HTML below the SVG — no overlap risk
+    const legendItems = [
+      { color:'#1d9e75', label:'LabQro target ★' },
+      { color:'#e24b4a', label:'Major chain (Salud Digna)' },
+      { color:'#ef9f27', label:'National lab (Chopo)' },
+      { color:'#185fa5', label:'Local/independent' },
+      { color:'#534ab7', label:'Hospital lab' },
+      { color:'#999890', label:'Public (IMSS)' },
+    ];
+    const legendHtml = '<div style="display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:12px;padding-top:10px;border-top:0.5px solid var(--border)">' +
+      legendItems.map(item =>
+        '<span style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text-secondary)">' +
+        '<span style="width:10px;height:10px;border-radius:50%;background:' + item.color + ';flex-shrink:0;display:inline-block"></span>' +
+        item.label + '</span>'
+      ).join('') + '</div>';
+
+    wrap.innerHTML = svg + legendHtml;
   }
 
   function initLeafletMap() {
@@ -7448,88 +7589,88 @@ Quedo a sus órdenes,
   const fullPricingData = [
     // Hematología
     { cat:'Hematología' },
-    { study:'Biometría Hemática Completa (BHC)',  sd:70,  chopo:140, hospital:350, yours:150, cat:'Hematología' },
-    { study:'Reticulocitos',                       sd:80,  chopo:150, hospital:300, yours:160, cat:'Hematología' },
+    { study:'Biometría Hemática Completa (BHC)',  sd:70,  chopo:140, hospital:350, yours:150, group:'Hematología' },
+    { study:'Reticulocitos',                       sd:80,  chopo:150, hospital:300, yours:160, group:'Hematología' },
     { study:'Velocidad de Sedimentación (VSG)',    sd:45,  chopo:80,  hospital:180, yours:90,  cat:'Hematología' },
-    { study:'Grupo Sanguíneo y Rh',                sd:60,  chopo:120, hospital:250, yours:130, cat:'Hematología' },
-    { study:'Frotis de sangre periférica',         sd:90,  chopo:170, hospital:380, yours:180, cat:'Hematología' },
+    { study:'Grupo Sanguíneo y Rh',                sd:60,  chopo:120, hospital:250, yours:130, group:'Hematología' },
+    { study:'Frotis de sangre periférica',         sd:90,  chopo:170, hospital:380, yours:180, group:'Hematología' },
     // Química Clínica
     { cat:'Química' },
     { study:'Glucosa en ayunas',                   sd:35,  chopo:70,  hospital:150, yours:75,  cat:'Química' },
-    { study:'Química Sanguínea 6',                 sd:90,  chopo:180, hospital:400, yours:200, cat:'Química' },
-    { study:'Química Sanguínea 12',                sd:130, chopo:260, hospital:580, yours:280, cat:'Química' },
-    { study:'Química Sanguínea 27',                sd:200, chopo:400, hospital:900, yours:420, cat:'Química' },
-    { study:'Hemoglobina Glucosilada (HbA1c)',     sd:120, chopo:250, hospital:500, yours:260, cat:'Química' },
+    { study:'Química Sanguínea 6',                 sd:90,  chopo:180, hospital:400, yours:200, group:'Química' },
+    { study:'Química Sanguínea 12',                sd:130, chopo:260, hospital:580, yours:280, group:'Química' },
+    { study:'Química Sanguínea 27',                sd:200, chopo:400, hospital:900, yours:420, group:'Química' },
+    { study:'Hemoglobina Glucosilada (HbA1c)',     sd:120, chopo:250, hospital:500, yours:260, group:'Química' },
     { study:'Urea / BUN',                          sd:40,  chopo:80,  hospital:180, yours:85,  cat:'Química' },
     { study:'Creatinina',                          sd:40,  chopo:80,  hospital:180, yours:85,  cat:'Química' },
     { study:'Ácido Úrico',                         sd:40,  chopo:80,  hospital:180, yours:85,  cat:'Química' },
     { study:'Colesterol Total',                    sd:40,  chopo:80,  hospital:180, yours:85,  cat:'Química' },
     { study:'Triglicéridos',                       sd:40,  chopo:80,  hospital:180, yours:85,  cat:'Química' },
-    { study:'HDL Colesterol',                      sd:50,  chopo:100, hospital:220, yours:105, cat:'Química' },
+    { study:'HDL Colesterol',                      sd:50,  chopo:100, hospital:220, yours:105, group:'Química' },
     { study:'LDL Colesterol (calculado)',           sd:35,  chopo:70,  hospital:160, yours:75,  cat:'Química' },
-    { study:'Perfil Lipídico (CT+TG+HDL+LDL)',     sd:100, chopo:200, hospital:450, yours:220, cat:'Química' },
+    { study:'Perfil Lipídico (CT+TG+HDL+LDL)',     sd:100, chopo:200, hospital:450, yours:220, group:'Química' },
     { study:'ALT / TGP',                           sd:40,  chopo:80,  hospital:180, yours:85,  cat:'Química' },
     { study:'AST / TGO',                           sd:40,  chopo:80,  hospital:180, yours:85,  cat:'Química' },
     { study:'GGT (Gamma-glutamil transferasa)',     sd:45,  chopo:90,  hospital:200, yours:95,  cat:'Química' },
-    { study:'Bilirrubinas (total, directa, indirecta)', sd:60, chopo:120, hospital:280, yours:130, cat:'Química' },
+    { study:'Bilirrubinas (total, directa, indirecta)', sd:60, chopo:120, hospital:280, yours:130, group:'Química' },
     { study:'Fosfatasa Alcalina',                  sd:40,  chopo:80,  hospital:180, yours:85,  cat:'Química' },
-    { study:'Perfil Hepático (6 pruebas)',         sd:120, chopo:250, hospital:550, yours:260, cat:'Química' },
-    { study:'Proteínas Totales + Albúmina',        sd:55,  chopo:110, hospital:240, yours:120, cat:'Química' },
+    { study:'Perfil Hepático (6 pruebas)',         sd:120, chopo:250, hospital:550, yours:260, group:'Química' },
+    { study:'Proteínas Totales + Albúmina',        sd:55,  chopo:110, hospital:240, yours:120, group:'Química' },
     { study:'Calcio sérico',                       sd:40,  chopo:80,  hospital:180, yours:85,  cat:'Química' },
     { study:'Fósforo',                             sd:40,  chopo:80,  hospital:180, yours:85,  cat:'Química' },
-    { study:'Hierro sérico',                       sd:50,  chopo:100, hospital:220, yours:110, cat:'Química' },
-    { study:'TIBC (Capacidad de unión de hierro)', sd:55,  chopo:110, hospital:240, yours:120, cat:'Química' },
+    { study:'Hierro sérico',                       sd:50,  chopo:100, hospital:220, yours:110, group:'Química' },
+    { study:'TIBC (Capacidad de unión de hierro)', sd:55,  chopo:110, hospital:240, yours:120, group:'Química' },
     // Hormonas
     { cat:'Hormonas' },
-    { study:'TSH (Tirotropina)',                   sd:100, chopo:200, hospital:450, yours:210, cat:'Hormonas' },
-    { study:'T3 Total',                            sd:110, chopo:220, hospital:480, yours:230, cat:'Hormonas' },
-    { study:'T4 Libre',                            sd:110, chopo:220, hospital:480, yours:230, cat:'Hormonas' },
-    { study:'Perfil Tiroideo (TSH + T3 + T4L)',    sd:250, chopo:500, hospital:1100, yours:520, cat:'Hormonas' },
-    { study:'Testosterona Total',                  sd:130, chopo:260, hospital:580, yours:270, cat:'Hormonas' },
-    { study:'Testosterona Libre',                  sd:150, chopo:300, hospital:650, yours:310, cat:'Hormonas' },
-    { study:'Prolactina',                          sd:120, chopo:240, hospital:530, yours:250, cat:'Hormonas' },
-    { study:'FSH (Hormona Foliculoestimulante)',   sd:120, chopo:240, hospital:530, yours:250, cat:'Hormonas' },
-    { study:'LH (Hormona Luteinizante)',           sd:120, chopo:240, hospital:530, yours:250, cat:'Hormonas' },
-    { study:'Estradiol',                           sd:130, chopo:260, hospital:580, yours:270, cat:'Hormonas' },
-    { study:'Progesterona',                        sd:130, chopo:260, hospital:580, yours:270, cat:'Hormonas' },
-    { study:'Insulina en ayunas',                  sd:130, chopo:260, hospital:580, yours:270, cat:'Hormonas' },
-    { study:'Beta-hCG cuantitativa',               sd:90,  chopo:180, hospital:400, yours:190, cat:'Hormonas' },
-    { study:'DHEAS',                               sd:140, chopo:280, hospital:620, yours:290, cat:'Hormonas' },
-    { study:'Cortisol matutino',                   sd:130, chopo:260, hospital:580, yours:270, cat:'Hormonas' },
+    { study:'TSH (Tirotropina)',                   sd:100, chopo:200, hospital:450, yours:210, group:'Hormonas' },
+    { study:'T3 Total',                            sd:110, chopo:220, hospital:480, yours:230, group:'Hormonas' },
+    { study:'T4 Libre',                            sd:110, chopo:220, hospital:480, yours:230, group:'Hormonas' },
+    { study:'Perfil Tiroideo (TSH + T3 + T4L)',    sd:250, chopo:500, hospital:1100, yours:520, group:'Hormonas' },
+    { study:'Testosterona Total',                  sd:130, chopo:260, hospital:580, yours:270, group:'Hormonas' },
+    { study:'Testosterona Libre',                  sd:150, chopo:300, hospital:650, yours:310, group:'Hormonas' },
+    { study:'Prolactina',                          sd:120, chopo:240, hospital:530, yours:250, group:'Hormonas' },
+    { study:'FSH (Hormona Foliculoestimulante)',   sd:120, chopo:240, hospital:530, yours:250, group:'Hormonas' },
+    { study:'LH (Hormona Luteinizante)',           sd:120, chopo:240, hospital:530, yours:250, group:'Hormonas' },
+    { study:'Estradiol',                           sd:130, chopo:260, hospital:580, yours:270, group:'Hormonas' },
+    { study:'Progesterona',                        sd:130, chopo:260, hospital:580, yours:270, group:'Hormonas' },
+    { study:'Insulina en ayunas',                  sd:130, chopo:260, hospital:580, yours:270, group:'Hormonas' },
+    { study:'Beta-hCG cuantitativa',               sd:90,  chopo:180, hospital:400, yours:190, group:'Hormonas' },
+    { study:'DHEAS',                               sd:140, chopo:280, hospital:620, yours:290, group:'Hormonas' },
+    { study:'Cortisol matutino',                   sd:130, chopo:260, hospital:580, yours:270, group:'Hormonas' },
     // Microbiología
     { cat:'Microbiología' },
-    { study:'Urocultivo + antibiograma',           sd:120, chopo:250, hospital:500, yours:260, cat:'Microbiología' },
-    { study:'Coprocultivo + antibiograma',         sd:130, chopo:260, hospital:520, yours:270, cat:'Microbiología' },
-    { study:'Hemocultivo (x2 aerobios)',           sd:200, chopo:400, hospital:800, yours:420, cat:'Microbiología' },
-    { study:'Exudado faríngeo + cultivo',          sd:100, chopo:200, hospital:400, yours:210, cat:'Microbiología' },
-    { study:'Cultivo vaginal / endocervical',      sd:110, chopo:220, hospital:450, yours:230, cat:'Microbiología' },
+    { study:'Urocultivo + antibiograma',           sd:120, chopo:250, hospital:500, yours:260, group:'Microbiología' },
+    { study:'Coprocultivo + antibiograma',         sd:130, chopo:260, hospital:520, yours:270, group:'Microbiología' },
+    { study:'Hemocultivo (x2 aerobios)',           sd:200, chopo:400, hospital:800, yours:420, group:'Microbiología' },
+    { study:'Exudado faríngeo + cultivo',          sd:100, chopo:200, hospital:400, yours:210, group:'Microbiología' },
+    { study:'Cultivo vaginal / endocervical',      sd:110, chopo:220, hospital:450, yours:230, group:'Microbiología' },
     { study:'Examen coproparasitoscópico (CPS)',   sd:40,  chopo:80,  hospital:180, yours:85,  cat:'Microbiología' },
-    { study:'Examen de heces (seriado x3)',        sd:90,  chopo:180, hospital:400, yours:190, cat:'Microbiología' },
+    { study:'Examen de heces (seriado x3)',        sd:90,  chopo:180, hospital:400, yours:190, group:'Microbiología' },
     // Inmunología / Serología
     { cat:'Inmunología' },
-    { study:'Antígeno Prostático (PSA total)',     sd:140, chopo:280, hospital:600, yours:300, cat:'Inmunología' },
-    { study:'PSA libre + índice PSA libre/total',  sd:200, chopo:400, hospital:850, yours:420, cat:'Inmunología' },
-    { study:'CA-125 (tumor marker)',               sd:170, chopo:350, hospital:750, yours:365, cat:'Inmunología' },
-    { study:'CA 19-9',                             sd:170, chopo:350, hospital:750, yours:365, cat:'Inmunología' },
-    { study:'CEA (Antígeno carcinoembrionario)',   sd:160, chopo:320, hospital:700, yours:335, cat:'Inmunología' },
-    { study:'Factor Reumatoide cuantitativo',      sd:80,  chopo:160, hospital:360, yours:170, cat:'Inmunología' },
-    { study:'PCR cuantitativa (Proteína C React)', sd:90,  chopo:180, hospital:400, yours:190, cat:'Inmunología' },
-    { study:'ANA (Anticuerpos antinucleares)',     sd:150, chopo:300, hospital:660, yours:315, cat:'Inmunología' },
-    { study:'VDRL / RPR (Sífilis)',                sd:60,  chopo:120, hospital:280, yours:130, cat:'Inmunología' },
-    { study:'VIH (ELISA 4ta generación)',          sd:100, chopo:200, hospital:450, yours:210, cat:'Inmunología' },
-    { study:'Hepatitis B (HBsAg)',                 sd:110, chopo:220, hospital:480, yours:230, cat:'Inmunología' },
-    { study:'Hepatitis C (Anti-HCV)',              sd:110, chopo:220, hospital:480, yours:230, cat:'Inmunología' },
-    { study:'IgE total (alergias)',                sd:120, chopo:240, hospital:530, yours:250, cat:'Inmunología' },
+    { study:'Antígeno Prostático (PSA total)',     sd:140, chopo:280, hospital:600, yours:300, group:'Inmunología' },
+    { study:'PSA libre + índice PSA libre/total',  sd:200, chopo:400, hospital:850, yours:420, group:'Inmunología' },
+    { study:'CA-125 (tumor marker)',               sd:170, chopo:350, hospital:750, yours:365, group:'Inmunología' },
+    { study:'CA 19-9',                             sd:170, chopo:350, hospital:750, yours:365, group:'Inmunología' },
+    { study:'CEA (Antígeno carcinoembrionario)',   sd:160, chopo:320, hospital:700, yours:335, group:'Inmunología' },
+    { study:'Factor Reumatoide cuantitativo',      sd:80,  chopo:160, hospital:360, yours:170, group:'Inmunología' },
+    { study:'PCR cuantitativa (Proteína C React)', sd:90,  chopo:180, hospital:400, yours:190, group:'Inmunología' },
+    { study:'ANA (Anticuerpos antinucleares)',     sd:150, chopo:300, hospital:660, yours:315, group:'Inmunología' },
+    { study:'VDRL / RPR (Sífilis)',                sd:60,  chopo:120, hospital:280, yours:130, group:'Inmunología' },
+    { study:'VIH (ELISA 4ta generación)',          sd:100, chopo:200, hospital:450, yours:210, group:'Inmunología' },
+    { study:'Hepatitis B (HBsAg)',                 sd:110, chopo:220, hospital:480, yours:230, group:'Inmunología' },
+    { study:'Hepatitis C (Anti-HCV)',              sd:110, chopo:220, hospital:480, yours:230, group:'Inmunología' },
+    { study:'IgE total (alergias)',                sd:120, chopo:240, hospital:530, yours:250, group:'Inmunología' },
     // Coagulación
     { cat:'Otros' },
-    { study:'Tiempo de Protrombina (TP/INR)',      sd:70,  chopo:140, hospital:320, yours:150, cat:'Otros' },
-    { study:'Tiempo de Tromboplastina (TTPa)',     sd:70,  chopo:140, hospital:320, yours:150, cat:'Otros' },
-    { study:'Fibrinógeno',                         sd:100, chopo:200, hospital:450, yours:210, cat:'Otros' },
+    { study:'Tiempo de Protrombina (TP/INR)',      sd:70,  chopo:140, hospital:320, yours:150, group:'Otros' },
+    { study:'Tiempo de Tromboplastina (TTPa)',     sd:70,  chopo:140, hospital:320, yours:150, group:'Otros' },
+    { study:'Fibrinógeno',                         sd:100, chopo:200, hospital:450, yours:210, group:'Otros' },
     { study:'Examen General de Orina (EGO)',       sd:40,  chopo:80,  hospital:200, yours:90,  cat:'Otros' },
-    { study:'Toxicológico básico orina (5 panel)', sd:200, chopo:400, hospital:800, yours:420, cat:'Otros' },
-    { study:'Prueba rápida COVID-19 Ag',           sd:150, chopo:280, hospital:500, yours:280, cat:'Otros' },
+    { study:'Toxicológico básico orina (5 panel)', sd:200, chopo:400, hospital:800, yours:420, group:'Otros' },
+    { study:'Prueba rápida COVID-19 Ag',           sd:150, chopo:280, hospital:500, yours:280, group:'Otros' },
     { study:'Prueba de embarazo orina (cualitat.)',sd:40,  chopo:80,  hospital:180, yours:85,  cat:'Otros' },
-    { study:'Glicohemoglobina + curva glucosa',    sd:180, chopo:360, hospital:800, yours:380, cat:'Otros' },
+    { study:'Glicohemoglobina + curva glucosa',    sd:180, chopo:360, hospital:800, yours:380, group:'Otros' },
   ];
 
   let pricingCatFilter = 'all';
@@ -7545,19 +7686,12 @@ Quedo a sus órdenes,
     const tbl = document.getElementById('pricing-table');
     if (!tbl) return;
 
-    const filtered = pricingCatFilter === 'all'
-      ? fullPricingData
-      : fullPricingData.filter(r => r.cat ? r.cat === pricingCatFilter : (r.cat_inherit === pricingCatFilter));
-
-    // Inject cat_inherit for filtering rows without cat header
-    let lastCat = '';
-    fullPricingData.forEach(r => { if (r.cat) lastCat = r.cat; else r.cat_inherit = lastCat; });
-
+    // Filter: header rows match on .cat, study rows match on .group
     const filteredRows = pricingCatFilter === 'all'
       ? fullPricingData
       : fullPricingData.filter(r => {
-          if (r.cat) return r.cat === pricingCatFilter;
-          return r.cat_inherit === pricingCatFilter;
+          if (r.cat && !r.study) return r.cat === pricingCatFilter; // header row
+          return r.group === pricingCatFilter;                       // study row
         });
 
     let html = '<thead><tr>' +
@@ -7570,11 +7704,9 @@ Quedo a sus órdenes,
       '<th style="text-align:right">Margin est.</th>' +
       '</tr></thead><tbody>';
 
-    let studies = 0, yourSum = 0, sdSum = 0, chopoSum = 0;
-    let lastCatInRow = '';
-    filteredRows.forEach((row, i) => {
-      if (row.cat) {
-        lastCatInRow = row.cat;
+    filteredRows.forEach(row => {
+      // Header separator row — has cat but no study
+      if (row.cat && !row.study) {
         html += '<tr class="cat-row"><td colspan="7">' + row.cat + '</td></tr>';
         return;
       }
@@ -7583,19 +7715,17 @@ Quedo a sus órdenes,
       const diff = yours && row.chopo ? Math.round((yours - row.chopo) / row.chopo * 100) : 0;
       const diffColor = diff < -20 ? 'var(--green-dark)' : diff < 0 ? 'var(--blue)' : diff < 15 ? 'var(--amber)' : 'var(--red)';
       const diffText = diff === 0 ? '—' : (diff > 0 ? '+' : '') + diff + '%';
-      // Estimate margin: typical reagent cost ~12% of test price for standard, ~18% for premium
-      const reagCost = Math.round(yours * (row.cat_inherit === 'Hormonas' ? 0.18 : row.cat_inherit === 'Microbiología' ? 0.25 : 0.12));
+      const reagCost = Math.round(yours * (row.group === 'Hormonas' ? 0.18 : row.group === 'Microbiología' ? 0.25 : 0.12));
       const margin = yours > 0 ? Math.round((yours - reagCost) / yours * 100) : 0;
       const marginColor = margin >= 80 ? 'var(--green-dark)' : margin >= 65 ? 'var(--blue)' : 'var(--amber)';
 
-      studies++; yourSum += yours; sdSum += row.sd || 0; chopoSum += row.chopo || 0;
       html += '<tr>' +
         '<td style="padding:7px 10px;font-size:12px">' + row.study + '</td>' +
         '<td class="price-cell">' + (row.sd ? '$' + row.sd : '—') + '</td>' +
         '<td class="price-cell">' + (row.chopo ? '$' + row.chopo : '—') + '</td>' +
         '<td class="price-cell">' + (row.hospital ? '$' + row.hospital : '—') + '</td>' +
         '<td class="price-cell your-price">' +
-          '<input type="number" value="' + yours + '" min="0" class="pricing-tbl input" ' +
+          '<input type="number" value="' + yours + '" min="0" ' +
           'style="width:70px;text-align:right;border:0.5px solid var(--border);border-radius:4px;padding:3px 6px;font-family:var(--font-mono);font-size:12px;background:var(--bg-primary);color:var(--green-dark);font-weight:500;outline:none" ' +
           'oninput="fullPricingData[' + idx + '].yours=+this.value||0;renderFullPricingMetrics()" ' +
           'onfocus="this.style.borderColor=\'var(--green)\'" onblur="this.style.borderColor=\'var(--border)\'"></td>' +
@@ -7603,6 +7733,7 @@ Quedo a sus órdenes,
         '<td class="price-cell" style="color:' + marginColor + '">' + margin + '%</td>' +
       '</tr>';
     });
+
     html += '</tbody>';
     tbl.innerHTML = html;
     renderFullPricingMetrics();
@@ -8063,7 +8194,54 @@ Quedo a sus órdenes,
   }
 
   function printInvestorSummary() {
+    document.body.classList.add('printing-investor');
     window.print();
+    // Remove class after print dialog closes (setTimeout gives browser time to render)
+    setTimeout(() => document.body.classList.remove('printing-investor'), 1000);
+  }
+
+
+  // ══════════════════════════════════════════
+  // ── LOCATION PAGE TABS ──
+  // ══════════════════════════════════════════
+  function switchLocTab(tab, el) {
+    ['scoring','map','intel'].forEach(t => {
+      const e = document.getElementById('loc-view-' + t);
+      if (e) e.style.display = t === tab ? 'block' : 'none';
+    });
+    document.querySelectorAll('#loc-tab-scoring,#loc-tab-map,#loc-tab-intel').forEach(b => b.classList.remove('active'));
+    if (el) el.classList.add('active');
+    if (tab === 'map')   { initLeafletMap(); }
+    if (tab === 'intel') { renderLocPositioningMap(); renderLocCompetitorTable(); }
+  }
+
+  function renderLocPositioningMap() {
+    // Reuse the same SVG renderer but target the loc-page wrap
+    const origWrap = document.getElementById('positioning-map-wrap');
+    const locWrap  = document.getElementById('loc-positioning-map-wrap');
+    if (!locWrap) return;
+    // Temporarily swap, render, swap back
+    const tempId = 'positioning-map-wrap';
+    locWrap.id = tempId;
+    if (origWrap) origWrap.id = 'positioning-map-wrap-hidden';
+    renderPositioningMap();
+    locWrap.id = 'loc-positioning-map-wrap';
+    if (origWrap) origWrap.id = 'positioning-map-wrap';
+  }
+
+  function renderLocCompetitorTable() {
+    const tbody = document.getElementById('loc-competitor-tbody');
+    if (!tbody) return;
+    tbody.innerHTML = competitors.map(c =>
+      '<tr style="border-bottom:0.5px solid var(--border)">' +
+        '<td style="padding:9px 10px"><div style="display:flex;align-items:center;gap:8px"><div style="width:10px;height:10px;border-radius:50%;background:' + c.color + ';flex-shrink:0"></div><span style="font-size:12px;font-weight:500;color:var(--text-primary)">' + c.name + '</span></div></td>' +
+        '<td style="padding:9px 10px;font-size:11px;color:var(--text-secondary)">' + c.tier + '</td>' +
+        '<td style="padding:9px 10px;font-size:12px;font-family:var(--font-mono)">' + c.locations + '</td>' +
+        '<td style="padding:9px 10px;font-size:12px">' + c.price + '</td>' +
+        '<td style="padding:9px 10px;font-size:11px;color:var(--text-secondary);max-width:220px">' + c.weaknesses + '</td>' +
+        '<td style="padding:9px 10px;font-size:11px;color:var(--green-dark);max-width:220px">' + c.opportunity + '</td>' +
+      '</tr>'
+    ).join('');
   }
 
   if (window._dbReady) {
