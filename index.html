@@ -4682,32 +4682,8 @@ Quedo a sus órdenes,
   </div>
   <div class="rp-body" id="wp-body" style="padding:18px 22px"></div>
 
-  <!-- AI Assist Drawer -->
-  <div id="wp-ai-drawer" style="display:none;border-top:1.5px solid var(--green);background:var(--bg-secondary);flex-shrink:0;max-height:420px;display:none;flex-direction:column">
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:0.5px solid var(--border)">
-      <div style="display:flex;align-items:center;gap:7px">
-        <div style="width:22px;height:22px;border-radius:6px;background:var(--green-l,#e1f5ee);display:flex;align-items:center;justify-content:center;font-size:12px">🤖</div>
-        <span style="font-size:12px;font-weight:500;color:var(--text-primary)">AI Assist</span>
-        <span style="font-size:10px;color:var(--text-tertiary)">— ask me to research & fill this step</span>
-      </div>
-      <button onclick="toggleWpAiDrawer()" style="border:none;background:none;color:var(--text-tertiary);cursor:pointer;font-size:14px;padding:2px 4px">✕</button>
-    </div>
-    <div id="wp-ai-messages" style="flex:1;overflow-y:auto;padding:12px 16px;display:flex;flex-direction:column;gap:8px;min-height:80px;max-height:220px"></div>
-    <!-- Suggested entries preview -->
-    <div id="wp-ai-preview" style="display:none;padding:10px 16px;border-top:0.5px solid var(--border)">
-      <div style="font-size:10px;font-weight:500;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">AI suggestions — select to add</div>
-      <div id="wp-ai-preview-items" style="display:flex;flex-direction:column;gap:4px;max-height:140px;overflow-y:auto;margin-bottom:8px"></div>
-      <button onclick="acceptWpAiSuggestions()" class="btn btn-primary" style="width:100%;font-size:12px">Add selected to list</button>
-    </div>
-    <div style="padding:10px 16px;border-top:0.5px solid var(--border);display:flex;gap:8px">
-      <textarea id="wp-ai-input" rows="1" placeholder="Ask AI to research this step..." style="flex:1;border:0.5px solid var(--border);border-radius:8px;padding:7px 10px;font-size:12px;font-family:var(--font);resize:none;background:var(--bg-primary);color:var(--text-primary);outline:none" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendWpAiMessage()}"></textarea>
-      <button onclick="sendWpAiMessage()" id="wp-ai-send" style="width:32px;height:32px;border-radius:8px;background:var(--green);border:none;color:#fff;font-size:14px;cursor:pointer;flex-shrink:0;align-self:flex-end">↑</button>
-    </div>
-  </div>
-
   <div id="wp-footer" style="padding:12px 22px;border-top:0.5px solid var(--border);display:flex;gap:8px;flex-shrink:0">
     <button class="btn" style="flex:1;font-size:12px" onclick="closeWorkPanel()">Close</button>
-    <button onclick="toggleWpAiDrawer()" style="padding:0 12px;border:1.5px solid var(--green);border-radius:8px;background:var(--green-l,#e1f5ee);color:var(--green-d,#0f6e56);font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap">🤖 AI Assist</button>
     <button class="btn btn-primary" style="flex:1;font-size:12px" id="wp-done-btn" onclick="toggleWorkPanelDone()">Mark complete</button>
   </div>
   <input type="file" id="wp-file-input" style="display:none" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx,.xls,.xlsx,.csv,.txt" onchange="handleWpFileUpload(this)">
@@ -6617,11 +6593,11 @@ Quedo a sus órdenes,
       (fields.length ? 'FIELDS TO FILL: ' + fields.join(', ') + '\n' : '') +
       'PANEL TYPE: ' + panelType + '\n' +
       (existingEntries.length ? 'ALREADY ADDED (' + existingEntries.length + ' entries): ' + existingEntries.map(function(e){ return typeof e === 'object' ? (e[fields[0]] || JSON.stringify(e)) : e; }).join(', ') + '\n' : '') +
-      '\nWhen the user asks you to research and suggest entries, you MUST respond with a JSON block in this exact format (and nothing else outside it):\n' +
-      '```json\n{"suggestions":[{"field1":"value","field2":"value",...}]}\n```\n' +
-      'Where each object has keys matching the FIELDS TO FILL exactly.\n' +
-      'For conversational messages that are NOT entry suggestions, respond normally in plain text.\n' +
-      'You know the target area is Juriquilla/Zibatá/Centro/Satélite zones of Queretaro. Be specific and realistic with Mexican lab names, addresses, and data.';
+      'CRITICAL: When the user asks to research, list, find, suggest, or add items/entries, respond with ONLY raw JSON, no explanation, no markdown, no extra text.\n' +
+      'Use this exact format: {"suggestions":[{"' + (fields[0]||'field') + '":"value",...}]}\n' +
+      'Each object MUST have ALL of these exact keys: ' + (fields.length ? fields.join(', ') : 'name, notes') + '\n' +
+      'Use realistic specific data for Queretaro Mexico (Juriquilla, Zibata, Centro, Satelite zones).\n' +
+      'For conversational questions not asking for items, respond in plain text only.';
   }
 
   async function sendWpAiMessage() {
@@ -6669,16 +6645,20 @@ Quedo a sus órdenes,
         if (sendBtn) { sendBtn.textContent = '↑'; sendBtn.disabled = false; }
         return;
       }
-      var data = await res.json();
       var reply = data.content && data.content[0] ? data.content[0].text : 'Sorry, no response. Please try again.';
       if (typing.parentNode) typing.remove();
       _wpAiMessages.push({ role: 'assistant', content: reply });
 
-      // Check for JSON suggestions block
-      var jsonMatch = reply.match(/```json\s*([\s\S]*?)```/);
-      if (jsonMatch) {
+      // Try to extract JSON suggestions — handle raw JSON or code block
+      var jsonStr = null;
+      var rawMatch = reply.match(/\{[\s\S]*"suggestions"[\s\S]*\}/);
+      var blockMatch = reply.match(/```(?:json)?\s*([\s\S]*?)```/);
+      if (rawMatch) jsonStr = rawMatch[0];
+      else if (blockMatch) jsonStr = blockMatch[1].trim();
+
+      if (jsonStr) {
         try {
-          var parsed = JSON.parse(jsonMatch[1].trim());
+          var parsed = JSON.parse(jsonStr);
           if (parsed.suggestions && parsed.suggestions.length) {
             _wpAiSuggested = parsed.suggestions;
             appendWpAiMessage('assistant', 'I found ' + parsed.suggestions.length + ' suggestion' + (parsed.suggestions.length > 1 ? 's' : '') + '. Review them below and select which to add:');
@@ -11166,7 +11146,37 @@ Quedo a sus órdenes,
         '- Threats: ' + swotData.t.join('; ') + '\n\n' : '') +
       'Respond concisely and practically. Use bullet points where helpful. ' +
       'When relevant, reference specific numbers from the context above. ' +
-      'Respond in English unless the user writes in Spanish, in which case respond in Spanish.';
+      'Always respond in Spanish.\n\n' +
+      'STEP DIRECTORY — you can add data to any of these steps on behalf of the user:\n' +
+      (function() {
+        var lines = [];
+        var allTasks = [];
+        try { p1Tasks.forEach(function(t){ allTasks.push({phase:1,tasks:[t]}); }); } catch(e){}
+        try { for(var n=2;n<=6;n++){ if(phaseConfigs[n]) phaseConfigs[n].tasks().forEach(function(t){ allTasks.push({phase:n,task:t}); }); } } catch(e){}
+
+        // Phase 1 — list and scorecard steps
+        try {
+          p1Tasks.forEach(function(t) {
+            t.subtasks.forEach(function(sub, si) {
+              if (typeof sub !== 'object' || (sub.panel !== 'list' && sub.panel !== 'scorecard')) return;
+              var text = sub.text;
+              var fields = sub.fields ? sub.fields.map(function(f){ return typeof f === 'object' ? f.label : f; }) : [];
+              var panel = sub.panel;
+              var existing = (p1State[t.id] && p1State[t.id].subtasks[si] && p1State[t.id].subtasks[si].entries) || [];
+              lines.push('  [p1|' + t.id + '|' + si + '|' + panel + '] "' + text + '" fields:[' + fields.join(', ') + ']' + (existing.length ? ' (' + existing.length + ' entries already)' : ''));
+            });
+          });
+        } catch(e){}
+
+        return lines.join('\n') + '\n\n' +
+          'LANGUAGE: Always respond in Spanish, no exceptions.\n\n' +
+          'INSTRUCTIONS: When the user asks to research, write, or list items for any step, respond with ONLY raw JSON, no other text:\n' +
+          '{"target":{"phase":1,"taskId":"p1t1","subIdx":0,"panel":"list"},"suggestions":[{"field1":"value",...},{"field1":"value",...}]}\n' +
+          'For LIST steps: you MUST return a minimum of 5 suggestions and up to 10. Never return just 1. Each is a separate object with ALL fields filled with realistic data.\n' +
+          'For SCORECARD steps: return exactly 1 suggestion object with ALL field labels as keys.\n' +
+          'Match target [phase|taskId|subIdx|panel] from the directory above. Data must be specific to Queretaro, Mexico.\n' +
+          'For general questions, reply briefly in Spanish plain text.';
+      })();
   }
 
   async function sendAIMessage() {
@@ -11199,7 +11209,7 @@ Quedo a sus órdenes,
         headers:{ 'Content-Type':'application/json' },
         body: JSON.stringify({
           model:'claude-sonnet-4-20250514',
-          max_tokens:1000,
+          max_tokens:3000,
           system: buildAIContext(),
           messages: aiMessages.map(m => ({ role:m.role, content:m.content })),
         })
@@ -11208,7 +11218,28 @@ Quedo a sus órdenes,
       const reply = data.content && data.content[0] ? data.content[0].text : 'Sorry, I couldn\'t get a response. Please try again.';
       aiMessages.push({ role:'assistant', content: reply });
       if (typingDiv.parentNode) typingDiv.remove();
-      appendAIMessage('assistant', reply);
+
+      // Detect JSON with target routing
+      var jsonStr = null;
+      var rawMatch = reply.match(/\{[\s\S]*"suggestions"[\s\S]*\}/);
+      var blockMatch = reply.match(/```(?:json)?\s*([\s\S]*?)```/);
+      if (rawMatch) jsonStr = rawMatch[0];
+      else if (blockMatch) jsonStr = blockMatch[1].trim();
+
+      if (jsonStr) {
+        try {
+          var parsed = JSON.parse(jsonStr);
+          if (parsed.suggestions && parsed.suggestions.length && parsed.target) {
+            showAIAdvisorPreview(parsed.suggestions, parsed.target);
+          } else {
+            appendAIMessage('assistant', reply);
+          }
+        } catch(e) {
+          appendAIMessage('assistant', reply);
+        }
+      } else {
+        appendAIMessage('assistant', reply);
+      }
     } catch(err) {
       if (typingDiv.parentNode) typingDiv.remove();
       appendAIMessage('assistant', 'Connection error. Please check your internet connection and try again.');
@@ -11223,6 +11254,121 @@ Quedo a sus órdenes,
     const msgs = document.getElementById('ai-messages');
     if (msgs) msgs.innerHTML = '';
     appendAIMessage('assistant', 'Chat cleared. How can I help you with LabQro?');
+  }
+
+  var _aiAdvisorSuggested = [];
+  var _aiAdvisorTarget = null;
+
+  function getStepName(target) {
+    if (!target) return '';
+    try {
+      var task = target.phase === 1
+        ? p1Tasks.find(function(t){return t.id===target.taskId;})
+        : phaseConfigs[target.phase].tasks().find(function(t){return t.id===target.taskId;});
+      var sub = task && task.subtasks[target.subIdx];
+      return typeof sub === 'string' ? sub : (sub && sub.text) || '';
+    } catch(e) { return ''; }
+  }
+
+  function showAIAdvisorPreview(suggestions, target) {
+    var msgs = document.getElementById('ai-messages');
+    if (!msgs) return;
+    _aiAdvisorSuggested = suggestions;
+    _aiAdvisorTarget = target;
+
+    var fields = [];
+    try {
+      var task = target.phase === 1
+        ? p1Tasks.find(function(t){return t.id===target.taskId;})
+        : phaseConfigs[target.phase].tasks().find(function(t){return t.id===target.taskId;});
+      var subDef = task && task.subtasks[target.subIdx];
+      var rawFields = (subDef && subDef.fields) || [];
+      fields = rawFields.map(function(f){ return typeof f === 'object' ? f.label : f; });
+    } catch(e) {}
+
+    // Also try reading field keys directly from the first suggestion if fields lookup failed
+    if (!fields.length && suggestions.length) {
+      fields = Object.keys(suggestions[0]).filter(function(k){ return k !== '_images'; });
+    }
+
+    var wrap = document.createElement('div');
+    wrap.id = 'ai-advisor-preview-wrap';
+    wrap.style.cssText = 'margin:4px 0 8px 0;background:var(--bg-secondary);border:0.5px solid var(--border);border-radius:10px';
+
+    var header = document.createElement('div');
+    header.style.cssText = 'padding:6px 10px;font-size:10px;font-weight:500;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.06em;border-bottom:0.5px solid var(--border)';
+    header.textContent = suggestions.length + ' suggestion' + (suggestions.length > 1 ? 's' : '') + ' — select to add';
+    wrap.appendChild(header);
+
+    var list = document.createElement('div');
+    list.style.cssText = 'padding:6px 8px;display:flex;flex-direction:column;gap:4px;max-height:220px;overflow-y:auto';
+    var t = target;
+    suggestions.forEach(function(s, si) {
+      var firstKey = fields[0] || Object.keys(s)[0] || '';
+      var label = firstKey ? (s[firstKey] || ('Item ' + (si+1))) : ('Item ' + (si+1));
+      // For scorecard, truncate long values and show as label: value
+      var isScorecard = t && t.panel === 'scorecard';
+      var detail = isScorecard
+        ? Object.entries(s).map(function(kv){ return kv[0] + ': ' + kv[1]; }).join(' · ')
+        : fields.slice(1).map(function(f){ return s[f] ? (f + ': ' + s[f]) : ''; }).filter(Boolean).join(' · ');
+      var row = document.createElement('label');
+      row.style.cssText = 'display:flex;align-items:flex-start;gap:8px;padding:7px 8px;border-radius:6px;border:0.5px solid var(--border);background:var(--bg-primary);cursor:pointer';
+      row.innerHTML = '<input type="checkbox" checked data-si="' + si + '" style="margin-top:2px;accent-color:var(--green);flex-shrink:0;width:14px;height:14px">' +
+        '<div style="min-width:0"><div style="font-size:12px;font-weight:500;color:var(--text-primary)">' + label + '</div>' +
+        (detail ? '<div style="font-size:10px;color:var(--text-tertiary);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + detail + '</div>' : '') + '</div>';
+      list.appendChild(row);
+    });
+    wrap.appendChild(list);
+
+    var footer = document.createElement('div');
+    footer.style.cssText = 'padding:8px;border-top:0.5px solid var(--border)';
+    footer.innerHTML = '<button onclick="acceptAIAdvisorSuggestions()" style="width:100%;padding:8px;background:var(--green);color:#fff;border:none;border-radius:7px;font-size:12px;font-weight:500;cursor:pointer">✓ Add selected to step</button>';
+    wrap.appendChild(footer);
+
+    msgs.appendChild(wrap);
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+
+  function acceptAIAdvisorSuggestions() {
+    if (!_aiAdvisorTarget) { appendAIMessage('assistant', 'Error: no target.'); return; }
+    var checkboxes = document.querySelectorAll('#ai-advisor-preview-wrap input[type="checkbox"]');
+    var toAdd = [];
+    checkboxes.forEach(function(cb) {
+      if (cb.checked) toAdd.push(_aiAdvisorSuggested[parseInt(cb.dataset.si)]);
+    });
+    if (!toAdd.length) { appendAIMessage('assistant', 'Nothing selected.'); return; }
+
+    var t = _aiAdvisorTarget;
+    try {
+      var subState = t.phase === 1
+        ? p1State[t.taskId].subtasks[t.subIdx]
+        : phaseStates[t.phase][t.taskId].subtasks[t.subIdx];
+
+      if (!subState) throw new Error('subState not found');
+
+      if (t.panel === 'scorecard') {
+        if (!subState.formData) subState.formData = {};
+        var sc = toAdd[0];
+        Object.keys(sc).forEach(function(label) {
+          var key = label.replace(/[^a-zA-Z0-9]/g, '');
+          subState.formData[key] = sc[label];
+        });
+      } else {
+        if (!subState.entries) subState.entries = [];
+        toAdd.forEach(function(entry) { subState.entries.push(entry); });
+      }
+
+      if (t.phase === 1) saveP1State();
+      else savePhaseState(t.phase);
+
+      var wrap = document.getElementById('ai-advisor-preview-wrap');
+      if (wrap) wrap.innerHTML = '<div style="padding:10px 12px;font-size:12px;color:var(--green-d,#0f6e56);background:var(--green-l,#e1f5ee);border-radius:8px">✓ ' + toAdd.length + ' item' + (toAdd.length > 1 ? 's' : '') + ' added to step</div>';
+    } catch(e) {
+      appendAIMessage('assistant', 'Save error: ' + e.message);
+    }
+
+    _aiAdvisorSuggested = [];
+    _aiAdvisorTarget = null;
   }
 
   // ══════════════════════════════════════════
