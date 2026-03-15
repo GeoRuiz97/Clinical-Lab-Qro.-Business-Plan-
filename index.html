@@ -257,7 +257,7 @@
   .badge-urgent   { background: #faeeda; color: #854f0b; }
 
   /* ─── LAYOUTS ─── */
-  .two-col   { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .two-col   { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: start; }
   .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
 
   /* ─── PHASE ROWS ─── */
@@ -3484,13 +3484,56 @@ Quedo a sus órdenes,
       <strong>Critical path:</strong> You cannot apply for COFEPRIS permits without a legally constituted empresa and RFC. Click any task to expand its workspace.
     </div>
 
-    <div class="card">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-        <div class="phase-section-title" style="margin:0;border:none;padding:0">Core tasks</div>
-        <div id="p2-header-pct" style="font-size:11px;font-family:var(--font-mono);color:var(--text-tertiary)"></div>
+    <div class="two-col">
+      <div>
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <div class="phase-section-title" style="margin:0;border:none;padding:0">Core tasks</div>
+            <div id="p2-header-pct" style="font-size:11px;font-family:var(--font-mono);color:var(--text-tertiary)"></div>
+          </div>
+          <div class="progress-bar" style="margin-bottom:14px"><div class="progress-fill" id="p2-inner-bar" style="width:0%;background:#854f0b"></div></div>
+          <div id="p2-tasks"></div>
+        </div>
       </div>
-      <div class="progress-bar" style="margin-bottom:14px"><div class="progress-fill" id="p2-inner-bar" style="width:0%;background:#854f0b"></div></div>
-      <div id="p2-tasks"></div>
+
+    <div>
+        <div class="card">
+          <div class="phase-section-title">Deliverables when phase is complete</div>
+          <div class="deliverable">Acta Constitutiva (notarized)</div>
+          <div class="deliverable">Pacto de Socios (if partners involved)</div>
+          <div class="deliverable">RFC registration confirmation</div>
+          <div class="deliverable">e.firma (electronic signature) active</div>
+          <div class="deliverable">Business bank account open</div>
+          <div class="deliverable">Signed lease with uso de suelo confirmed</div>
+          <div class="deliverable">CFDI invoicing setup (PAC provider selected)</div>
+          <div class="deliverable">Professional liability insurance policy</div>
+        </div>
+
+        <div class="card">
+          <div class="phase-section-title">Key decisions to make</div>
+          <div class="info-box neutral" style="margin-bottom:10px">
+            <strong>S.A. de C.V. vs S.A.S.?</strong><br>S.A. de C.V. is standard for clinical labs — liability protection, investor-ready, expected by COFEPRIS. S.A.S. is simpler but has capital limits. Go S.A. de C.V.
+          </div>
+          <div class="info-box neutral" style="margin-bottom:10px">
+            <strong>Need a Pacto de Socios?</strong><br>If taking on ANY partner: yes. Cover vesting, decision rights, profit distribution, exit mechanisms. Draft BEFORE the Acta Constitutiva. $8K-$20K MXN for a specialized attorney.
+          </div>
+          <div class="info-box neutral">
+            <strong>Which insurance?</strong><br>RC Profesional (diagnostic errors), RC General (premises), Equipment (fire/theft/earthquake), Employee accident. Budget $40K-$80K/yr total. GNP, AXA, Zurich — bundle for 10-15% discount.
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="phase-section-title">Estimated costs</div>
+          <div class="fin-row"><div class="fin-label">Notario (Acta Constitutiva)</div><div class="fin-val">$15,000-25,000</div></div>
+          <div class="fin-row"><div class="fin-label">RFC / e.firma (SAT)</div><div class="fin-val">$0 (free)</div></div>
+          <div class="fin-row"><div class="fin-label">IMPI trademark</div><div class="fin-val">~$2,500</div></div>
+          <div class="fin-row"><div class="fin-label">Lease deposit (2-3 months)</div><div class="fin-val">$36,000-105,000</div></div>
+          <div class="fin-row" style="border-top:1.5px solid var(--border-strong);margin-top:5px;padding-top:10px">
+            <div class="fin-label" style="font-weight:500;color:var(--text-primary)">Phase total</div>
+            <div class="fin-val total">$53,000-135,000 MXN</div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -3511,13 +3554,54 @@ Quedo a sus órdenes,
       <strong>Longest and most unpredictable phase.</strong> COFEPRIS timelines range from 4 to 12 months. Click tasks to track your progress on each requirement.
     </div>
 
-    <div class="card">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-        <div class="phase-section-title" style="margin:0;border:none;padding:0">Core tasks</div>
-        <div id="p3-header-pct" style="font-size:11px;font-family:var(--font-mono);color:var(--text-tertiary)"></div>
+    <div class="two-col">
+      <div>
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <div class="phase-section-title" style="margin:0;border:none;padding:0">Core tasks</div>
+            <div id="p3-header-pct" style="font-size:11px;font-family:var(--font-mono);color:var(--text-tertiary)"></div>
+          </div>
+          <div class="progress-bar" style="margin-bottom:14px"><div class="progress-fill" id="p3-inner-bar" style="width:0%;background:#a32d2d"></div></div>
+          <div id="p3-tasks"></div>
+        </div>
       </div>
-      <div class="progress-bar" style="margin-bottom:14px"><div class="progress-fill" id="p3-inner-bar" style="width:0%;background:#a32d2d"></div></div>
-      <div id="p3-tasks"></div>
+
+    <div>
+        <div class="card">
+          <div class="phase-section-title">Deliverables when phase is complete</div>
+          <div class="deliverable">Director Técnico (QFB) under contract</div>
+          <div class="deliverable">Aviso de Funcionamiento accepted</div>
+          <div class="deliverable">Licencia Sanitaria application filed</div>
+          <div class="deliverable">NOM-007 compliant floor plan</div>
+          <div class="deliverable">NOM-087 RPBI waste management plan</div>
+          <div class="deliverable">Protección Civil dictamen received</div>
+          <div class="deliverable">COFEPRIS inspection passed</div>
+          <div class="deliverable">Licencia Sanitaria in hand</div>
+        </div>
+
+        <div class="card">
+          <div class="phase-section-title">Key decisions to make</div>
+          <div class="info-box neutral" style="margin-bottom:10px">
+            <strong>Full-time vs. part-time QFB?</strong><br>COFEPRIS requires a named QFB. Full-time ($28-35K/mo) gives you on-site quality control. Some labs start with a part-time arrangement, but this limits your hours and inspection flexibility.
+          </div>
+          <div class="info-box neutral">
+            <strong>Hire a gestor for COFEPRIS?</strong><br>A regulatory consultant ($15-30K) who knows the process can save months. They know what inspectors look for and can pre-audit your lab. Worth it for first-time lab operators.
+          </div>
+        </div>
+
+        <div class="card" style="border:1.5px solid var(--red)">
+          <div class="phase-section-title" style="color:var(--red)">Critical timeline</div>
+          <div style="font-size:12px;color:var(--text-secondary);line-height:1.8">
+            COFEPRIS is the longest and most variable step. Typical timeline:<br>
+            <strong>Month 1:</strong> File Aviso de Funcionamiento<br>
+            <strong>Month 1-2:</strong> Prepare Licencia Sanitaria application<br>
+            <strong>Month 2:</strong> Submit application<br>
+            <strong>Month 3-8:</strong> Wait for inspection scheduling<br>
+            <strong>Month 8-9:</strong> Pass inspection (or correct and re-inspect)<br>
+            <strong>Month 9-12:</strong> Receive Licencia Sanitaria
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -3538,13 +3622,51 @@ Quedo a sus órdenes,
       <strong>Run in parallel with COFEPRIS.</strong> Order equipment early — import lead times are 8–16 weeks. Your lab must be ready before the inspection.
     </div>
 
-    <div class="card">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-        <div class="phase-section-title" style="margin:0;border:none;padding:0">Core tasks</div>
-        <div id="p4-header-pct" style="font-size:11px;font-family:var(--font-mono);color:var(--text-tertiary)"></div>
+    <div class="two-col">
+      <div>
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <div class="phase-section-title" style="margin:0;border:none;padding:0">Core tasks</div>
+            <div id="p4-header-pct" style="font-size:11px;font-family:var(--font-mono);color:var(--text-tertiary)"></div>
+          </div>
+          <div class="progress-bar" style="margin-bottom:14px"><div class="progress-fill" id="p4-inner-bar" style="width:0%;background:#534ab7"></div></div>
+          <div id="p4-tasks"></div>
+        </div>
       </div>
-      <div class="progress-bar" style="margin-bottom:14px"><div class="progress-fill" id="p4-inner-bar" style="width:0%;background:#534ab7"></div></div>
-      <div id="p4-tasks"></div>
+
+    <div>
+        <div class="card">
+          <div class="phase-section-title">Deliverables when phase is complete</div>
+          <div class="deliverable">Lab space fully built out per NOM-007</div>
+          <div class="deliverable">All analyzers installed and calibrated</div>
+          <div class="deliverable">Cold chain operational (2-8C, -20C)</div>
+          <div class="deliverable">LIS configured and tested</div>
+          <div class="deliverable">Furniture, fixtures, and signage installed</div>
+          <div class="deliverable">IT infrastructure (network, printers, backup)</div>
+        </div>
+
+        <div class="card">
+          <div class="phase-section-title">Key decisions to make</div>
+          <div class="info-box neutral" style="margin-bottom:10px">
+            <strong>Buy vs. comodato?</strong><br>Comodato: free analyzer, locked to one reagent vendor. Slashes startup cost by $300-800K but locks you in for 3-5 years. Good for year 1 — renegotiate after volume proves out.
+          </div>
+          <div class="info-box neutral" style="margin-bottom:10px">
+            <strong>Which LIS?</strong><br>SaaS ($3-8K/mo) vs. on-premise license ($50-150K). SaaS is recommended — lower upfront, automatic updates, WhatsApp integration. Must support CFDI 4.0 and Spanish-language reports.
+          </div>
+          <div class="info-box neutral">
+            <strong>New vs. refurbished equipment?</strong><br>Refurbished hematology/chemistry analyzers can save 40-60%. Ensure warranty, calibration certificates, and reagent availability. Mindray offers competitive new-equipment pricing for emerging markets.
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="phase-section-title">Estimated costs</div>
+          <div class="fin-row"><div class="fin-label">Lab buildout/remodeling</div><div class="fin-val">$150,000-400,000</div></div>
+          <div class="fin-row"><div class="fin-label">Equipment (if purchased)</div><div class="fin-val">$400,000-1,200,000</div></div>
+          <div class="fin-row"><div class="fin-label">Equipment (if comodato)</div><div class="fin-val">$0 upfront</div></div>
+          <div class="fin-row"><div class="fin-label">LIS setup + first year</div><div class="fin-val">$36,000-96,000</div></div>
+          <div class="fin-row"><div class="fin-label">Furniture and signage</div><div class="fin-val">$40,000-100,000</div></div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -3565,13 +3687,51 @@ Quedo a sus órdenes,
       <strong>Hire and train before day one.</strong> Your QFB must be on-site for the COFEPRIS inspection. Lab techs need 2–4 weeks of equipment training.
     </div>
 
-    <div class="card">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-        <div class="phase-section-title" style="margin:0;border:none;padding:0">Core tasks</div>
-        <div id="p5-header-pct" style="font-size:11px;font-family:var(--font-mono);color:var(--text-tertiary)"></div>
+    <div class="two-col">
+      <div>
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <div class="phase-section-title" style="margin:0;border:none;padding:0">Core tasks</div>
+            <div id="p5-header-pct" style="font-size:11px;font-family:var(--font-mono);color:var(--text-tertiary)"></div>
+          </div>
+          <div class="progress-bar" style="margin-bottom:14px"><div class="progress-fill" id="p5-inner-bar" style="width:0%;background:#22c55e"></div></div>
+          <div id="p5-tasks"></div>
+        </div>
       </div>
-      <div class="progress-bar" style="margin-bottom:14px"><div class="progress-fill" id="p5-inner-bar" style="width:0%;background:#22c55e"></div></div>
-      <div id="p5-tasks"></div>
+
+    <div>
+        <div class="card">
+          <div class="phase-section-title">Deliverables when phase is complete</div>
+          <div class="deliverable">All staff hired and IMSS-registered</div>
+          <div class="deliverable">Training logs signed by each employee</div>
+          <div class="deliverable">SOPs drafted and approved by QFB</div>
+          <div class="deliverable">Daily QC procedures running</div>
+          <div class="deliverable">PACAL/EQC enrollment confirmed</div>
+          <div class="deliverable">LIS proficiency verified for all users</div>
+        </div>
+
+        <div class="card">
+          <div class="phase-section-title">Key decisions to make</div>
+          <div class="info-box neutral" style="margin-bottom:10px">
+            <strong>Minimum viable team?</strong><br>4 people: QFB (director), 1 quimico analista, 1 flebotomista, 1 recepcionista. Add a second lab tech at ~200 studies/month. Cleaning can be outsourced initially.
+          </div>
+          <div class="info-box neutral">
+            <strong>PACAL vs. RIQAS vs. Bio-Rad?</strong><br>PACAL is the most recognized in Mexico and costs $15-25K/year. RIQAS and Bio-Rad EQAS are international alternatives. COFEPRIS accepts all three. Start with PACAL for simplicity.
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="phase-section-title">Estimated monthly payroll</div>
+          <div class="fin-row"><div class="fin-label">QFB Director Técnico</div><div class="fin-val">$28,000-35,000</div></div>
+          <div class="fin-row"><div class="fin-label">Quimico Analista</div><div class="fin-val">$12,000-16,000</div></div>
+          <div class="fin-row"><div class="fin-label">Flebotomista</div><div class="fin-val">$9,000-12,000</div></div>
+          <div class="fin-row"><div class="fin-label">Recepcionista</div><div class="fin-val">$8,000-10,000</div></div>
+          <div class="fin-row" style="border-top:1.5px solid var(--border-strong);margin-top:5px;padding-top:10px">
+            <div class="fin-label" style="font-weight:500;color:var(--text-primary)">Subtotal (before IMSS 48%)</div>
+            <div class="fin-val total">$57,000-73,000/mo</div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -3592,13 +3752,51 @@ Quedo a sus órdenes,
       <strong>Revenue starts here.</strong> Your physician referral network should be warm before day 1. Start visiting médicos 2–3 months before opening.
     </div>
 
-    <div class="card">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-        <div class="phase-section-title" style="margin:0;border:none;padding:0">Core tasks</div>
-        <div id="p6-header-pct" style="font-size:11px;font-family:var(--font-mono);color:var(--text-tertiary)"></div>
+    <div class="two-col">
+      <div>
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <div class="phase-section-title" style="margin:0;border:none;padding:0">Core tasks</div>
+            <div id="p6-header-pct" style="font-size:11px;font-family:var(--font-mono);color:var(--text-tertiary)"></div>
+          </div>
+          <div class="progress-bar" style="margin-bottom:14px"><div class="progress-fill" id="p6-inner-bar" style="width:0%;background:#0ea5e9"></div></div>
+          <div id="p6-tasks"></div>
+        </div>
       </div>
-      <div class="progress-bar" style="margin-bottom:14px"><div class="progress-fill" id="p6-inner-bar" style="width:0%;background:#0ea5e9"></div></div>
-      <div id="p6-tasks"></div>
+
+    <div>
+        <div class="card">
+          <div class="phase-section-title">Deliverables when phase is complete</div>
+          <div class="deliverable">30+ physician offices visited</div>
+          <div class="deliverable">Price list finalized (público + médico)</div>
+          <div class="deliverable">Google Business Profile live and verified</div>
+          <div class="deliverable">WhatsApp Business configured for result delivery</div>
+          <div class="deliverable">First corporate contract signed</div>
+          <div class="deliverable">Grand opening event completed</div>
+          <div class="deliverable">First 30 days of operations data</div>
+        </div>
+
+        <div class="card">
+          <div class="phase-section-title">Key decisions to make</div>
+          <div class="info-box neutral" style="margin-bottom:10px">
+            <strong>Launch with or without toma a domicilio?</strong><br>Home collection adds cost ($10-15K/mo for a dedicated flebotomista + vehicle). Wait until you have 40+ domicilio requests/month to break even. Use the Toma a Domicilio calculator in the app.
+          </div>
+          <div class="info-box neutral" style="margin-bottom:10px">
+            <strong>Soft launch first?</strong><br>Yes. Open 2 weeks before grand opening with limited hours and invite-only patients. Use this to shake out LIS bugs, QC issues, and workflow bottlenecks.
+          </div>
+          <div class="info-box neutral">
+            <strong>Opening discount?</strong><br>10-20% off for the first month drives volume and word-of-mouth. Don\'t discount to physician-referred patients — the médico discount is already applied.
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="phase-section-title">Querétaro-specific tips</div>
+          <div class="info-box green">
+            <strong>Physician visits work best 8-10am and 1-3pm</strong> — between their patient blocks. Bring a printed price list (público + médico tiers), a sample lab report, and business cards.<br><br>
+            <strong>Google Business Profile</strong> is the #1 way walk-in patients find you. Upload 10+ photos, set hours, add your test menu and prices. Respond to every review within 24 hours.
+          </div>
+        </div>
+      </div>
     </div>
   </section>
   <!-- ── COST ESTIMATOR ── -->
@@ -4483,8 +4681,33 @@ Quedo a sus órdenes,
     <button class="rp-close" onclick="closeWorkPanel()">✕</button>
   </div>
   <div class="rp-body" id="wp-body" style="padding:18px 22px"></div>
+
+  <!-- AI Assist Drawer -->
+  <div id="wp-ai-drawer" style="display:none;border-top:1.5px solid var(--green);background:var(--bg-secondary);flex-shrink:0;max-height:420px;display:none;flex-direction:column">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:0.5px solid var(--border)">
+      <div style="display:flex;align-items:center;gap:7px">
+        <div style="width:22px;height:22px;border-radius:6px;background:var(--green-l,#e1f5ee);display:flex;align-items:center;justify-content:center;font-size:12px">🤖</div>
+        <span style="font-size:12px;font-weight:500;color:var(--text-primary)">AI Assist</span>
+        <span style="font-size:10px;color:var(--text-tertiary)">— ask me to research & fill this step</span>
+      </div>
+      <button onclick="toggleWpAiDrawer()" style="border:none;background:none;color:var(--text-tertiary);cursor:pointer;font-size:14px;padding:2px 4px">✕</button>
+    </div>
+    <div id="wp-ai-messages" style="flex:1;overflow-y:auto;padding:12px 16px;display:flex;flex-direction:column;gap:8px;min-height:80px;max-height:220px"></div>
+    <!-- Suggested entries preview -->
+    <div id="wp-ai-preview" style="display:none;padding:10px 16px;border-top:0.5px solid var(--border)">
+      <div style="font-size:10px;font-weight:500;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">AI suggestions — select to add</div>
+      <div id="wp-ai-preview-items" style="display:flex;flex-direction:column;gap:4px;max-height:140px;overflow-y:auto;margin-bottom:8px"></div>
+      <button onclick="acceptWpAiSuggestions()" class="btn btn-primary" style="width:100%;font-size:12px">Add selected to list</button>
+    </div>
+    <div style="padding:10px 16px;border-top:0.5px solid var(--border);display:flex;gap:8px">
+      <textarea id="wp-ai-input" rows="1" placeholder="Ask AI to research this step..." style="flex:1;border:0.5px solid var(--border);border-radius:8px;padding:7px 10px;font-size:12px;font-family:var(--font);resize:none;background:var(--bg-primary);color:var(--text-primary);outline:none" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendWpAiMessage()}"></textarea>
+      <button onclick="sendWpAiMessage()" id="wp-ai-send" style="width:32px;height:32px;border-radius:8px;background:var(--green);border:none;color:#fff;font-size:14px;cursor:pointer;flex-shrink:0;align-self:flex-end">↑</button>
+    </div>
+  </div>
+
   <div id="wp-footer" style="padding:12px 22px;border-top:0.5px solid var(--border);display:flex;gap:8px;flex-shrink:0">
     <button class="btn" style="flex:1;font-size:12px" onclick="closeWorkPanel()">Close</button>
+    <button onclick="toggleWpAiDrawer()" style="padding:0 12px;border:1.5px solid var(--green);border-radius:8px;background:var(--green-l,#e1f5ee);color:var(--green-d,#0f6e56);font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap">🤖 AI Assist</button>
     <button class="btn btn-primary" style="flex:1;font-size:12px" id="wp-done-btn" onclick="toggleWorkPanelDone()">Mark complete</button>
   </div>
   <input type="file" id="wp-file-input" style="display:none" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx,.xls,.xlsx,.csv,.txt" onchange="handleWpFileUpload(this)">
@@ -5862,6 +6085,15 @@ Quedo a sus órdenes,
   var _wpTaskId = null, _wpSubIdx = null;
 
   function openWorkPanel(taskId, subIdx) {
+    _newItemImages = [];
+    _wpAiMessages = [];
+    _wpAiSuggested = [];
+    var drawer = document.getElementById('wp-ai-drawer');
+    if (drawer) drawer.style.display = 'none';
+    var msgs = document.getElementById('wp-ai-messages');
+    if (msgs) msgs.innerHTML = '';
+    var preview = document.getElementById('wp-ai-preview');
+    if (preview) preview.style.display = 'none';
     _wpTaskId = taskId;
     _wpSubIdx = subIdx;
     const task = p1Tasks.find(t => t.id === taskId);
@@ -5902,13 +6134,29 @@ Quedo a sus órdenes,
 
     // ── PANEL TYPE: LIST ──
     if (panelType === 'list') {
+      var isLocStep = (taskId === 'p1t4');
+      var isPhotoStep = (taskId === 'p1t4' && subIdx === 1); // "Visit each property and photograph layout"
+      // Pre-compute location properties for dropdown (used in both add form and edit drawers)
+      var locationProperties = [];
+      if (taskId === 'p1t4' && subIdx >= 1) {
+        var step0entries = (p1State['p1t4'] && p1State['p1t4'].subtasks[0] && p1State['p1t4'].subtasks[0].entries) || [];
+        locationProperties = step0entries.map(function(e) { return (typeof e === 'object' ? e['Property name/address'] : e) || ''; }).filter(Boolean);
+      }
       html += '<div style="margin-bottom:16px">';
       html += '<div style="font-size:10px;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-tertiary);font-weight:500;margin-bottom:8px">Items (' + (subState.entries.length || 0) + ')</div>';
       if (subState.entries.length) {
         subState.entries.forEach(function(entry, ei) {
-          html += '<div class="wp-entry">';
-          html += '<div class="wp-entry-num">' + (ei + 1) + '</div>';
-          html += '<div class="wp-entry-text" style="display:flex;flex-direction:column;gap:2px">';
+          var imgs = (entry._images || []);
+          var isImg = function(f) { return f.type && f.type.startsWith('image/'); };
+
+          html += '<div style="background:var(--bg-secondary);border-radius:var(--radius-md);margin-bottom:6px;font-size:12px;color:var(--text-primary);line-height:1.5;overflow:hidden">';
+
+          // ── Card face ──
+          html += '<div style="display:flex;align-items:flex-start;gap:10px;padding:10px 12px">';
+          // number badge
+          html += '<div style="width:20px;height:20px;border-radius:50%;background:var(--bg-tertiary);color:var(--text-tertiary);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;flex-shrink:0;margin-top:1px">' + (ei + 1) + '</div>';
+          // fields
+          html += '<div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px">';
           if (typeof entry === 'object') {
             panelFields.forEach(function(f) {
               var val = entry[f] || '';
@@ -5917,21 +6165,89 @@ Quedo a sus órdenes,
           } else {
             html += '<div>' + entry + '</div>';
           }
+          // attachment chips visible on card face
+          if (isLocStep) {
+            html += '<div id="entry-chips-' + ei + '" style="display:flex;flex-wrap:wrap;gap:4px;margin-top:6px">';
+            imgs.forEach(function(img, ii) {
+              var label = (img.type && img.type.startsWith('image/') ? '🖼 Image ' : '📄 File ') + (ii + 1);
+              html += '<button onclick="viewEntryImage(' + ei + ',' + ii + ')" style="font-size:10px;padding:2px 8px;border:0.5px solid var(--border);border-radius:10px;background:var(--bg-primary);color:var(--text-secondary);cursor:pointer">' + label + '</button>';
+            });
+            html += '</div>';
+          }
           html += '</div>';
-          html += '<button class="wp-entry-del" onclick="removeWpEntry(' + ei + ')">✕</button>';
+          // Edit + Delete buttons side by side, NOT absolute
+          html += '<div style="display:flex;align-items:center;gap:4px;flex-shrink:0;margin-left:4px">';
+          html += '<button onclick="toggleEntryEdit(\'entry-edit-' + ei + '\')" style="font-size:10px;padding:3px 8px;border:0.5px solid var(--border);border-radius:4px;background:var(--bg-primary);color:var(--text-secondary);cursor:pointer;line-height:1.4">Edit</button>';
+          html += '<button onclick="removeWpEntry(' + ei + ')" style="font-size:10px;padding:3px 7px;border:none;background:none;color:var(--text-tertiary);cursor:pointer;line-height:1.4">✕</button>';
           html += '</div>';
+          html += '</div>'; // end card face
+
+          // ── Inline edit drawer ──
+          html += '<div id="entry-edit-' + ei + '" style="display:none;padding:10px 12px;border-top:0.5px solid var(--border)">';
+          panelFields.forEach(function(f) {
+            var fid = 'ee-' + ei + '-' + f.replace(/[^a-zA-Z0-9]/g,'');
+            var cur = (typeof entry === 'object' ? entry[f] : '') || '';
+            html += '<div style="margin-bottom:6px"><label style="font-size:10px;color:var(--text-secondary);display:block;margin-bottom:2px">' + f + '</label>';
+            if (f === 'Property' && locationProperties.length) {
+              html += '<select class="wp-add-input" id="' + fid + '" style="width:100%;padding:7px 10px"><option value="">Select property...</option>';
+              locationProperties.forEach(function(p) { html += '<option value="' + p.replace(/"/g,'&quot;') + '"' + (cur === p ? ' selected' : '') + '>' + p + '</option>'; });
+              html += '</select>';
+            } else {
+              html += '<input class="wp-add-input" id="' + fid + '" style="width:100%;margin:0" value="' + cur.replace(/"/g,'&quot;') + '" placeholder="' + f + '...">';
+            }
+            html += '</div>';
+          });
+          // attachments in edit drawer
+          if (isLocStep) {
+            html += '<div id="entry-img-grid-' + ei + '" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px">';
+            imgs.forEach(function(img, ii) {
+              html += '<div style="position:relative;width:64px;height:64px;border-radius:6px;overflow:hidden;border:0.5px solid var(--border);flex-shrink:0">' +
+                '<img src="' + img.data + '" style="width:100%;height:100%;object-fit:cover;cursor:pointer" onclick="viewEntryImage(' + ei + ',' + ii + ')" title="' + img.name + '">' +
+                '<button onclick="removeEntryImage(' + ei + ',' + ii + ')" style="position:absolute;top:2px;right:2px;background:rgba(0,0,0,0.55);color:#fff;border:none;border-radius:50%;width:16px;height:16px;font-size:9px;cursor:pointer;line-height:1">✕</button>' +
+              '</div>';
+            });
+            html += '</div>';
+            html += '<label style="display:flex;align-items:center;justify-content:center;gap:6px;font-size:12px;color:var(--text-secondary);cursor:pointer;padding:8px 12px;border:1.5px dashed var(--border);border-radius:8px;margin-bottom:8px;transition:all 0.15s" onmouseover="this.style.borderColor=\'var(--green)\';this.style.color=\'var(--green)\'" onmouseout="this.style.borderColor=\'var(--border)\';this.style.color=\'var(--text-secondary)\'">' +
+              (isPhotoStep ? '📷 Add photo' : '📎 Add file') + '<input type="file" accept="' + (isPhotoStep ? 'image/*' : '*/*') + '" style="display:none" onchange="addEntryImage(' + ei + ',this)">' +
+            '</label>';
+          }
+          html += '<button class="btn btn-primary" style="width:100%;font-size:11px" onclick="saveEntryEdit(' + ei + ')">Save changes</button>';
+          html += '</div>'; // end edit drawer
+
+          html += '</div>'; // end card
         });
       } else {
         html += '<div style="font-size:12px;color:var(--text-tertiary);padding:16px;text-align:center;background:var(--bg-secondary);border-radius:8px">No items yet</div>';
       }
-      // Add form with fields
-      html += '<div style="margin-top:10px;padding:12px;background:var(--bg-secondary);border-radius:8px">';
-      html += '<div style="font-size:10px;font-weight:500;color:var(--text-tertiary);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.06em">Add new item</div>';
+      // ── Collapsed "Add new item" form ──
+      html += '<div style="margin-top:10px">';
+      html += '<button id="wp-add-toggle" onclick="(function(){var b=document.getElementById(\'wp-add-form\');var open=b.style.display===\'block\';b.style.display=open?\'none\':\'block\';document.getElementById(\'wp-add-toggle\').textContent=open?\'+ Add item\':\'− Cancel\';})()" style="width:100%;padding:8px;border:1.5px dashed var(--border);border-radius:8px;background:transparent;font-size:12px;color:var(--text-secondary);cursor:pointer;transition:all 0.15s" onmouseover="this.style.borderColor=\'var(--green)\';this.style.color=\'var(--green)\'" onmouseout="this.style.borderColor=\'var(--border)\';this.style.color=\'var(--text-secondary)\'">+ Add item</button>';
+      html += '<div id="wp-add-form" style="display:none;margin-top:6px;padding:12px;background:var(--bg-secondary);border-radius:8px">';
+      if (locationProperties.length) {
+        html += '<div style="margin-bottom:10px;padding:7px 10px;background:var(--green-l,#e1f5ee);border-radius:6px;font-size:10px;color:var(--green-d,#0f6e56)">📍 ' + locationProperties.length + ' propert' + (locationProperties.length === 1 ? 'y' : 'ies') + ' from step 1</div>';
+      }
       panelFields.forEach(function(f) {
-        html += '<div style="margin-bottom:6px"><label style="font-size:10px;color:var(--text-secondary);display:block;margin-bottom:2px">' + f + '</label>' +
-          '<input class="wp-add-input" id="wp-field-' + f.replace(/[^a-zA-Z0-9]/g,'') + '" style="width:100%;margin:0" placeholder="' + f + '..."></div>';
+        var fieldId = 'wp-field-' + f.replace(/[^a-zA-Z0-9]/g,'');
+        html += '<div style="margin-bottom:6px"><label style="font-size:10px;color:var(--text-secondary);display:block;margin-bottom:2px">' + f + '</label>';
+        if (f === 'Property' && locationProperties.length) {
+          html += '<select class="wp-add-input" id="' + fieldId + '" style="width:100%;padding:7px 10px"><option value="">Select property...</option>';
+          locationProperties.forEach(function(p) { html += '<option value="' + p.replace(/"/g,'&quot;') + '">' + p + '</option>'; });
+          html += '</select>';
+        } else {
+          html += '<input class="wp-add-input" id="' + fieldId + '" style="width:100%;margin:0" placeholder="' + f + '...">';
+        }
+        html += '</div>';
       });
+      if (isLocStep) {
+        html += '<div style="margin-bottom:8px">';
+        html += '<div id="wp-new-img-preview" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px"></div>';
+        html += '<label style="display:flex;align-items:center;justify-content:center;gap:6px;font-size:12px;color:var(--text-secondary);cursor:pointer;padding:8px 12px;border:1.5px dashed var(--border);border-radius:8px;background:var(--bg-primary);transition:all 0.15s" onmouseover="this.style.borderColor=\'var(--green)\';this.style.color=\'var(--green)\'" onmouseout="this.style.borderColor=\'var(--border)\';this.style.color=\'var(--text-secondary)\'">' +
+          (isPhotoStep ? '📷 Add photo' : '📎 Add file') + '<input type="file" accept="' + (isPhotoStep ? 'image/*' : '*/*') + '" style="display:none" onchange="stageNewItemImage(this)">' +
+        '</label>';
+        html += '</div>';
+      }
       html += '<button class="btn btn-primary" style="width:100%;font-size:12px;margin-top:6px" onclick="addWpListEntry()">+ Add item</button>';
+      html += '</div>';
       html += '</div>';
       html += '</div>';
 
@@ -5972,10 +6288,39 @@ Quedo a sus órdenes,
 
     // ── PANEL TYPE: NOTES (freeform) ──
     } else {
-      html += '<div style="margin-bottom:16px">';
-      html += '<div style="font-size:10px;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-tertiary);font-weight:500;margin-bottom:8px">Your findings</div>';
-      html += '<textarea class="wp-notes-area" id="wp-notes" style="min-height:160px" placeholder="Write your findings, analysis, conclusions...">' + (subState.notes || '') + '</textarea>';
-      html += '</div>';
+      // Special case: "Select top 3" step in location shortlist
+      if (taskId === 'p1t4' && subIdx === 6) {
+        var top3entries = (p1State['p1t4'] && p1State['p1t4'].subtasks[0] && p1State['p1t4'].subtasks[0].entries) || [];
+        var top3props = top3entries.map(function(e) { return (typeof e === 'object' ? e['Property name/address'] : e) || ''; }).filter(Boolean);
+        var selected = (subState.formData && subState.formData.selected) || [];
+        html += '<div style="margin-bottom:16px">';
+        html += '<div style="font-size:10px;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-tertiary);font-weight:500;margin-bottom:8px">Select top 3 properties</div>';
+        if (top3props.length) {
+          top3props.forEach(function(p, pi) {
+            var checked = selected.indexOf(p) !== -1;
+            var isDisabled = !checked && selected.length >= 3;
+            html += '<label style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;border:1.5px solid ' + (checked ? 'var(--green)' : 'var(--border)') + ';background:' + (checked ? 'var(--green-l,#e1f5ee)' : 'var(--bg-secondary)') + ';margin-bottom:6px;cursor:' + (isDisabled ? 'default' : 'pointer') + ';opacity:' + (isDisabled ? '0.45' : '1') + '">' +
+              '<input type="checkbox" id="top3-prop-' + pi + '" value="' + p.replace(/"/g,'&quot;') + '"' + (checked ? ' checked' : '') + (isDisabled ? ' disabled' : '') + ' onchange="saveTop3Selection()" style="width:14px;height:14px;accent-color:var(--green);flex-shrink:0">' +
+              '<span style="font-size:12px;color:var(--text-primary)">' + p + '</span>' +
+            '</label>';
+          });
+          if (selected.length >= 3) {
+            html += '<div style="font-size:10px;color:var(--green-d,#0f6e56);padding:6px 10px;background:var(--green-l,#e1f5ee);border-radius:6px;margin-bottom:8px">✓ 3 properties selected</div>';
+          }
+        } else {
+          html += '<div style="font-size:12px;color:var(--text-tertiary);padding:16px;text-align:center;background:var(--bg-secondary);border-radius:8px;margin-bottom:8px">No properties found — add them in step 1 first.</div>';
+        }
+        html += '</div>';
+        html += '<div style="margin-bottom:16px">';
+        html += '<div style="font-size:10px;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-tertiary);font-weight:500;margin-bottom:8px">Notes & reasoning</div>';
+        html += '<textarea class="wp-notes-area" id="wp-notes" style="min-height:120px" placeholder="Record your final ranking, reasoning, and next steps...">' + (subState.notes || '') + '</textarea>';
+        html += '</div>';
+      } else {
+        html += '<div style="margin-bottom:16px">';
+        html += '<div style="font-size:10px;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-tertiary);font-weight:500;margin-bottom:8px">Your findings</div>';
+        html += '<textarea class="wp-notes-area" id="wp-notes" style="min-height:160px" placeholder="Write your findings, analysis, conclusions...">' + (subState.notes || '') + '</textarea>';
+        html += '</div>';
+      }
     }
 
     // File attachments
@@ -6026,6 +6371,39 @@ Quedo a sus órdenes,
   }
 
   // List panel: add entry with multiple fields
+  var _newItemImages = []; // staged images for the new item form
+
+  function stageNewItemImage(input) {
+    var file = input.files[0];
+    if (!file) return;
+    if (file.size > 5242880) { alert('File too large — max 5 MB.'); input.value=''; return; }
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      _newItemImages.push({ name: file.name, size: file.size, type: file.type, data: e.target.result });
+      renderNewItemImagePreview();
+    };
+    reader.readAsDataURL(file);
+    input.value = '';
+  }
+
+  function removeStagedImage(ii) {
+    _newItemImages.splice(ii, 1);
+    renderNewItemImagePreview();
+  }
+
+  function renderNewItemImagePreview() {
+    var preview = document.getElementById('wp-new-img-preview');
+    if (!preview) return;
+    preview.innerHTML = '';
+    _newItemImages.forEach(function(img, ii) {
+      var thumb = document.createElement('div');
+      thumb.style.cssText = 'position:relative;width:56px;height:56px;border-radius:6px;overflow:hidden;border:0.5px solid var(--border);flex-shrink:0';
+      thumb.innerHTML = '<img src="' + img.data + '" style="width:100%;height:100%;object-fit:cover">' +
+        '<button onclick="removeStagedImage(' + ii + ')" style="position:absolute;top:2px;right:2px;background:rgba(0,0,0,0.55);color:#fff;border:none;border-radius:50%;width:16px;height:16px;font-size:9px;cursor:pointer;line-height:1">✕</button>';
+      preview.appendChild(thumb);
+    });
+  }
+
   function addWpListEntry() {
     var task = p1Tasks.find(function(t) { return t.id === _wpTaskId; });
     var fields = getSubPanel(task, _wpSubIdx)?.fields || [];
@@ -6037,6 +6415,8 @@ Quedo a sus órdenes,
       if (inp && inp.value.trim()) { entry[f] = inp.value.trim(); hasValue = true; }
     });
     if (!hasValue) return;
+    if (_newItemImages.length) { entry._images = _newItemImages.slice(); }
+    _newItemImages = [];
     p1State[_wpTaskId].subtasks[_wpSubIdx].entries.push(entry);
     saveP1State();
     openWorkPanel(_wpTaskId, _wpSubIdx);
@@ -6047,6 +6427,90 @@ Quedo a sus órdenes,
 
   function removeWpEntry(idx) {
     p1State[_wpTaskId].subtasks[_wpSubIdx].entries.splice(idx, 1);
+    saveP1State();
+    openWorkPanel(_wpTaskId, _wpSubIdx);
+  }
+
+  // Per-entry image helpers (location shortlist)
+  function addEntryImage(entryIdx, input) {
+    var file = input.files[0];
+    if (!file) return;
+    if (file.size > 5242880) { alert('File too large — max 5 MB.'); input.value=''; return; }
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      var entry = p1State[_wpTaskId].subtasks[_wpSubIdx].entries[entryIdx];
+      if (!entry._images) entry._images = [];
+      entry._images.push({ name: file.name, size: file.size, type: file.type, data: e.target.result });
+      saveP1State();
+      renderEntryImageGrid(entryIdx);
+      renderEntryChips(entryIdx);
+    };
+    reader.readAsDataURL(file);
+    input.value = '';
+  }
+
+  function removeEntryImage(entryIdx, imgIdx) {
+    var entry = p1State[_wpTaskId].subtasks[_wpSubIdx].entries[entryIdx];
+    if (!entry || !entry._images) return;
+    entry._images.splice(imgIdx, 1);
+    saveP1State();
+    renderEntryImageGrid(entryIdx);
+    renderEntryChips(entryIdx);
+  }
+
+  function renderEntryImageGrid(entryIdx) {
+    var grid = document.getElementById('entry-img-grid-' + entryIdx);
+    if (!grid) return;
+    var entry = p1State[_wpTaskId].subtasks[_wpSubIdx].entries[entryIdx];
+    var imgs = (entry && entry._images) || [];
+    grid.innerHTML = '';
+    imgs.forEach(function(img, ii) {
+      var thumb = document.createElement('div');
+      thumb.style.cssText = 'position:relative;width:64px;height:64px;border-radius:6px;overflow:hidden;border:0.5px solid var(--border);flex-shrink:0';
+      thumb.innerHTML = '<img src="' + img.data + '" style="width:100%;height:100%;object-fit:cover;cursor:pointer" onclick="viewEntryImage(' + entryIdx + ',' + ii + ')" title="' + img.name + '">' +
+        '<button onclick="removeEntryImage(' + entryIdx + ',' + ii + ')" style="position:absolute;top:2px;right:2px;background:rgba(0,0,0,0.55);color:#fff;border:none;border-radius:50%;width:16px;height:16px;font-size:9px;cursor:pointer;line-height:1">✕</button>';
+      grid.appendChild(thumb);
+    });
+  }
+
+  function renderEntryChips(entryIdx) {
+    var chips = document.getElementById('entry-chips-' + entryIdx);
+    if (!chips) return;
+    var entry = p1State[_wpTaskId].subtasks[_wpSubIdx].entries[entryIdx];
+    var imgs = (entry && entry._images) || [];
+    chips.innerHTML = '';
+    imgs.forEach(function(img, ii) {
+      var label = (img.type && img.type.startsWith('image/') ? '🖼 Image ' : '📄 File ') + (ii + 1);
+      var btn = document.createElement('button');
+      btn.onclick = function() { viewEntryImage(entryIdx, ii); };
+      btn.style.cssText = 'font-size:10px;padding:2px 8px;border:0.5px solid var(--border);border-radius:10px;background:var(--bg-primary);color:var(--text-secondary);cursor:pointer';
+      btn.textContent = label;
+      chips.appendChild(btn);
+    });
+  }
+
+  function viewEntryImage(entryIdx, imgIdx) {
+    var entry = p1State[_wpTaskId].subtasks[_wpSubIdx].entries[entryIdx];
+    if (!entry || !entry._images || !entry._images[imgIdx]) return;
+    var img = entry._images[imgIdx];
+    var w = window.open();
+    w.document.write('<img src="' + img.data + '" style="max-width:100%;display:block;margin:auto">');
+  }
+
+  function toggleEntryEdit(id) {
+    var el = document.getElementById(id);
+    if (el) el.style.display = el.style.display === 'none' ? 'block' : 'none';
+  }
+
+  function saveEntryEdit(entryIdx) {
+    var task = p1Tasks.find(function(t) { return t.id === _wpTaskId; });
+    var fields = (task && getSubPanel(task, _wpSubIdx)?.fields) || [];
+    var entry = p1State[_wpTaskId].subtasks[_wpSubIdx].entries[entryIdx];
+    fields.forEach(function(f) {
+      var fid = 'ee-' + entryIdx + '-' + f.replace(/[^a-zA-Z0-9]/g,'');
+      var el = document.getElementById(fid);
+      if (el) entry[f] = el.value;
+    });
     saveP1State();
     openWorkPanel(_wpTaskId, _wpSubIdx);
   }
@@ -6072,6 +6536,218 @@ Quedo a sus órdenes,
       p1State[_wpTaskId].subtasks[_wpSubIdx].notes = notesEl.value;
       saveP1State();
     }
+  }
+
+  function saveTop3Selection() {
+    if (!p1State[_wpTaskId] || !p1State[_wpTaskId].subtasks[_wpSubIdx].formData) {
+      p1State[_wpTaskId].subtasks[_wpSubIdx].formData = {};
+    }
+    var selected = [];
+    var checkboxes = document.querySelectorAll('[id^="top3-prop-"]');
+    checkboxes.forEach(function(cb) { if (cb.checked) selected.push(cb.value); });
+    p1State[_wpTaskId].subtasks[_wpSubIdx].formData.selected = selected;
+    // Save notes before re-rendering
+    var notesEl = document.getElementById('wp-notes');
+    if (notesEl) p1State[_wpTaskId].subtasks[_wpSubIdx].notes = notesEl.value;
+    saveP1State();
+    // Re-render so disabled states update live
+    openWorkPanel(_wpTaskId, _wpSubIdx);
+  }
+
+  // ── Work Panel AI Assist ──
+  var _wpAiMessages = [];
+  var _wpAiSuggested = [];
+  var _wpAiLoading = false;
+
+  function toggleWpAiDrawer() {
+    var drawer = document.getElementById('wp-ai-drawer');
+    if (!drawer) return;
+    var isOpen = drawer.style.display === 'flex';
+    drawer.style.display = isOpen ? 'none' : 'flex';
+    if (!isOpen && _wpAiMessages.length === 0) {
+      // Show greeting in UI only — don't push to _wpAiMessages so API history starts with user
+      var msgs = document.getElementById('wp-ai-messages');
+      if (msgs) {
+        var div = document.createElement('div');
+        div.style.cssText = 'display:flex;gap:6px;align-items:flex-start';
+        div.innerHTML = '<div style="width:20px;height:20px;border-radius:5px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;margin-top:1px;background:var(--green-l,#e1f5ee);color:var(--green-d)">🤖</div>' +
+          '<div style="max-width:85%;padding:8px 11px;border-radius:10px;font-size:11px;line-height:1.5;background:var(--bg-primary);color:var(--text-primary);border:0.5px solid var(--border)">Hi! I can research this step and suggest entries for you to review. What would you like me to look into?</div>';
+        msgs.appendChild(div);
+      }
+    }
+    if (!isOpen) setTimeout(function() { var inp = document.getElementById('wp-ai-input'); if (inp) inp.focus(); }, 50);
+  }
+
+  function appendWpAiMessage(role, text) {
+    var msgs = document.getElementById('wp-ai-messages');
+    if (!msgs) return;
+    var div = document.createElement('div');
+    div.style.cssText = 'display:flex;gap:6px;align-items:flex-start;' + (role === 'user' ? 'flex-direction:row-reverse' : '');
+    var avatar = document.createElement('div');
+    avatar.style.cssText = 'width:20px;height:20px;border-radius:5px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;margin-top:1px;' + (role === 'user' ? 'background:#f1efe8;color:var(--text-secondary)' : 'background:var(--green-l,#e1f5ee);color:var(--green-d)');
+    avatar.textContent = role === 'user' ? '👤' : '🤖';
+    var bubble = document.createElement('div');
+    bubble.style.cssText = 'max-width:85%;padding:8px 11px;border-radius:10px;font-size:11px;line-height:1.5;white-space:pre-wrap;' + (role === 'user' ? 'background:var(--green);color:#fff;' : 'background:var(--bg-primary);color:var(--text-primary);border:0.5px solid var(--border)');
+    bubble.textContent = text;
+    div.appendChild(avatar);
+    div.appendChild(bubble);
+    msgs.appendChild(div);
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+
+  function buildWpAiContext() {
+    var task = _wpPhaseNum !== null
+      ? (phaseConfigs[_wpPhaseNum] && phaseConfigs[_wpPhaseNum].tasks().find(function(t){return t.id===_wpTaskId;}))
+      : p1Tasks.find(function(t){return t.id===_wpTaskId;});
+    var subDef = task && task.subtasks && task.subtasks[_wpSubIdx];
+    var subText = typeof subDef === 'string' ? subDef : (subDef && subDef.text) || '';
+    var fields = (subDef && subDef.fields) || [];
+    var hint = (subDef && subDef.hint) || '';
+    var panelType = (subDef && subDef.panel) || 'notes';
+    var existingEntries = [];
+    try {
+      var st = _wpPhaseNum !== null ? phaseStates[_wpPhaseNum][_wpTaskId].subtasks[_wpSubIdx] : p1State[_wpTaskId].subtasks[_wpSubIdx];
+      existingEntries = (st && st.entries) || [];
+    } catch(e) {}
+
+    return 'You are the AI assistant embedded in LabQro, a clinical laboratory startup app for a lab being launched in Queretaro, Mexico.\n\n' +
+      'The user is working on the following task step:\n' +
+      'STEP: ' + subText + '\n' +
+      (hint ? 'CONTEXT/HINT: ' + hint + '\n' : '') +
+      (fields.length ? 'FIELDS TO FILL: ' + fields.join(', ') + '\n' : '') +
+      'PANEL TYPE: ' + panelType + '\n' +
+      (existingEntries.length ? 'ALREADY ADDED (' + existingEntries.length + ' entries): ' + existingEntries.map(function(e){ return typeof e === 'object' ? (e[fields[0]] || JSON.stringify(e)) : e; }).join(', ') + '\n' : '') +
+      '\nWhen the user asks you to research and suggest entries, you MUST respond with a JSON block in this exact format (and nothing else outside it):\n' +
+      '```json\n{"suggestions":[{"field1":"value","field2":"value",...}]}\n```\n' +
+      'Where each object has keys matching the FIELDS TO FILL exactly.\n' +
+      'For conversational messages that are NOT entry suggestions, respond normally in plain text.\n' +
+      'You know the target area is Juriquilla/Zibatá/Centro/Satélite zones of Queretaro. Be specific and realistic with Mexican lab names, addresses, and data.';
+  }
+
+  async function sendWpAiMessage() {
+    if (_wpAiLoading) return;
+    var inp = document.getElementById('wp-ai-input');
+    if (!inp) return;
+    var text = inp.value.trim();
+    if (!text) return;
+    inp.value = ''; inp.style.height = 'auto';
+    appendWpAiMessage('user', text);
+    _wpAiMessages.push({ role: 'user', content: text });
+    _wpAiLoading = true;
+
+    var sendBtn = document.getElementById('wp-ai-send');
+    if (sendBtn) { sendBtn.textContent = '⏳'; sendBtn.disabled = true; }
+
+    // Typing indicator
+    var msgs = document.getElementById('wp-ai-messages');
+    var typing = document.createElement('div');
+    typing.id = 'wp-ai-typing';
+    typing.style.cssText = 'display:flex;gap:6px;align-items:center';
+    typing.innerHTML = '<div style="width:20px;height:20px;border-radius:5px;background:var(--green-l,#e1f5ee);display:flex;align-items:center;justify-content:center;font-size:10px">🤖</div>' +
+      '<div style="padding:8px 11px;background:var(--bg-primary);border:0.5px solid var(--border);border-radius:10px;font-size:11px;color:var(--text-tertiary)">Researching…</div>';
+    if (msgs) { msgs.appendChild(typing); msgs.scrollTop = msgs.scrollHeight; }
+
+    try {
+      var res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'anthropic-dangerous-direct-browser-access': 'true'
+        },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 1500,
+          system: buildWpAiContext(),
+          messages: _wpAiMessages.map(function(m){ return { role: m.role, content: m.content }; })
+        })
+      });
+      var data = await res.json();
+      if (!res.ok) {
+        if (typing.parentNode) typing.remove();
+        appendWpAiMessage('assistant', 'API error ' + res.status + ': ' + (data.error && data.error.message ? data.error.message : JSON.stringify(data)));
+        _wpAiLoading = false;
+        if (sendBtn) { sendBtn.textContent = '↑'; sendBtn.disabled = false; }
+        return;
+      }
+      var data = await res.json();
+      var reply = data.content && data.content[0] ? data.content[0].text : 'Sorry, no response. Please try again.';
+      if (typing.parentNode) typing.remove();
+      _wpAiMessages.push({ role: 'assistant', content: reply });
+
+      // Check for JSON suggestions block
+      var jsonMatch = reply.match(/```json\s*([\s\S]*?)```/);
+      if (jsonMatch) {
+        try {
+          var parsed = JSON.parse(jsonMatch[1].trim());
+          if (parsed.suggestions && parsed.suggestions.length) {
+            _wpAiSuggested = parsed.suggestions;
+            appendWpAiMessage('assistant', 'I found ' + parsed.suggestions.length + ' suggestion' + (parsed.suggestions.length > 1 ? 's' : '') + '. Review them below and select which to add:');
+            showWpAiPreview(parsed.suggestions);
+          } else {
+            appendWpAiMessage('assistant', reply);
+          }
+        } catch(e) {
+          appendWpAiMessage('assistant', reply);
+        }
+      } else {
+        appendWpAiMessage('assistant', reply);
+      }
+    } catch(err) {
+      if (typing.parentNode) typing.remove();
+      appendWpAiMessage('assistant', 'Error: ' + (err && err.message ? err.message : String(err)));
+    }
+
+    _wpAiLoading = false;
+    if (sendBtn) { sendBtn.textContent = '↑'; sendBtn.disabled = false; }
+  }
+
+  function showWpAiPreview(suggestions) {
+    var task = _wpPhaseNum !== null
+      ? (phaseConfigs[_wpPhaseNum] && phaseConfigs[_wpPhaseNum].tasks().find(function(t){return t.id===_wpTaskId;}))
+      : p1Tasks.find(function(t){return t.id===_wpTaskId;});
+    var subDef = task && task.subtasks && task.subtasks[_wpSubIdx];
+    var fields = (subDef && subDef.fields) || [];
+    var preview = document.getElementById('wp-ai-preview');
+    var items = document.getElementById('wp-ai-preview-items');
+    if (!preview || !items) return;
+    items.innerHTML = '';
+    suggestions.forEach(function(s, si) {
+      var label = fields.length ? (s[fields[0]] || ('Item ' + (si + 1))) : ('Item ' + (si + 1));
+      var detail = fields.slice(1).map(function(f){ return s[f] ? f + ': ' + s[f] : ''; }).filter(Boolean).join(' · ');
+      var row = document.createElement('label');
+      row.style.cssText = 'display:flex;align-items:flex-start;gap:8px;padding:7px 10px;border-radius:7px;border:0.5px solid var(--border);background:var(--bg-secondary);cursor:pointer';
+      row.innerHTML = '<input type="checkbox" checked data-si="' + si + '" style="margin-top:2px;accent-color:var(--green);flex-shrink:0">' +
+        '<div style="min-width:0"><div style="font-size:11px;font-weight:500;color:var(--text-primary)">' + label + '</div>' +
+        (detail ? '<div style="font-size:10px;color:var(--text-tertiary);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + detail + '</div>' : '') +
+        '</div>';
+      items.appendChild(row);
+    });
+    preview.style.display = 'block';
+  }
+
+  function acceptWpAiSuggestions() {
+    var checkboxes = document.querySelectorAll('#wp-ai-preview-items input[type="checkbox"]');
+    var toAdd = [];
+    checkboxes.forEach(function(cb) {
+      if (cb.checked) toAdd.push(_wpAiSuggested[parseInt(cb.dataset.si)]);
+    });
+    if (!toAdd.length) return;
+    var subState = _wpPhaseNum !== null
+      ? phaseStates[_wpPhaseNum][_wpTaskId].subtasks[_wpSubIdx]
+      : p1State[_wpTaskId].subtasks[_wpSubIdx];
+    toAdd.forEach(function(entry) { subState.entries.push(entry); });
+    if (_wpPhaseNum !== null) { savePhaseState(_wpPhaseNum); openPhaseWorkPanel(_wpPhaseNum, _wpTaskId, _wpSubIdx); }
+    else { saveP1State(); openWorkPanel(_wpTaskId, _wpSubIdx); }
+    // Re-open drawer and confirm
+    setTimeout(function() {
+      var drawer = document.getElementById('wp-ai-drawer');
+      if (drawer) drawer.style.display = 'flex';
+      document.getElementById('wp-ai-preview').style.display = 'none';
+      var confirmMsg = '✓ Added ' + toAdd.length + ' item' + (toAdd.length > 1 ? 's' : '') + ' to the list. Want me to research anything else?';
+      appendWpAiMessage('assistant', confirmMsg);
+      _wpAiMessages.push({ role: 'assistant', content: confirmMsg });
+    }, 100);
+    _wpAiSuggested = [];
   }
 
   // ── File attachment helpers ──
@@ -6278,32 +6954,7 @@ Quedo a sus órdenes,
               }).join('') +
             '</div>' +
 
-            // Notes
-            '<div style="margin-bottom:12px">' +
-              '<div class="tw-section-label">Notes & findings</div>' +
-              st.notes.map((n, ni) =>
-                '<div class="tw-note-saved">' + n.text +
-                  '<div class="tw-note-date">' + n.date + '</div>' +
-                  '<button class="tw-file-remove" onclick="event.stopPropagation();removeP1Note(\'' + t.id + '\',' + ni + ')" style="position:absolute;top:6px;right:8px">✕</button>' +
-                '</div>'
-              ).join('') +
-              '<div style="display:flex;gap:8px" onclick="event.stopPropagation()">' +
-                '<textarea class="tw-note-input" id="p1-note-' + t.id + '" placeholder="Add a note..." style="min-height:36px;font-size:11px"></textarea>' +
-                '<button class="btn btn-primary" style="flex-shrink:0;align-self:flex-end;font-size:11px;padding:5px 10px" onclick="addP1Note(\'' + t.id + '\')">Save</button>' +
-              '</div>' +
-            '</div>' +
 
-            // Files
-            '<div>' +
-              '<div class="tw-section-label">File references</div>' +
-              st.files.map((f, fi) =>
-                '<div class="tw-file-item"><div class="tw-file-icon">📄</div><div class="tw-file-name">' + f + '</div><button class="tw-file-remove" onclick="event.stopPropagation();removeP1File(\'' + t.id + '\',' + fi + ')">✕</button></div>'
-              ).join('') +
-              '<div style="display:flex;gap:8px" onclick="event.stopPropagation()">' +
-                '<input id="p1-file-' + t.id + '" class="tw-note-input" style="min-height:auto;padding:6px 10px;font-size:11px" placeholder="File name or URL...">' +
-                '<button class="btn" style="flex-shrink:0;font-size:11px;padding:4px 10px" onclick="addP1File(\'' + t.id + '\')">+ Add</button>' +
-              '</div>' +
-            '</div>' +
 
           '</div>' +
         '</div>' +
