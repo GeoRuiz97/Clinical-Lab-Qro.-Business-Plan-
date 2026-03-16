@@ -639,6 +639,20 @@
     font-size: 12px; color: var(--text-secondary); margin-bottom: 6px;
   }
   .slider-val { font-family: var(--font-mono); font-weight: 500; color: var(--text-primary); font-size: 13px; }
+  /* Editable number input paired with slider */
+  .slider-num-input {
+    font-family: var(--font-mono); font-weight: 500; color: var(--green-dark);
+    font-size: 13px; background: transparent; border: none; border-bottom: 1.5px dashed transparent;
+    outline: none; text-align: right; width: 80px; padding: 0 2px;
+    transition: border-color 0.15s, background 0.15s;
+    cursor: text;
+  }
+  .slider-num-input:hover { border-bottom-color: var(--border-strong); }
+  .slider-num-input:focus {
+    border-bottom-color: var(--green);
+    background: rgba(29,158,117,0.06);
+    border-radius: 3px 3px 0 0;
+  }
   input[type=range] {
     -webkit-appearance: none; width: 100%; height: 5px;
     background: var(--bg-tertiary); border-radius: 3px; outline: none;
@@ -8030,14 +8044,21 @@ Quedo a sus órdenes,
     const eqModel    = +document.getElementById('s-eqmodel').value;
     const startup    = +document.getElementById('s-startup').value;
 
-    document.getElementById('v-studies').textContent  = studies;
-    document.getElementById('v-ticket').textContent   = fmt(ticket);
-    document.getElementById('v-corp').textContent     = corpPct + '%';
-    document.getElementById('v-rent').textContent     = fmt(rent);
-    document.getElementById('v-staff').textContent    = staff;
-    document.getElementById('v-reagent').textContent  = reagentPct + '%';
-    document.getElementById('v-eqmodel').textContent  = eqModel === 0 ? 'Purchase' : 'Comodato';
-    document.getElementById('v-startup').textContent  = fmt(startup);
+    // Helper: set value on either span (.textContent) or input (.value)
+    function setSliderDisplay(id, val) {
+      var el = document.getElementById(id);
+      if (!el) return;
+      if (el.tagName === 'INPUT') el.value = val;
+      else el.textContent = val;
+    }
+    setSliderDisplay('v-studies', studies);
+    setSliderDisplay('v-ticket', fmt(ticket));
+    setSliderDisplay('v-corp', corpPct + '%');
+    setSliderDisplay('v-rent', fmt(rent));
+    setSliderDisplay('v-staff', staff);
+    setSliderDisplay('v-reagent', reagentPct + '%');
+    setSliderDisplay('v-eqmodel', eqModel === 0 ? 'Purchase' : 'Comodato');
+    setSliderDisplay('v-startup', fmt(startup));
 
     const revenue        = studies * ticket;
     const corpRevenue    = Math.round(revenue * corpPct / 100);
@@ -8053,7 +8074,10 @@ Quedo a sus órdenes,
 
     // Update the reagent display to show source
     const reagentLabel = document.getElementById('v-reagent');
-    if (reagentLabel) reagentLabel.textContent = useModeler ? effectiveReagentPct + '% (modeled)' : reagentPct + '%';
+    if (reagentLabel) {
+      var rVal = useModeler ? effectiveReagentPct + '% (modeled)' : reagentPct + '%';
+      if (reagentLabel.tagName === 'INPUT') reagentLabel.value = rVal; else reagentLabel.textContent = rVal;
+    }
 
     const rentUtil       = rent + 5000;
     const misc           = 15000;
@@ -9929,7 +9953,7 @@ Quedo a sus órdenes,
     const sum      = eqPct + nafinPct + partPct + othPct;
 
     // Display slider values
-    const setV = (id, v) => { const e=document.getElementById(id); if(e) e.textContent=v; };
+    const setV = (id, v) => { const e=document.getElementById(id); if(!e) return; if(e.tagName==='INPUT') e.value=v; else e.textContent=v; };
     setV('fv-equity',  eqPct+'%');
     setV('fv-nafin',   nafinPct+'%');
     setV('fv-partner', partPct+'%');
@@ -10499,7 +10523,7 @@ Quedo a sus órdenes,
     const premPct  = +document.getElementById('tco-prem').value  || 30;
     const maintPct = +document.getElementById('tco-maint').value || 10;
 
-    const setV = (id, v) => { const e=document.getElementById(id); if(e) e.textContent=v; };
+    const setV = (id, v) => { const e=document.getElementById(id); if(!e) return; if(e.tagName==='INPUT') e.value=v; else e.textContent=v; };
     setV('tco-v-vol',  vol);
     setV('tco-v-prem', premPct + '%');
     setV('tco-v-maint',maintPct + '%');
@@ -11048,7 +11072,7 @@ Quedo a sus órdenes,
   function updateTaxEstimator() {
     const rev    = +document.getElementById('sat-rev').value  || 150000;
     const dedPct = +document.getElementById('sat-ded').value  || 65;
-    const setV = (id, v) => { const e=document.getElementById(id); if(e) e.textContent=v; };
+    const setV = (id, v) => { const e=document.getElementById(id); if(!e) return; if(e.tagName==='INPUT') e.value=v; else e.textContent=v; };
     setV('sat-v-rev', fmt(rev));
     setV('sat-v-ded', dedPct + '%');
 
@@ -11623,7 +11647,7 @@ Quedo a sus órdenes,
     const physician = +document.getElementById('rm-physician').value || 0;
     const corporate = +document.getElementById('rm-corporate').value || 0;
 
-    const setV = (id, v) => { const e=document.getElementById(id); if(e) e.textContent=v; };
+    const setV = (id, v) => { const e=document.getElementById(id); if(!e) return; if(e.tagName==='INPUT') e.value=v; else e.textContent=v; };
     setV('rm-v-walkin',    walkin);
     setV('rm-v-physician', physician);
     setV('rm-v-corporate', corporate);
@@ -14191,6 +14215,83 @@ Each array must have exactly 4–5 concise, specific, actionable items in Englis
   }
 
   document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeRegPanel(); closeWorkPanel(); } });
+
+  // ══════════════════════════════════════════
+  // ── SLIDER ↔ NUMBER INPUT PAIRING ──
+  // ══════════════════════════════════════════
+  // Automatically makes every range slider editable by replacing the display-only
+  // .slider-val span with a number input that syncs bidirectionally with the slider.
+  (function enhanceSliders() {
+    // Find all range inputs inside .slider-group containers
+    document.querySelectorAll('.slider-group input[type="range"]').forEach(function(range) {
+      var group = range.closest('.slider-group');
+      if (!group) return;
+      var valSpan = group.querySelector('.slider-val');
+      if (!valSpan) return;
+
+      // Create number input to replace the span
+      var numInput = document.createElement('input');
+      numInput.type = 'number';
+      numInput.className = 'slider-num-input';
+      numInput.min = range.min;
+      numInput.max = range.max;
+      numInput.step = range.step || 1;
+      numInput.value = range.value;
+      numInput.title = 'Click to type a value (min: ' + range.min + ', max: ' + range.max + ')';
+
+      // Determine display format from the original span text
+      var origText = valSpan.textContent.trim();
+      var hasPercent = origText.includes('%');
+      var hasMo = origText.includes(' mo');
+      var isFormatted = origText.includes(','); // has comma formatting
+
+      function formatDisplay(val) {
+        if (hasPercent) return val;
+        if (hasMo) return val;
+        if (isFormatted || +val >= 1000) return (+val).toLocaleString('en-US');
+        return val;
+      }
+
+      // Set initial display
+      numInput.value = range.value;
+
+      // Sync: slider → number input
+      var origOninput = range.oninput;
+      range.addEventListener('input', function() {
+        numInput.value = range.value;
+      });
+
+      // Sync: number input → slider
+      numInput.addEventListener('input', function() {
+        var v = +numInput.value;
+        // Clamp to slider range
+        var lo = +range.min, hi = +range.max;
+        if (v < lo) v = lo;
+        if (v > hi) { /* Allow typing beyond max — will clamp on blur */ }
+        range.value = v;
+        // Fire the slider's oninput handler
+        range.dispatchEvent(new Event('input', { bubbles: true }));
+      });
+
+      numInput.addEventListener('blur', function() {
+        // Clamp on blur
+        var v = +numInput.value;
+        var lo = +range.min, hi = +range.max;
+        if (v < lo) v = lo;
+        if (v > hi) v = hi;
+        numInput.value = v;
+        range.value = v;
+        range.dispatchEvent(new Event('input', { bubbles: true }));
+      });
+
+      numInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') { numInput.blur(); }
+      });
+
+      // Replace span with input
+      valSpan.parentNode.replaceChild(numInput, valSpan);
+    });
+  })();
 
   // ══════════════════════════════════════════
   // ── EXCEL EXPORT (#23) ──
