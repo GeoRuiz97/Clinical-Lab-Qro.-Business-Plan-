@@ -183,32 +183,80 @@
   .sb-section {
     font-size: 10px;
     color: var(--text-tertiary);
-    padding: 10px 18px 3px;
+    padding: 14px 18px 4px;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
-    font-weight: 500;
+    letter-spacing: 0.09em;
+    font-weight: 600;
   }
   .sb-item {
-    display: flex; align-items: center; gap: 10px;
-    padding: 8px 18px;
+    display: flex; align-items: center; gap: 9px;
+    padding: 7px 18px 7px 16px;
     cursor: pointer;
     font-size: 13px;
     color: var(--text-secondary);
     border: none;
+    border-left: 2px solid transparent;
     background: none;
     width: 100%;
     text-align: left;
     font-family: var(--font);
-    transition: background 0.12s;
-    border-radius: 0;
+    transition: background 0.1s, color 0.1s, border-color 0.1s;
   }
-  .sb-item:hover { background: var(--bg-secondary); }
-  .sb-item.active { color: var(--text-primary); font-weight: 500; background: var(--bg-secondary); }
+  .sb-item:hover { background: var(--bg-secondary); color: var(--text-primary); }
+  .sb-item.active {
+    color: var(--text-primary);
+    font-weight: 500;
+    background: var(--bg-secondary);
+    border-left-color: var(--green);
+  }
+
+  /* Collapsible sidebar groups */
+  .sb-collapsible {
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+    transition: color 0.12s;
+  }
+  .sb-collapsible:hover { color: var(--text-secondary); }
+  .sb-chevron {
+    font-size: 10px;
+    transition: transform 0.2s ease;
+    color: var(--text-tertiary);
+    transform: rotate(90deg);
+  }
+  .sb-collapsible.collapsed .sb-chevron { transform: rotate(0deg); }
+  .sb-group { display: block; }
+  .sb-group.collapsed { display: none; }
+
+  /* Sidebar phase dividers */
+  .sb-divider {
+    display: flex;
+    align-items: center;
+    padding: 14px 18px 6px;
+    gap: 10px;
+  }
+  .sb-divider::before,
+  .sb-divider::after {
+    content: '';
+    flex: 1;
+    height: 0.5px;
+    background: var(--border-strong);
+  }
+  .sb-divider span {
+    font-size: 9px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-tertiary);
+    white-space: nowrap;
+  }
   .sb-icon {
-    width: 18px; height: 18px;
-    border-radius: 4px;
+    width: 20px; height: 20px;
+    border-radius: 5px;
     display: flex; align-items: center; justify-content: center;
-    font-size: 10px; flex-shrink: 0;
+    font-size: 11px; flex-shrink: 0;
   }
 
   /* ─── MAIN ─── */
@@ -222,8 +270,8 @@
   .page { display: none; }
   .page.active { display: block; }
 
-  .page-title { font-size: 20px; font-weight: 500; color: var(--text-primary); margin-bottom: 3px; letter-spacing: -0.02em; }
-  .page-sub   { font-size: 13px; color: var(--text-secondary); margin-bottom: 20px; }
+  .page-title { font-size: 21px; font-weight: 500; color: var(--text-primary); margin-bottom: 4px; letter-spacing: -0.025em; }
+  .page-sub   { font-size: 13px; color: var(--text-tertiary); margin-bottom: 22px; line-height: 1.5; }
 
   /* ─── CARDS ─── */
   .card {
@@ -233,13 +281,20 @@
     padding: 18px 20px;
     margin-bottom: 14px;
   }
-  .card-title { font-size: 13px; font-weight: 500; color: var(--text-primary); margin-bottom: 12px; }
+  .card-title { font-size: 13px; font-weight: 500; color: var(--text-primary); margin-bottom: 14px; letter-spacing: -0.01em; }
 
   /* ─── METRIC CARDS ─── */
   .metrics { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 10px; margin-bottom: 14px; }
-  .metric { background: var(--bg-secondary); border-radius: var(--radius-md); padding: 14px 16px; }
-  .metric-label { font-size: 11px; color: var(--text-secondary); margin-bottom: 5px; }
-  .metric-val { font-size: 20px; font-weight: 500; color: var(--text-primary); }
+  .metric {
+    background: var(--bg-secondary); border-radius: var(--radius-md); padding: 14px 16px;
+    transition: background 0.12s;
+  }
+  .metric:hover { background: var(--bg-tertiary); }
+  .metric-label {
+    font-size: 11px; color: var(--text-tertiary); margin-bottom: 6px;
+    text-transform: uppercase; letter-spacing: 0.06em; font-weight: 500;
+  }
+  .metric-val { font-size: 22px; font-weight: 500; color: var(--text-primary); line-height: 1.1; }
   .metric-val.green  { color: var(--green-dark); }
   .metric-val.amber  { color: var(--amber); }
   .metric-val.blue   { color: var(--blue); }
@@ -247,14 +302,22 @@
 
   /* ─── BADGES ─── */
   .badge {
-    display: inline-flex; align-items: center;
-    padding: 2px 9px; border-radius: 20px;
-    font-size: 11px; font-weight: 500;
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 2px 8px; border-radius: 20px;
+    font-size: 11px; font-weight: 500; letter-spacing: 0.01em;
+    border: 0.5px solid transparent;
   }
-  .badge-todo     { background: #f1efe8; color: #5f5e5a; }
-  .badge-progress { background: #e6f1fb; color: #185fa5; }
-  .badge-done     { background: #eaf3de; color: #3b6d11; }
-  .badge-urgent   { background: #faeeda; color: #854f0b; }
+  .badge::before {
+    content: ''; width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0;
+  }
+  .badge-todo     { background: #f1efe8; color: #5f5e5a; border-color: rgba(95,94,90,0.18); }
+  .badge-todo::before { background: #888780; }
+  .badge-progress { background: #e6f1fb; color: #185fa5; border-color: rgba(24,95,165,0.18); }
+  .badge-progress::before { background: #185fa5; }
+  .badge-done     { background: #eaf3de; color: #3b6d11; border-color: rgba(59,109,17,0.18); }
+  .badge-done::before { background: #3b6d11; }
+  .badge-urgent   { background: #faeeda; color: #854f0b; border-color: rgba(133,79,11,0.2); }
+  .badge-urgent::before { background: #854f0b; }
 
   /* ─── LAYOUTS ─── */
   .two-col   { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: start; }
@@ -464,20 +527,27 @@
     resize: vertical;
     min-height: 90px;
     outline: none;
-    transition: border-color 0.15s;
+    transition: border-color 0.15s, box-shadow 0.15s;
   }
-  .note-area:focus { border-color: var(--green); }
+  .note-area:focus { border-color: var(--green); box-shadow: 0 0 0 2.5px rgba(29,158,117,0.15); }
 
   .btn {
-    padding: 7px 16px; border-radius: var(--radius-md);
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: 7px 14px; border-radius: var(--radius-md);
     font-size: 13px; cursor: pointer; font-family: var(--font);
     border: 0.5px solid var(--border-strong);
     background: var(--bg-primary); color: var(--text-primary);
-    transition: background 0.12s;
+    transition: background 0.1s, border-color 0.1s, box-shadow 0.1s;
+    line-height: 1.4; font-weight: 400;
   }
-  .btn:hover { background: var(--bg-secondary); }
-  .btn-primary { background: var(--green); color: #fff; border-color: var(--green-dark); }
-  .btn-primary:hover { background: var(--green-dark); }
+  .btn:hover { background: var(--bg-secondary); border-color: var(--border-strong); }
+  .btn:focus-visible { outline: none; box-shadow: 0 0 0 2.5px rgba(29,158,117,0.35); }
+  .btn-primary {
+    background: var(--green); color: #fff;
+    border-color: var(--green-dark); font-weight: 500;
+  }
+  .btn-primary:hover { background: var(--green-dark); border-color: var(--green-dark); }
+  .btn-sm { padding: 5px 11px; font-size: 12px; border-radius: 6px; }
 
   /* ─── RISK ROWS ─── */
   .risk-row { display: flex; align-items: flex-start; gap: 10px; font-size: 12px; padding: 5px 0; }
@@ -501,6 +571,66 @@
 
   /* ─── NEXT ACTIONS DOT ─── */
   .action-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--blue); flex-shrink: 0; margin-top: 5px; }
+
+  /* ─── FORMULA AUDIT TOOLTIPS ─── */
+  .ftip {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--bg-tertiary);
+    color: var(--text-tertiary);
+    font-size: 8px;
+    font-weight: 600;
+    cursor: help;
+    flex-shrink: 0;
+    margin-left: 5px;
+    vertical-align: middle;
+    transition: background 0.15s, color 0.15s;
+    font-family: var(--font);
+    line-height: 1;
+  }
+  .ftip:hover { background: var(--green); color: #fff; }
+  .ftip .fpop {
+    display: none;
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1a1a18;
+    color: #e8e8e4;
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 1.65;
+    white-space: normal;
+    width: 320px;
+    max-width: 88vw;
+    z-index: 50;
+    box-shadow: 0 8px 28px rgba(0,0,0,0.25);
+    pointer-events: none;
+    text-align: left;
+  }
+  .ftip .fpop::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: #1a1a18;
+  }
+  .ftip:hover .fpop { display: block; }
+  .fpop .fp-t { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: #1d9e75; font-weight: 600; margin-bottom: 6px; }
+  .fpop .fp-f { font-family: var(--font-mono); font-size: 11px; color: #fff; background: rgba(255,255,255,0.08); border-radius: 5px; padding: 6px 10px; margin: 6px 0; line-height: 1.55; }
+  .fpop .fp-n { font-size: 10px; color: #999; margin-top: 4px; line-height: 1.5; }
+  .ftip.tip-r .fpop { left: auto; right: -8px; transform: none; }
+  .ftip.tip-r .fpop::after { left: auto; right: 14px; transform: none; }
+  .ftip.tip-l .fpop { left: -8px; right: auto; transform: none; }
+  .ftip.tip-l .fpop::after { left: 14px; right: auto; transform: none; }
 
   /* ─── RANGE SLIDER ─── */
   .slider-group { margin-bottom: 16px; }
@@ -670,9 +800,9 @@
     width: 100%; border: 0.5px solid var(--border); border-radius: 6px;
     padding: 7px 10px; font-size: 12px; font-family: var(--font);
     color: var(--text-primary); background: var(--bg-primary); outline: none;
-    margin-bottom: 8px;
+    margin-bottom: 8px; transition: border-color 0.15s, box-shadow 0.15s;
   }
-  .crm-input:focus { border-color: var(--green); }
+  .crm-input:focus { border-color: var(--green); box-shadow: 0 0 0 2.5px rgba(29,158,117,0.15); }
   .crm-input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
   .crm-stats { display: grid; grid-template-columns: repeat(5,1fr); gap: 10px; margin-bottom: 14px; }
   .crm-stat { background: var(--bg-secondary); border-radius: var(--radius-md); padding: 10px 14px; text-align: center; }
@@ -720,9 +850,9 @@
     font-size: 10px; font-family: var(--font-mono); color: var(--text-primary);
     border: 0.5px solid var(--border); border-radius: 4px; padding: 3px 5px;
     background: var(--bg-primary); outline: none; width: 100%;
-    transition: border-color 0.12s;
+    transition: border-color 0.12s, box-shadow 0.12s;
   }
-  .kanban-date-input:focus { border-color: var(--green); }
+  .kanban-date-input:focus { border-color: var(--green); box-shadow: 0 0 0 2px rgba(29,158,117,0.15); }
   .kanban-date-input.overdue { border-color: var(--red); color: var(--red); background: #fff5f5; }
   .kanban-date-input.due-soon { border-color: var(--amber); color: var(--amber); }
   .kanban-card-actions { display: flex; gap: 3px; margin-top: 6px; }
@@ -891,9 +1021,10 @@
     width: 100%; border: 0.5px solid var(--border); border-radius: var(--radius-md);
     padding: 10px 12px; font-size: 12px; font-family: var(--font);
     color: var(--text-primary); background: var(--bg-primary);
-    resize: vertical; min-height: 60px; outline: none; transition: border-color 0.15s;
+    resize: vertical; min-height: 60px; outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
   }
-  .tw-note-input:focus { border-color: var(--green); }
+  .tw-note-input:focus { border-color: var(--green); box-shadow: 0 0 0 2.5px rgba(29,158,117,0.15); }
   .tw-note-saved {
     padding: 8px 12px; background: var(--bg-secondary); border-radius: 6px;
     font-size: 12px; color: var(--text-secondary); line-height: 1.5;
@@ -1200,8 +1331,6 @@
 
 
     ::-webkit-scrollbar { width: 5px; }
-
-    ::-webkit-scrollbar { width: 5px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
 
@@ -1367,9 +1496,9 @@
     padding: 12px 14px; font-size: 12px; font-family: var(--font);
     color: var(--text-primary); background: var(--bg-primary);
     resize: vertical; min-height: 100px; outline: none;
-    transition: border-color 0.15s; margin-top: 8px;
+    transition: border-color 0.15s, box-shadow 0.15s; margin-top: 8px;
   }
-  .wp-notes-area:focus { border-color: var(--green); }
+  .wp-notes-area:focus { border-color: var(--green); box-shadow: 0 0 0 2.5px rgba(29,158,117,0.15); }
   .wp-done-badge {
     display: inline-flex; align-items: center; gap: 4px;
     padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 500;
@@ -1585,9 +1714,9 @@
     flex: 1; border: 0.5px solid var(--border-strong); border-radius: var(--radius-md);
     padding: 6px 10px; font-size: 12px; font-family: var(--font);
     color: var(--text-primary); background: var(--bg-primary); outline: none;
-    transition: border-color 0.15s;
+    transition: border-color 0.15s, box-shadow 0.15s;
   }
-  .swot-input:focus { border-color: var(--green); }
+  .swot-input:focus { border-color: var(--green); box-shadow: 0 0 0 2.5px rgba(29,158,117,0.15); }
   .swot-add-btn {
     padding: 6px 12px; border-radius: var(--radius-md); font-size: 12px;
     cursor: pointer; font-family: var(--font); border: 0.5px solid var(--border-strong);
@@ -1739,66 +1868,153 @@
     .bmc-bot { grid-template-columns: 1fr; }
     .bmc-cell-costs { border-right: none; border-bottom: 1.5px solid var(--border-strong); }
   }
+
+  /* ─── PIN GATE ─── */
+  #pin-gate {
+    position: fixed; inset: 0; background: var(--bg-tertiary);
+    z-index: 9999; display: flex; align-items: center; justify-content: center;
+  }
+  #pin-card {
+    background: var(--bg-primary); border: 0.5px solid var(--border);
+    border-radius: 18px; padding: 36px 40px; width: 320px;
+    text-align: center;
+  }
+  #pin-logo {
+    width: 48px; height: 48px; background: #e1f5ee; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; margin: 0 auto 16px;
+  }
+  #pin-title { font-size: 17px; font-weight: 500; color: var(--text-primary); letter-spacing: -0.02em; margin-bottom: 3px; }
+  #pin-sub   { font-size: 12px; color: var(--text-tertiary); margin-bottom: 22px; }
+  #pin-error {
+    display: none; font-size: 12px; color: var(--red);
+    background: #fcebeb; border: 0.5px solid rgba(163,45,45,0.2);
+    border-radius: 8px; padding: 7px 12px; margin-bottom: 12px;
+  }
+  #pin-input-el {
+    width: 100%; text-align: center; letter-spacing: 0.25em;
+    font-size: 20px; padding: 11px 14px;
+    border: 1px solid var(--border-strong); border-radius: 10px;
+    font-family: var(--font-mono); outline: none;
+    color: var(--text-primary); background: var(--bg-primary);
+    margin-bottom: 12px; transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  #pin-input-el:focus { border-color: var(--green); box-shadow: 0 0 0 2.5px rgba(29,158,117,0.15); }
+  #pin-submit {
+    width: 100%; padding: 11px; background: var(--green); color: #fff;
+    border: none; border-radius: 10px; font-size: 14px; font-weight: 500;
+    font-family: var(--font); cursor: pointer; transition: background 0.12s;
+  }
+  #pin-submit:hover { background: var(--green-dark); }
+  #pin-hint { font-size: 11px; color: var(--text-tertiary); margin-top: 14px; }
+
+  /* ─── AI FAB ─── */
+  #ai-fab {
+    position: fixed; bottom: 24px; right: 24px; z-index: 500;
+    width: 46px; height: 46px; border-radius: 50%;
+    background: var(--green); color: #fff; border: none;
+    display: none; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 19px;
+    box-shadow: 0 2px 12px rgba(29,158,117,0.32);
+    transition: transform 0.18s, box-shadow 0.18s;
+  }
+  #ai-fab:hover { transform: scale(1.07); box-shadow: 0 4px 18px rgba(29,158,117,0.45); }
+
+  /* ─── AI PANEL ─── */
+  #ai-panel {
+    position: fixed; bottom: 0; right: 24px; z-index: 501;
+    width: 390px; max-width: calc(100vw - 32px);
+    background: var(--bg-primary);
+    border: 0.5px solid var(--border);
+    border-radius: 14px 14px 0 0;
+    box-shadow: 0 -2px 20px rgba(0,0,0,0.09);
+    display: none; flex-direction: column; max-height: 68vh;
+  }
+  .ai-hdr-btn {
+    font-size: 11px; padding: 4px 9px; border: 0.5px solid var(--border);
+    border-radius: 6px; background: none; cursor: pointer;
+    color: var(--text-tertiary); font-family: var(--font);
+    transition: background 0.1s, color 0.1s;
+  }
+  .ai-hdr-btn:hover { background: var(--bg-secondary); color: var(--text-primary); }
+  .ai-close-btn {
+    width: 26px; height: 26px; border-radius: 6px;
+    border: 0.5px solid var(--border); background: none;
+    cursor: pointer; font-size: 13px; color: var(--text-tertiary);
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.1s, color 0.1s;
+  }
+  .ai-close-btn:hover { background: var(--bg-secondary); color: var(--text-primary); }
+  .ai-chip {
+    font-size: 11px; padding: 4px 10px; border-radius: 20px;
+    border: 0.5px solid var(--border); background: var(--bg-secondary);
+    color: var(--text-secondary); cursor: pointer; font-family: var(--font);
+    transition: background 0.1s, border-color 0.1s, color 0.1s; white-space: nowrap;
+  }
+  .ai-chip:hover { background: var(--bg-tertiary); border-color: var(--border-strong); color: var(--text-primary); }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
 
 <!-- ═══ PIN ACCESS GATE ═══ -->
-<div id="pin-gate" style="position:fixed;inset:0;background:#f5f5f3;z-index:9999;display:flex;align-items:center;justify-content:center">
-  <div style="background:#fff;border:0.5px solid var(--border);border-radius:20px;padding:40px 44px;width:340px;box-shadow:0 8px 40px rgba(0,0,0,0.08);text-align:center">
-    <div style="width:52px;height:52px;background:#e1f5ee;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 18px">🔬</div>
-    <h2 style="font-size:18px;font-weight:500;color:var(--text-primary);letter-spacing:-0.02em;margin-bottom:4px">LabQro HQ</h2>
-    <p style="font-size:12px;color:var(--text-tertiary);margin-bottom:24px">Querétaro · Business Plan 2025</p>
-    <div id="pin-error" style="display:none;font-size:12px;color:var(--red);background:#fcebeb;border-radius:8px;padding:8px 12px;margin-bottom:12px">Incorrect PIN — try again</div>
-    <input id="pin-input" type="password" maxlength="8" placeholder="Enter PIN"
-      style="width:100%;text-align:center;letter-spacing:0.3em;font-size:18px;padding:12px 16px;border:1.5px solid var(--border);border-radius:10px;font-family:var(--font-mono);outline:none;color:var(--text-primary);background:var(--bg-primary);margin-bottom:12px"
-      oninput="this.style.borderColor='var(--border)'"
+<div id="pin-gate">
+  <div id="pin-card">
+    <div id="pin-logo">🔬</div>
+    <div id="pin-title">LabQro HQ</div>
+    <div id="pin-sub">Querétaro · Business Plan 2025</div>
+    <div id="pin-error">Incorrect PIN — try again</div>
+    <input id="pin-input" class="pin-input-el" type="password" maxlength="8" placeholder="Enter PIN"
+      style="width:100%;text-align:center;letter-spacing:0.25em;font-size:20px;padding:11px 14px;border:1px solid var(--border-strong);border-radius:10px;font-family:var(--font-mono);outline:none;color:var(--text-primary);background:var(--bg-primary);margin-bottom:12px;transition:border-color 0.15s,box-shadow 0.15s"
+      oninput="this.style.borderColor='var(--border-strong)';this.style.boxShadow='none'"
+      onfocus="this.style.borderColor='var(--green)';this.style.boxShadow='0 0 0 2.5px rgba(29,158,117,0.15)'"
       onkeydown="if(event.key==='Enter')submitPin()">
-    <button onclick="submitPin()" style="width:100%;padding:12px;background:var(--green);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:500;font-family:var(--font);cursor:pointer">Enter</button>
-    <p style="font-size:11px;color:var(--text-tertiary);margin-top:16px">Contact the founder for access</p>
+    <button id="pin-submit" onclick="submitPin()">Enter</button>
+    <div id="pin-hint">Contact the founder for access</div>
   </div>
 </div>
 
 <!-- ═══ AI ADVISOR PANEL ═══ -->
-<div id="ai-fab" onclick="toggleAIPanel()"
-  style="position:fixed;bottom:24px;right:24px;z-index:500;width:52px;height:52px;border-radius:50%;background:var(--green);color:#fff;display:none;align-items:center;justify-content:center;cursor:pointer;font-size:22px;box-shadow:0 4px 18px rgba(29,158,117,0.4);transition:transform 0.2s"
-  onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'">🤖</div>
+<button id="ai-fab" onclick="toggleAIPanel()">🤖</button>
 
-<div id="ai-panel" style="position:fixed;bottom:0;right:24px;z-index:501;width:400px;max-width:calc(100vw - 32px);background:var(--bg-primary);border:0.5px solid var(--border);border-radius:16px 16px 0 0;box-shadow:0 -4px 30px rgba(0,0,0,0.12);display:none;flex-direction:column;max-height:70vh">
-  <div style="padding:14px 18px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0">
+<div id="ai-panel">
+  <div style="padding:13px 16px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0">
     <div style="display:flex;align-items:center;gap:10px">
-      <div style="width:32px;height:32px;border-radius:8px;background:#e1f5ee;display:flex;align-items:center;justify-content:center;font-size:16px">🤖</div>
+      <div style="width:30px;height:30px;border-radius:8px;background:#e1f5ee;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0">🤖</div>
       <div>
         <div style="font-size:13px;font-weight:500;color:var(--text-primary)">LabQro AI Advisor</div>
-        <div style="font-size:10px;color:var(--text-tertiary)">Powered by Claude</div>
+        <div style="font-size:10px;color:var(--text-tertiary);margin-top:1px">Powered by Claude</div>
       </div>
     </div>
-    <div style="display:flex;gap:6px;align-items:center">
-      <button onclick="clearAIChat()" style="font-size:10px;padding:3px 8px;border:0.5px solid var(--border);border-radius:6px;background:none;cursor:pointer;color:var(--text-tertiary);font-family:var(--font)">Clear</button>
-      <button onclick="toggleAIPanel()" style="width:26px;height:26px;border-radius:6px;border:0.5px solid var(--border);background:none;cursor:pointer;font-size:13px;color:var(--text-tertiary)">✕</button>
+    <div style="display:flex;gap:5px;align-items:center">
+      <button class="ai-hdr-btn" onclick="clearAIChat()">Clear</button>
+      <button class="ai-close-btn" onclick="toggleAIPanel()">✕</button>
     </div>
   </div>
 
   <!-- Quick prompts -->
-  <div style="padding:10px 14px;border-bottom:0.5px solid var(--border);display:flex;gap:6px;flex-wrap:wrap;flex-shrink:0" id="ai-quick-prompts"></div>
+  <div style="padding:9px 12px;border-bottom:0.5px solid var(--border);display:flex;gap:5px;flex-wrap:wrap;flex-shrink:0" id="ai-quick-prompts"></div>
 
   <!-- Messages -->
-  <div id="ai-messages" style="flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;min-height:100px"></div>
+  <div id="ai-messages" style="flex:1;overflow-y:auto;padding:12px 14px;display:flex;flex-direction:column;gap:10px;min-height:80px"></div>
 
   <!-- Input -->
-  <div style="padding:10px 14px;border-top:0.5px solid var(--border);display:flex;gap:8px;align-items:flex-end;flex-shrink:0">
+  <div style="padding:10px 12px;border-top:0.5px solid var(--border);display:flex;gap:8px;align-items:flex-end;flex-shrink:0">
     <textarea id="ai-input" placeholder="Ask anything about your business plan…"
-      style="flex:1;resize:none;border:0.5px solid var(--border);border-radius:8px;padding:8px 12px;font-size:12px;font-family:var(--font);color:var(--text-primary);background:var(--bg-primary);outline:none;line-height:1.5;max-height:80px"
+      style="flex:1;resize:none;border:0.5px solid var(--border);border-radius:8px;padding:8px 11px;font-size:12px;font-family:var(--font);color:var(--text-primary);background:var(--bg-secondary);outline:none;line-height:1.5;max-height:80px;transition:border-color 0.15s,box-shadow 0.15s,background 0.15s"
       rows="1"
+      onfocus="this.style.borderColor='var(--green)';this.style.boxShadow='0 0 0 2.5px rgba(29,158,117,0.15)';this.style.background='var(--bg-primary)'"
+      onblur="this.style.borderColor='var(--border)';this.style.boxShadow='none';this.style.background='var(--bg-secondary)'"
       oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,80)+'px'"
       onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendAIMessage()}"></textarea>
     <button id="ai-send-btn" onclick="sendAIMessage()"
-      style="flex-shrink:0;width:34px;height:34px;border-radius:8px;background:var(--green);border:none;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px">↑</button>
+      style="flex-shrink:0;width:32px;height:32px;border-radius:8px;background:var(--green);border:none;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;transition:background 0.12s"
+      onmouseover="this.style.background='var(--green-dark)'" onmouseout="this.style.background='var(--green)'">↑</button>
   </div>
 </div>
 
@@ -1835,115 +2051,148 @@
     <p>Querétaro · Business Plan 2025</p>
   </div>
 
+  <!-- ── Overview ── -->
   <div class="sb-section">Overview</div>
   <button class="sb-item active" onclick="nav('dashboard',this)">
     <div class="sb-icon" style="background:#e1f5ee;color:#0f6e56">▦</div> Dashboard
   </button>
 
-  <div class="sb-section">Plan</div>
-  <button class="sb-item" onclick="nav('roadmap',this)">
-    <div class="sb-icon" style="background:#e6f1fb;color:#185fa5">→</div> Roadmap & Timeline
-  </button>
-  <button class="sb-item" onclick="nav('canvas',this)">
-    <div class="sb-icon" style="background:#f5e6f0;color:#7a2d6b">⊡</div> Business Model Canvas
-  </button>
-  <button class="sb-item" onclick="nav('regulatory',this)">
-    <div class="sb-icon" style="background:#faeeda;color:#854f0b">⚖</div> Regulatory
-  </button>
-  <button class="sb-item" onclick="nav('regboard',this)">
-    <div class="sb-icon" style="background:#fcebeb;color:#a32d2d">⊞</div> Permit board
-  </button>
-  <button class="sb-item" onclick="nav('financials',this)">
-    <div class="sb-icon" style="background:#eaf3de;color:#3b6d11">$</div> Financials
-  </button>
-  <button class="sb-item" onclick="nav('estimator',this)">
-    <div class="sb-icon" style="background:#faeeda;color:#854f0b">⊟</div> Cost estimator
-  </button>
-  <button class="sb-item" onclick="nav('budget',this)">
-    <div class="sb-icon" style="background:#fcebeb;color:#a32d2d">◈</div> Budget tracker
-  </button>
-  <button class="sb-item" onclick="nav('calculator',this)">
-    <div class="sb-icon" style="background:#d9f0e5;color:#0f6e56">⚙</div> Calculator
-  </button>
-  <button class="sb-item" onclick="nav('funding',this)">
-    <div class="sb-icon" style="background:#e1f5ee;color:#0f6e56">💰</div> Funding & Capital
-  </button>
-  <button class="sb-item" onclick="nav('volume',this)">
-    <div class="sb-icon" style="background:#e6f1fb;color:#185fa5">📈</div> Volume projector
-  </button>
-  <button class="sb-item" onclick="nav('cashflow',this)">
-    <div class="sb-icon" style="background:#faeeda;color:#854f0b">📅</div> Cash flow
-  </button>
-  <button class="sb-item" onclick="nav('sensitivity',this)">
-    <div class="sb-icon" style="background:#fcebeb;color:#a32d2d">⊞</div> Sensitivity analysis
-  </button>
-  <button class="sb-item" onclick="nav('contracts',this)">
-    <div class="sb-icon" style="background:#eeedfe;color:#534ab7">🏢</div> Corporate contracts
-  </button>
-  <button class="sb-item" onclick="nav('working-capital',this)">
-    <div class="sb-icon" style="background:#e1f5ee;color:#0f6e56">💵</div> Working capital
-  </button>
-  <button class="sb-item" onclick="nav('market',this)">
-    <div class="sb-icon" style="background:#fbeaf0;color:#993556">◎</div> Market
-  </button>
-  <button class="sb-item" onclick="nav('swot',this)">
-    <div class="sb-icon" style="background:#eeedfe;color:#534ab7">⊞</div> SWOT analysis
-  </button>
-  <button class="sb-item" onclick="nav('pricing',this)">
-    <div class="sb-icon" style="background:#f5e6f0;color:#7a2d6b">≡</div> Pricing matrix
-  </button>
-  <button class="sb-item" onclick="nav('revmix',this)">
-    <div class="sb-icon" style="background:#eaf3de;color:#3b6d11">◑</div> Revenue mix
-  </button>
+  <!-- ═══════════════════════════════ -->
+  <!-- ── PRE-LAUNCH: PLAN & BUILD ── -->
+  <!-- ═══════════════════════════════ -->
+  <div class="sb-divider"><span>Pre-Launch</span></div>
 
-  <div class="sb-section">Tools</div>
-  <button class="sb-item" onclick="nav('locations',this)">
-    <div class="sb-icon" style="background:#e6f1fb;color:#185fa5">⊕</div> Location scoring
-  </button>
-  <button class="sb-item" onclick="nav('physicians',this)">
-    <div class="sb-icon" style="background:#e1f5ee;color:#0f6e56">♦</div> Physician CRM
-  </button>
-  <button class="sb-item" onclick="nav('equipment',this)">
-    <div class="sb-icon" style="background:#eeedfe;color:#534ab7">▥</div> Equipment compare
-  </button>
-  <button class="sb-item" onclick="nav('suppliers',this)">
-    <div class="sb-icon" style="background:#fbeaf0;color:#993556">🏭</div> Supplier tracker
-  </button>
-  <button class="sb-item" onclick="nav('staffing',this)">
-    <div class="sb-icon" style="background:#dde8f8;color:#2a5ea8">👥</div> Staffing model
-  </button>
+  <!-- ── Strategy ── -->
+  <div class="sb-section sb-collapsible" onclick="toggleSbSection(this)">Strategy <span class="sb-chevron">›</span></div>
+  <div class="sb-group">
+    <button class="sb-item" onclick="nav('roadmap',this)">
+      <div class="sb-icon" style="background:#e6f1fb;color:#185fa5">→</div> Roadmap & Timeline
+    </button>
+    <button class="sb-item" onclick="nav('canvas',this)">
+      <div class="sb-icon" style="background:#f5e6f0;color:#7a2d6b">⊡</div> Business Model Canvas
+    </button>
+    <button class="sb-item" onclick="nav('market',this)">
+      <div class="sb-icon" style="background:#fbeaf0;color:#993556">◎</div> Market & Competitors
+    </button>
+    <button class="sb-item" onclick="nav('swot',this)">
+      <div class="sb-icon" style="background:#eeedfe;color:#534ab7">⊞</div> SWOT Analysis
+    </button>
+    <button class="sb-item" onclick="nav('go-nogo',this)">
+      <div class="sb-icon" style="background:#faeeda;color:#854f0b">⚡</div> Go / No-Go Gate
+    </button>
+  </div>
 
-  <div class="sb-section">Compliance</div>
-  <button class="sb-item" onclick="nav('quality',this)">
-    <div class="sb-icon" style="background:#eeedfe;color:#534ab7">📋</div> Quality (SGC)
-  </button>
-  <button class="sb-item" onclick="nav('mock-inspection',this)">
-    <div class="sb-icon" style="background:#fcebeb;color:#a32d2d">✓</div> Mock inspection
-  </button>
-  <button class="sb-item" onclick="nav('sat-compliance',this)">
-    <div class="sb-icon" style="background:#eaf3de;color:#3b6d11">$</div> SAT / Tax
-  </button>
-  <div class="sb-section">Workspace</div>
-  <button class="sb-item" onclick="nav('go-nogo',this)">
-    <div class="sb-icon" style="background:#faeeda;color:#854f0b">⚡</div> Go / No-Go gate
-  </button>
-  <button class="sb-item" onclick="nav('domicilio',this)">
-    <div class="sb-icon" style="background:#e1f5ee;color:#0f6e56">🏠</div> Toma a domicilio
-  </button>
-  <button class="sb-item" onclick="nav('first90',this)">
-    <div class="sb-icon" style="background:#faeeda;color:#854f0b">🚀</div> First 90 days
-  </button>
-  <button class="sb-item" onclick="nav('checklist',this)">
-    <div class="sb-icon" style="background:#f1efe8;color:#5f5e5a">✓</div> Checklist & Docs
-  </button>
-  <button class="sb-item" onclick="nav('notes',this)">
-    <div class="sb-icon" style="background:#eeedfe;color:#534ab7">✏</div> Notes
-  </button>
-  <div style="padding:12px 18px;margin-top:auto;border-top:0.5px solid var(--border);display:flex;flex-direction:column;gap:6px">
-    <button class="btn btn-primary" style="width:100%;font-size:12px" onclick="openInvestorSummary()">📄 Investor summary</button>
-    <button class="btn" style="width:100%;font-size:12px;color:var(--green-dark);border-color:var(--green)" onclick="exportFullPlanPDF()">📑 Export full plan (PDF)</button>
-    <button class="btn" style="width:100%;font-size:12px;color:var(--text-secondary)" onclick="window.print()">⎙ Print / Save PDF</button>
-    <button class="btn" style="width:100%;font-size:12px;color:var(--text-secondary)" onclick="exportBackup()">⬇ Export backup (JSON)</button>
+  <!-- ── Financial Planning ── -->
+  <div class="sb-section sb-collapsible" onclick="toggleSbSection(this)">Financial Planning <span class="sb-chevron">›</span></div>
+  <div class="sb-group">
+    <button class="sb-item" onclick="nav('calculator',this)">
+      <div class="sb-icon" style="background:#d9f0e5;color:#0f6e56">⚙</div> Calculator
+    </button>
+    <button class="sb-item" onclick="nav('financials',this)">
+      <div class="sb-icon" style="background:#eaf3de;color:#3b6d11">$</div> 3-Year Projection
+    </button>
+    <button class="sb-item" onclick="nav('estimator',this)">
+      <div class="sb-icon" style="background:#faeeda;color:#854f0b">⊟</div> Startup Costs
+    </button>
+    <button class="sb-item" onclick="nav('budget',this)">
+      <div class="sb-icon" style="background:#fcebeb;color:#a32d2d">◈</div> Budget Tracker
+    </button>
+    <button class="sb-item" onclick="nav('funding',this)">
+      <div class="sb-icon" style="background:#e1f5ee;color:#0f6e56">💰</div> Funding & Capital
+    </button>
+    <button class="sb-item" onclick="nav('cashflow',this)">
+      <div class="sb-icon" style="background:#faeeda;color:#854f0b">📅</div> Cash Flow Calendar
+    </button>
+    <button class="sb-item" onclick="nav('sensitivity',this)">
+      <div class="sb-icon" style="background:#fcebeb;color:#a32d2d">⊞</div> Sensitivity Analysis
+    </button>
+    <button class="sb-item" onclick="nav('pricing',this)">
+      <div class="sb-icon" style="background:#f5e6f0;color:#7a2d6b">≡</div> Pricing Matrix
+    </button>
+  </div>
+
+  <!-- ── Setup & Procurement ── -->
+  <div class="sb-section sb-collapsible" onclick="toggleSbSection(this)">Setup & Procurement <span class="sb-chevron">›</span></div>
+  <div class="sb-group">
+    <button class="sb-item" onclick="nav('locations',this)">
+      <div class="sb-icon" style="background:#e6f1fb;color:#185fa5">⊕</div> Location Scoring
+    </button>
+    <button class="sb-item" onclick="nav('equipment',this)">
+      <div class="sb-icon" style="background:#eeedfe;color:#534ab7">▥</div> Equipment Compare
+    </button>
+    <button class="sb-item" onclick="nav('staffing',this)">
+      <div class="sb-icon" style="background:#dde8f8;color:#2a5ea8">👥</div> Staffing Model
+    </button>
+    <button class="sb-item" onclick="nav('suppliers',this)">
+      <div class="sb-icon" style="background:#fbeaf0;color:#993556">🏭</div> Supplier Tracker
+    </button>
+  </div>
+
+  <!-- ── Regulatory & Permits ── -->
+  <div class="sb-section sb-collapsible" onclick="toggleSbSection(this)">Regulatory & Permits <span class="sb-chevron">›</span></div>
+  <div class="sb-group">
+    <button class="sb-item" onclick="nav('regulatory',this)">
+      <div class="sb-icon" style="background:#faeeda;color:#854f0b">⚖</div> Regulatory Guide
+    </button>
+    <button class="sb-item" onclick="nav('regboard',this)">
+      <div class="sb-icon" style="background:#fcebeb;color:#a32d2d">⊞</div> Permit Board
+    </button>
+    <button class="sb-item" onclick="nav('mock-inspection',this)">
+      <div class="sb-icon" style="background:#fcebeb;color:#a32d2d">✓</div> Mock Inspection
+    </button>
+  </div>
+
+  <!-- ═══════════════════════════════ -->
+  <!-- ── POST-LAUNCH: OPERATE ────── -->
+  <!-- ═══════════════════════════════ -->
+  <div class="sb-divider"><span>Post-Launch</span></div>
+
+  <!-- ── Revenue & Growth ── -->
+  <div class="sb-section sb-collapsible" onclick="toggleSbSection(this)">Revenue & Growth <span class="sb-chevron">›</span></div>
+  <div class="sb-group">
+    <button class="sb-item" onclick="nav('revmix',this)">
+      <div class="sb-icon" style="background:#eaf3de;color:#3b6d11">◑</div> Revenue Mix
+    </button>
+    <button class="sb-item" onclick="nav('volume',this)">
+      <div class="sb-icon" style="background:#e6f1fb;color:#185fa5">📈</div> Volume Projector
+    </button>
+    <button class="sb-item" onclick="nav('contracts',this)">
+      <div class="sb-icon" style="background:#eeedfe;color:#534ab7">🏢</div> Corporate Contracts
+    </button>
+    <button class="sb-item" onclick="nav('physicians',this)">
+      <div class="sb-icon" style="background:#e1f5ee;color:#0f6e56">♦</div> Physician CRM
+    </button>
+    <button class="sb-item" onclick="nav('working-capital',this)">
+      <div class="sb-icon" style="background:#e1f5ee;color:#0f6e56">💵</div> Working Capital
+    </button>
+    <button class="sb-item" onclick="nav('domicilio',this)">
+      <div class="sb-icon" style="background:#e1f5ee;color:#0f6e56">🏠</div> Toma a Domicilio
+    </button>
+  </div>
+
+  <!-- ── Operations & Compliance ── -->
+  <div class="sb-section sb-collapsible" onclick="toggleSbSection(this)">Operations & Compliance <span class="sb-chevron">›</span></div>
+  <div class="sb-group">
+    <button class="sb-item" onclick="nav('first90',this)">
+      <div class="sb-icon" style="background:#faeeda;color:#854f0b">🚀</div> First 90 Days
+    </button>
+    <button class="sb-item" onclick="nav('quality',this)">
+      <div class="sb-icon" style="background:#eeedfe;color:#534ab7">📋</div> Quality (SGC)
+    </button>
+    <button class="sb-item" onclick="nav('sat-compliance',this)">
+      <div class="sb-icon" style="background:#eaf3de;color:#3b6d11">$</div> SAT / Tax
+    </button>
+    <button class="sb-item" onclick="nav('notes',this)">
+      <div class="sb-icon" style="background:#eeedfe;color:#534ab7">✏</div> Notes
+    </button>
+  </div>
+
+  <div style="padding:14px 16px;margin-top:auto;border-top:0.5px solid var(--border);display:flex;flex-direction:column;gap:5px">
+    <button class="btn btn-primary" style="width:100%;font-size:12px;justify-content:center" onclick="openInvestorSummary()">📄 Investor summary</button>
+    <button class="btn" style="width:100%;font-size:12px;color:var(--green-dark);border-color:rgba(29,158,117,0.4);justify-content:center" onclick="exportFullPlanPDF()">📑 Export full plan (PDF)</button>
+    <button class="btn" style="width:100%;font-size:12px;color:var(--blue);border-color:rgba(24,95,165,0.3);justify-content:center" onclick="exportFullBusinessPlanXlsx()">📊 Export all (Excel)</button>
+    <button class="btn" style="width:100%;font-size:12px;color:var(--text-secondary);justify-content:center" onclick="window.print()">⎙ Print / Save PDF</button>
+    <button class="btn" style="width:100%;font-size:12px;color:var(--text-secondary);justify-content:center" onclick="exportBackup()">⬇ Export backup (JSON)</button>
   </div>
 </nav>
 
@@ -1952,105 +2201,148 @@
 
   <!-- ── DASHBOARD ── -->
   <section id="page-dashboard" class="page active">
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:3px">
-      <div class="page-title">Good day — welcome to LabQro HQ</div>
-      <div id="sync-badge" style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text-tertiary);padding:4px 10px;border-radius:20px;background:var(--bg-secondary);border:0.5px solid var(--border)">
-        <span id="sync-dot" style="width:6px;height:6px;border-radius:50%;background:var(--text-tertiary);flex-shrink:0"></span>
-        <span id="sync-label">Connecting…</span>
-      </div>
-    </div>
-    <div class="page-sub" id="dash-sub">Laboratorio Clínico · Querétaro · Stage: Pre-launch</div>
 
-    <div class="metrics" style="grid-template-columns: repeat(3, minmax(0,1fr)) 200px">
-      <div class="metric"><div class="metric-label">Checklist progress</div><div class="metric-val" id="dash-progress">—</div></div>
-      <div class="metric"><div class="metric-label">Permits completed</div><div class="metric-val blue" id="dash-permits" style="font-size:15px">—</div></div>
-      <div class="metric"><div class="metric-label">Physicians in pipeline</div><div class="metric-val amber" id="dash-physicians" style="font-size:16px">—</div></div>
-      <div class="metric" style="display:flex;align-items:center;gap:14px;padding:10px 16px">
-        <svg width="52" height="52" viewBox="0 0 52 52">
-          <circle cx="26" cy="26" r="22" fill="none" stroke="var(--bg-tertiary)" stroke-width="5"/>
-          <circle id="dash-ring" cx="26" cy="26" r="22" fill="none" stroke="var(--green)" stroke-width="5"
-            stroke-dasharray="138.2" stroke-dashoffset="138.2"
-            stroke-linecap="round" transform="rotate(-90 26 26)"
-            style="transition:stroke-dashoffset 0.6s ease"/>
-          <text id="dash-ring-pct" x="26" y="30" text-anchor="middle" font-size="11" font-weight="500" fill="var(--text-primary)" font-family="var(--font-mono)">0%</text>
-        </svg>
-        <div>
-          <div style="font-size:11px;color:var(--text-secondary)">Overall</div>
-          <div style="font-size:13px;font-weight:500;color:var(--text-primary)" id="dash-ring-label">Pre-launch</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="two-col">
-      <!-- Phases -->
-      <div class="card">
-        <div class="card-title">Project phases</div>
-        <div class="phase-row clickable" onclick="openPhase(1)">
-          <div class="phase-num" style="background:#e6f1fb;color:#185fa5">1</div>
-          <div class="phase-body">
-            <div class="phase-hdr"><div class="phase-name">Research & Planning</div><span class="badge" id="phase-badge-1">In progress</span></div>
-            <div class="phase-desc">Market analysis, location scouting, business model</div>
-            <div class="progress-bar"><div class="progress-fill" id="phase-bar-1" style="width:0%;background:#185fa5"></div></div>
-          </div>
-        </div>
-        <div class="phase-row clickable" onclick="openPhase(2)">
-          <div class="phase-num" style="background:#f1efe8;color:#5f5e5a">2</div>
-          <div class="phase-body">
-            <div class="phase-hdr"><div class="phase-name">Legal & Corporate</div><span class="badge" id="phase-badge-2">To do</span></div>
-            <div class="phase-desc">Constitución SA, RFC, Razón Social, IMPI</div>
-            <div class="progress-bar"><div class="progress-fill" id="phase-bar-2" style="width:0%"></div></div>
-          </div>
-        </div>
-        <div class="phase-row clickable" onclick="openPhase(3)">
-          <div class="phase-num" style="background:#f1efe8;color:#5f5e5a">3</div>
-          <div class="phase-body">
-            <div class="phase-hdr"><div class="phase-name">COFEPRIS & NOM Permits</div><span class="badge" id="phase-badge-3">To do</span></div>
-            <div class="phase-desc">Licencia Sanitaria, NOM-007, NOM-166</div>
-            <div class="progress-bar"><div class="progress-fill" id="phase-bar-3" style="width:0%"></div></div>
-          </div>
-        </div>
-        <div class="phase-row clickable" onclick="openPhase(4)">
-          <div class="phase-num" style="background:#f1efe8;color:#5f5e5a">4</div>
-          <div class="phase-body">
-            <div class="phase-hdr"><div class="phase-name">Infrastructure & Equipment</div><span class="badge" id="phase-badge-4">To do</span></div>
-            <div class="phase-desc">Location, lab setup, analyzers, cold chain</div>
-            <div class="progress-bar"><div class="progress-fill" id="phase-bar-4" style="width:0%"></div></div>
-          </div>
-        </div>
-        <div class="phase-row clickable" onclick="openPhase(5)">
-          <div class="phase-num" style="background:#f1efe8;color:#5f5e5a">5</div>
-          <div class="phase-body">
-            <div class="phase-hdr"><div class="phase-name">Staffing & Training</div><span class="badge" id="phase-badge-5">To do</span></div>
-            <div class="phase-desc">QFB, lab techs, front desk, director técnico</div>
-            <div class="progress-bar"><div class="progress-fill" id="phase-bar-5" style="width:0%"></div></div>
-          </div>
-        </div>
-        <div class="phase-row clickable" onclick="openPhase(6)">
-          <div class="phase-num" style="background:#f1efe8;color:#5f5e5a">6</div>
-          <div class="phase-body">
-            <div class="phase-hdr"><div class="phase-name">Soft Launch & Marketing</div><span class="badge" id="phase-badge-6">To do</span></div>
-            <div class="phase-desc">Médicos referentes, pricing, digital presence</div>
-            <div class="progress-bar"><div class="progress-fill" id="phase-bar-6" style="width:0%"></div></div>
-          </div>
-        </div>
-      </div>
-
+    <!-- ── Header row ── -->
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;flex-wrap:wrap;gap:10px">
       <div>
+        <div style="font-size:23px;font-weight:500;color:var(--text-primary);letter-spacing:-0.03em">LabQro HQ</div>
+        <div class="page-sub" id="dash-sub" style="margin-bottom:0">Laboratorio Clínico · Querétaro · Stage: Pre-launch</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div id="sync-badge" style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text-tertiary);padding:4px 10px;border-radius:20px;background:var(--bg-secondary);border:0.5px solid var(--border)">
+          <span id="sync-dot" style="width:6px;height:6px;border-radius:50%;background:var(--text-tertiary);flex-shrink:0"></span>
+          <span id="sync-label">Connecting…</span>
+        </div>
+        <button class="btn btn-primary" style="font-size:11px;padding:5px 14px" onclick="openInvestorSummary()">📄 Investor Summary</button>
+      </div>
+    </div>
+
+    <!-- ── Hero financial snapshot (dark card) ── -->
+    <div style="background:#1a1a18;border-radius:var(--radius-xl);padding:22px 26px;margin-bottom:14px;display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:20px;align-items:center;color:#fff" id="dash-hero">
+      <div>
+        <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:#888;font-weight:500;margin-bottom:5px">Monthly Revenue</div>
+        <div style="font-size:22px;font-weight:500;font-family:var(--font-mono);color:#5ee6b5" id="dash-h-revenue">—</div>
+        <div style="font-size:10px;color:#666;margin-top:3px" id="dash-h-rev-detail">—</div>
+      </div>
+      <div>
+        <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:#888;font-weight:500;margin-bottom:5px">EBITDA</div>
+        <div style="font-size:22px;font-weight:500;font-family:var(--font-mono)" id="dash-h-ebitda" style="color:#5eafe6">—</div>
+        <div style="font-size:10px;color:#666;margin-top:3px" id="dash-h-ebitda-detail">—</div>
+      </div>
+      <div>
+        <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:#888;font-weight:500;margin-bottom:5px">Break-even</div>
+        <div style="font-size:22px;font-weight:500;font-family:var(--font-mono);color:#fff" id="dash-h-breakeven">—</div>
+        <div style="font-size:10px;color:#666;margin-top:3px">studies / month</div>
+      </div>
+      <div>
+        <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:#888;font-weight:500;margin-bottom:5px">Startup Capital</div>
+        <div style="font-size:22px;font-weight:500;font-family:var(--font-mono);color:#efac5e" id="dash-h-startup">—</div>
+        <div style="font-size:10px;color:#666;margin-top:3px" id="dash-h-payback">—</div>
+      </div>
+      <div style="text-align:center;padding-left:10px;border-left:1px solid #333">
+        <svg width="64" height="64" viewBox="0 0 64 64">
+          <circle cx="32" cy="32" r="27" fill="none" stroke="#333" stroke-width="5"/>
+          <circle id="dash-ring" cx="32" cy="32" r="27" fill="none" stroke="#5ee6b5" stroke-width="5"
+            stroke-dasharray="169.6" stroke-dashoffset="169.6"
+            stroke-linecap="round" transform="rotate(-90 32 32)"
+            style="transition:stroke-dashoffset 0.6s ease"/>
+          <text id="dash-ring-pct" x="32" y="36" text-anchor="middle" font-size="13" font-weight="500" fill="#fff" font-family="var(--font-mono)">0%</text>
+        </svg>
+        <div style="font-size:10px;color:#888;margin-top:4px" id="dash-ring-label">Pre-launch</div>
+      </div>
+    </div>
+
+    <!-- ── Mini Gantt timeline (right below hero) ── -->
+    <div class="card" style="margin-bottom:14px">
+      <div class="section-hdr" style="margin-bottom:10px">
+        <div class="card-title" style="margin:0">18-month timeline</div>
+        <a onclick="nav('roadmap',null)" style="font-size:11px;color:var(--blue);cursor:pointer;text-decoration:none">Full Gantt →</a>
+      </div>
+      <div id="dash-mini-gantt" style="overflow-x:auto"></div>
+    </div>
+
+    <!-- ── Two-column main area (equal height) ── -->
+    <div class="two-col" style="align-items:stretch">
+      <!-- LEFT: Phases (stretches to match right column) -->
+      <div style="display:flex;flex-direction:column">
+        <div class="card" style="flex:1;margin-bottom:0">
+          <div class="card-title">Project phases</div>
+          <div class="phase-row clickable" onclick="openPhase(1)">
+            <div class="phase-num" style="background:#e6f1fb;color:#185fa5">1</div>
+            <div class="phase-body">
+              <div class="phase-hdr"><div class="phase-name">Research & Planning</div><span class="badge" id="phase-badge-1">In progress</span></div>
+              <div class="phase-desc">Market analysis, location scouting, business model</div>
+              <div class="progress-bar"><div class="progress-fill" id="phase-bar-1" style="width:0%;background:#185fa5"></div></div>
+            </div>
+          </div>
+          <div class="phase-row clickable" onclick="openPhase(2)">
+            <div class="phase-num" style="background:#f1efe8;color:#5f5e5a">2</div>
+            <div class="phase-body">
+              <div class="phase-hdr"><div class="phase-name">Legal & Corporate</div><span class="badge" id="phase-badge-2">To do</span></div>
+              <div class="phase-desc">Constitución SA, RFC, Razón Social, IMPI</div>
+              <div class="progress-bar"><div class="progress-fill" id="phase-bar-2" style="width:0%"></div></div>
+            </div>
+          </div>
+          <div class="phase-row clickable" onclick="openPhase(3)">
+            <div class="phase-num" style="background:#f1efe8;color:#5f5e5a">3</div>
+            <div class="phase-body">
+              <div class="phase-hdr"><div class="phase-name">COFEPRIS & NOM Permits</div><span class="badge" id="phase-badge-3">To do</span></div>
+              <div class="phase-desc">Licencia Sanitaria, NOM-007, NOM-166</div>
+              <div class="progress-bar"><div class="progress-fill" id="phase-bar-3" style="width:0%"></div></div>
+            </div>
+          </div>
+          <div class="phase-row clickable" onclick="openPhase(4)">
+            <div class="phase-num" style="background:#f1efe8;color:#5f5e5a">4</div>
+            <div class="phase-body">
+              <div class="phase-hdr"><div class="phase-name">Infrastructure & Equipment</div><span class="badge" id="phase-badge-4">To do</span></div>
+              <div class="phase-desc">Location, lab setup, analyzers, cold chain</div>
+              <div class="progress-bar"><div class="progress-fill" id="phase-bar-4" style="width:0%"></div></div>
+            </div>
+          </div>
+          <div class="phase-row clickable" onclick="openPhase(5)">
+            <div class="phase-num" style="background:#f1efe8;color:#5f5e5a">5</div>
+            <div class="phase-body">
+              <div class="phase-hdr"><div class="phase-name">Staffing & Training</div><span class="badge" id="phase-badge-5">To do</span></div>
+              <div class="phase-desc">QFB, lab techs, front desk, director técnico</div>
+              <div class="progress-bar"><div class="progress-fill" id="phase-bar-5" style="width:0%"></div></div>
+            </div>
+          </div>
+          <div class="phase-row clickable" onclick="openPhase(6)">
+            <div class="phase-num" style="background:#f1efe8;color:#5f5e5a">6</div>
+            <div class="phase-body">
+              <div class="phase-hdr"><div class="phase-name">Soft Launch & Marketing</div><span class="badge" id="phase-badge-6">To do</span></div>
+              <div class="phase-desc">Médicos referentes, pricing, digital presence</div>
+              <div class="progress-bar"><div class="progress-fill" id="phase-bar-6" style="width:0%"></div></div>
+            </div>
+          </div>
+          <div class="phase-row clickable" onclick="openPhase(7)">
+            <div class="phase-num" style="background:#e1f5ee;color:#0f6e56">7</div>
+            <div class="phase-body">
+              <div class="phase-hdr"><div class="phase-name">Operations & Growth</div><span class="badge" id="phase-badge-7">To do</span></div>
+              <div class="phase-desc">Post-launch ops, QC, tax compliance, revenue growth</div>
+              <div class="progress-bar"><div class="progress-fill" id="phase-bar-7" style="width:0%"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Next actions + Risks -->
+      <div style="display:flex;flex-direction:column;gap:14px">
         <!-- Next actions -->
-        <div class="card">
+        <div class="card" style="margin-bottom:0">
           <div class="section-hdr" style="margin-bottom:8px">
             <div class="card-title" style="margin:0">Next actions</div>
-            <a onclick="nav('checklist',document.querySelectorAll('.sb-item')[document.querySelectorAll('.sb-item').length-2])" style="font-size:11px;color:var(--blue);cursor:pointer;text-decoration:none">View all →</a>
+            <a onclick="openPhase(1)" style="font-size:11px;color:var(--blue);cursor:pointer;text-decoration:none">View all →</a>
           </div>
           <div id="dash-next-actions">
             <div style="font-size:12px;color:var(--text-tertiary);padding:8px 0">Loading…</div>
           </div>
         </div>
 
-        <!-- Risks -->
-        <div class="card">
+        <!-- Key risks -->
+        <div class="card" style="flex:1;margin-bottom:0;display:flex;flex-direction:column">
           <div class="card-title">Key risks to watch</div>
-          <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;flex-direction:column;gap:10px;flex:1;justify-content:center">
             <div class="risk-row"><span class="risk-icon" style="color:#a32d2d">▲</span><div><div style="font-size:12px;font-weight:500;color:var(--text-primary)">COFEPRIS timeline slippage</div><div style="font-size:11px;color:var(--text-secondary)">Budget 6–9 months for permits</div></div></div>
             <div class="risk-row"><span class="risk-icon" style="color:#854f0b">▲</span><div><div style="font-size:12px;font-weight:500;color:var(--text-primary)">Equipment import delays</div><div style="font-size:11px;color:var(--text-secondary)">Order analyzers early</div></div></div>
             <div class="risk-row"><span class="risk-icon" style="color:#854f0b">▲</span><div><div style="font-size:12px;font-weight:500;color:var(--text-primary)">Director Técnico requirement</div><div style="font-size:11px;color:var(--text-secondary)">Must be QFB with cédula</div></div></div>
@@ -2059,6 +2351,7 @@
         </div>
       </div>
     </div>
+
   </section>
 
   <!-- ── ROADMAP + TIMELINE (merged) ── -->
@@ -2792,44 +3085,6 @@
   </section>
 
   <!-- ── CHECKLIST + DOCUMENTS (merged) ── -->
-  <section id="page-checklist" class="page">
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px">
-      <div>
-        <div class="page-title">Checklist & Documents</div>
-        <div class="page-sub">Track every task and required document from incorporation to launch</div>
-      </div>
-      <div id="sync-badge-cl" style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-tertiary);padding:4px 12px;border-radius:20px;background:var(--bg-secondary);border:0.5px solid var(--border)"></div>
-    </div>
-
-    <!-- Progress strip -->
-    <div class="cl-progress-strip" id="cl-progress-strip">
-      <div class="cl-stat"><div class="cl-stat-val" id="cl-done">0</div><div class="cl-stat-label">Completed</div></div>
-      <div class="cl-stat"><div class="cl-stat-val" id="cl-total-num">18</div><div class="cl-stat-label">Total tasks</div></div>
-      <div class="cl-stat"><div class="cl-stat-val" id="cl-pct" style="color:var(--green-dark)">0%</div><div class="cl-stat-label">Progress</div></div>
-      <div class="cl-stat"><div class="cl-stat-val" id="cl-docs-done" style="color:var(--blue)">0</div><div class="cl-stat-label">Docs received</div></div>
-    </div>
-
-    <!-- Section tabs -->
-    <div style="display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap">
-      <button class="tab active" id="cl-view-tasks" onclick="switchClView('tasks',this)">Tasks</button>
-      <button class="tab" id="cl-view-docs" onclick="switchClView('docs',this)">Documents</button>
-    </div>
-
-    <!-- ── TASKS VIEW ── -->
-    <div id="cl-tasks-view">
-      <div id="cl-groups"></div>
-    </div>
-
-    <!-- ── DOCUMENTS VIEW ── -->
-    <div id="cl-docs-view" style="display:none">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-        <div style="font-size:13px;color:var(--text-secondary)">Click any document card to advance its status</div>
-        <div style="font-size:11px;color:var(--text-tertiary)" id="doc-summary-label"></div>
-      </div>
-      <div class="doc-board" id="doc-board"></div>
-    </div>
-  </section>
-
   <!-- ── FINANCIAL CALCULATOR ── -->
   <section id="page-calculator" class="page">
     <div class="page-title">Financial calculator</div>
@@ -3087,18 +3342,42 @@
         <div style="padding:18px 22px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0">
           <div>
             <div style="font-size:15px;font-weight:500;color:var(--text-primary)">Edit competitor prices</div>
-            <div style="font-size:11px;color:var(--text-tertiary);margin-top:2px">Update Salud Digna and Chopo prices as you verify them in the field</div>
+            <div style="font-size:11px;color:var(--text-tertiary);margin-top:2px">Edit prices, add new studies, or remove rows — changes apply on Save</div>
           </div>
           <button onclick="closeCompetitorEditor()" style="width:28px;height:28px;border-radius:6px;border:0.5px solid var(--border);background:none;cursor:pointer;font-size:14px;color:var(--text-tertiary)">✕</button>
         </div>
         <div style="overflow-y:auto;flex:1;padding:16px 22px">
-          <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:0;margin-bottom:6px">
+          <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 28px;gap:0;margin-bottom:6px">
             <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-tertiary);font-weight:500;padding:6px 8px">Study</div>
             <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-tertiary);font-weight:500;padding:6px 8px;text-align:right">Salud Digna</div>
             <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-tertiary);font-weight:500;padding:6px 8px;text-align:right">Chopo</div>
             <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-tertiary);font-weight:500;padding:6px 8px;text-align:right">Hospital</div>
+            <div></div>
           </div>
           <div id="competitor-editor-rows"></div>
+
+          <!-- Add new study row -->
+          <div style="margin-top:14px;padding-top:12px;border-top:0.5px solid var(--border)">
+            <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-tertiary);font-weight:500;margin-bottom:8px">Add new study</div>
+            <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;gap:6px;align-items:center">
+              <input id="new-study-name" type="text" placeholder="Study name (e.g. Vitamina D)"
+                style="border:0.5px solid var(--border);border-radius:6px;padding:6px 9px;font-size:12px;font-family:var(--font);color:var(--text-primary);background:var(--bg-primary);outline:none"
+                onfocus="this.style.borderColor='var(--green)'" onblur="this.style.borderColor='var(--border)'">
+              <input id="new-study-sd" type="number" placeholder="SD $" min="0"
+                style="width:100%;text-align:right;border:0.5px solid var(--border);border-radius:6px;padding:6px 9px;font-size:12px;font-family:var(--font-mono);color:var(--text-primary);background:var(--bg-primary);outline:none"
+                onfocus="this.style.borderColor='var(--green)'" onblur="this.style.borderColor='var(--border)'">
+              <input id="new-study-chopo" type="number" placeholder="Chopo $" min="0"
+                style="width:100%;text-align:right;border:0.5px solid var(--border);border-radius:6px;padding:6px 9px;font-size:12px;font-family:var(--font-mono);color:var(--blue);background:var(--bg-primary);outline:none"
+                onfocus="this.style.borderColor='var(--green)'" onblur="this.style.borderColor='var(--border)'">
+              <input id="new-study-hosp" type="number" placeholder="Hosp $" min="0"
+                style="width:100%;text-align:right;border:0.5px solid var(--border);border-radius:6px;padding:6px 9px;font-size:12px;font-family:var(--font-mono);color:var(--text-secondary);background:var(--bg-primary);outline:none"
+                onfocus="this.style.borderColor='var(--green)'" onblur="this.style.borderColor='var(--border)'">
+              <button onclick="addCompetitorRow()" class="btn btn-primary" style="font-size:12px;padding:6px 14px;white-space:nowrap">+ Add</button>
+            </div>
+            <div style="font-size:10px;color:var(--text-tertiary);margin-top:6px">
+              New studies are added to the <strong style="font-weight:500">Otros</strong> category. Set your LabQro price in the main table after saving.
+            </div>
+          </div>
         </div>
         <div style="padding:14px 22px;border-top:0.5px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-shrink:0;flex-wrap:wrap;gap:8px">
           <button class="btn" style="font-size:12px" onclick="resetCompetitorPrices()">Reset to defaults</button>
@@ -3125,6 +3404,7 @@
       <button class="tab" id="pm-tab-inm"             onclick="filterPricing('Inmunología',this)">Inmunología</button>
       <button class="tab" id="pm-tab-other"           onclick="filterPricing('Otros',this)">Otros</button>
       <button class="btn" style="margin-left:auto;font-size:11px;padding:4px 12px;color:var(--text-tertiary)" onclick="resetPricing()">Reset my prices</button>
+      <button class="btn" style="font-size:11px;padding:4px 12px;color:var(--green-dark)" onclick="exportPricingXlsx()">📊 Export Excel</button>
     </div>
 
     <div class="card" style="overflow-x:auto">
@@ -3354,6 +3634,18 @@ Quedo a sus órdenes,
         </div>
       </div>
       <div id="dep-map"></div>
+    </div>
+
+    <!-- Document Tracker (moved from former Checklist page) -->
+    <div class="card" style="margin-top:14px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <div>
+          <div class="card-title" style="margin:0">Required documents</div>
+          <div style="font-size:11px;color:var(--text-tertiary);margin-top:2px">Click any document card to advance its status</div>
+        </div>
+        <div style="font-size:11px;color:var(--text-tertiary)" id="doc-summary-label"></div>
+      </div>
+      <div class="doc-board" id="doc-board"></div>
     </div>
   </section>
 
@@ -3799,6 +4091,68 @@ Quedo a sus órdenes,
       </div>
     </div>
   </section>
+
+  <!-- ── PHASE 7: OPERATIONS & GROWTH ── -->
+  <section id="page-phase-7" class="page">
+    <button class="back-btn" onclick="nav('dashboard',document.querySelector('.sb-item'))"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 3L5 8l5 5"/></svg>Back to dashboard</button>
+    <div class="phase-header">
+      <div class="phase-header-num" style="background:#e1f5ee;color:#1d9e75">7</div>
+      <div><div class="phase-header-title">Operations & Growth</div></div>
+    </div>
+    <div class="phase-timeline">
+      <span>Months 12–18+</span><span class="sep">·</span>
+      <span class="badge badge-todo" id="p7-badge">To do</span><span class="sep">·</span>
+      <span>Post-launch · Ongoing</span>
+    </div>
+
+    <div class="info-box green" style="margin-bottom:14px">
+      <strong>You're open for business.</strong> This phase covers daily operations, quality management, tax compliance, revenue growth, and working capital. These tasks repeat and evolve — they're not one-time checkboxes.
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <div class="phase-section-title" style="margin:0;border:none;padding:0">Core tasks</div>
+            <div id="p7-header-pct" style="font-size:11px;font-family:var(--font-mono);color:var(--text-tertiary)"></div>
+          </div>
+          <div class="progress-bar" style="margin-bottom:14px"><div class="progress-fill" id="p7-inner-bar" style="width:0%;background:#1d9e75"></div></div>
+          <div id="p7-tasks"></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card">
+          <div class="phase-section-title">Key milestones</div>
+          <div class="deliverable">Month 1: All daily QC protocols running without gaps</div>
+          <div class="deliverable">Month 1: First CFDI invoices issued successfully</div>
+          <div class="deliverable">Month 2: First corporate health contract activated</div>
+          <div class="deliverable">Month 3: Operational audit complete — volume, TAT, QC metrics</div>
+          <div class="deliverable">Month 3: PACAL first proficiency test submitted</div>
+          <div class="deliverable">Month 3: Revenue mix review — actual vs projected by channel</div>
+          <div class="deliverable">Month 6: Toma a domicilio evaluation (launch if 40+ requests/mo)</div>
+          <div class="deliverable">Month 12: Annual ISR declaration prepared</div>
+        </div>
+
+        <div class="card">
+          <div class="phase-section-title">Key metrics to track weekly</div>
+          <div class="info-box neutral" style="margin-bottom:10px">
+            <strong>Volume:</strong> Studies/day by channel (walk-in, physician, corporate). Target: ramp to 300/month by Month 6 post-launch.
+          </div>
+          <div class="info-box neutral" style="margin-bottom:10px">
+            <strong>TAT:</strong> % of results delivered within 4 hours. Your #1 differentiator. Track daily, review weekly.
+          </div>
+          <div class="info-box neutral" style="margin-bottom:10px">
+            <strong>Cash:</strong> Weekly cash balance vs. projection. Never drop below 3× monthly operating costs.
+          </div>
+          <div class="info-box neutral">
+            <strong>AR Aging:</strong> Corporate receivables >60 days. Follow up immediately on anything overdue.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ── COST ESTIMATOR ── -->
   <section id="page-estimator" class="page">
     <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px;flex-wrap:wrap;gap:10px">
@@ -3849,7 +4203,10 @@ Quedo a sus órdenes,
 
     <div style="padding:10px 16px;border-radius:var(--radius-md);background:var(--bg-secondary);border:0.5px solid var(--border);font-size:11px;color:var(--text-tertiary);display:flex;align-items:center;gap:8px;flex-wrap:wrap">
       <span>🔗 Grand total syncs to <strong style="color:var(--text-secondary)">Financials</strong> and <strong style="color:var(--text-secondary)">Budget Tracker</strong>.</span>
-      <span style="margin-left:auto">Click <strong style="color:var(--text-secondary)">› rows</strong> to expand sub-items · Edit any green cell · Fill Actual as you receive quotes</span>
+      <span style="margin-left:auto;display:flex;gap:6px;align-items:center">
+        <button class="btn" style="font-size:10px;padding:4px 10px;color:var(--green-dark)" onclick="exportEstimatorXlsx()">📊 Export Excel</button>
+        Click <strong style="color:var(--text-secondary)">› rows</strong> to expand sub-items · Edit any green cell · Fill Actual as you receive quotes
+      </span>
     </div>
   </section>
 
@@ -4249,6 +4606,13 @@ Quedo a sus órdenes,
     <div class="card">
       <div class="card-title">Key risk thresholds</div>
       <div id="sensitivity-risks"></div>
+    </div>
+
+    <!-- Break-even chart (#26) -->
+    <div class="card" style="margin-top:14px">
+      <div class="card-title">Break-even chart</div>
+      <div style="font-size:11px;color:var(--text-tertiary);margin-bottom:12px">Revenue vs. total costs as volume increases — the intersection is your break-even point</div>
+      <canvas id="chart-breakeven" height="280"></canvas>
     </div>
   </section>
 
@@ -5534,7 +5898,7 @@ Quedo a sus órdenes,
     setSyncStatus('saving');
     try {
       const keys = ['checks','permits','physicians','notes','locations','docStatMap',
-                    'savedScenarios','pricingYours','lastPage','estValues','budgetEntries','eqData','suppliers','mockChecks','satCfdi','fullPricingYours','staffingModel','corpContracts','f90Checks','gngChecks','gngReviewDate','p1TaskState','p2TaskState','p3TaskState','p4TaskState','p5TaskState','p6TaskState'];
+                    'savedScenarios','pricingYours','lastPage','estValues','budgetEntries','eqData','suppliers','mockChecks','satCfdi','fullPricingYours','staffingModel','corpContracts','f90Checks','gngChecks','gngReviewDate','p1TaskState','p2TaskState','p3TaskState','p4TaskState','p5TaskState','p6TaskState','p7TaskState'];
       const results = await Promise.all(keys.map(k => dbGet(k)));
       const data = {};
       keys.forEach((k, i) => { data[k] = results[i]; });
@@ -5661,8 +6025,11 @@ Quedo a sus órdenes,
   function nav(id, el) {
     // Block investor role from hidden pages
     if (currentRole === 'investor' && INVESTOR_HIDDEN_PAGES.includes(id)) return;
+    // Safety: if target page doesn't exist, fall back to dashboard
+    var targetPage = document.getElementById('page-' + id);
+    if (!targetPage) { id = 'dashboard'; targetPage = document.getElementById('page-dashboard'); }
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.getElementById('page-' + id).classList.add('active');
+    targetPage.classList.add('active');
     document.querySelectorAll('.sb-item').forEach(b => b.classList.remove('active'));
     if (el) el.classList.add('active');
     document.getElementById('main').scrollTop = 0;
@@ -5672,6 +6039,7 @@ Quedo a sus órdenes,
     dbSet('lastPage', id);
     // Lazy-render pages that need it
     if (id === 'funding')   { fundUpdate(); }
+    if (id === 'regboard')  { renderKanban(); renderDocTracker(); }
     if (id === 'volume')    { renderVolumeConfig(); renderVolumeChart(); }
     if (id === 'cashflow')  { renderCashFlow(); }
     if (id === 'suppliers')      { renderSuppliers(); }
@@ -5695,6 +6063,24 @@ Quedo a sus órdenes,
     // Re-render AI prompts if panel is open (context changes with page)
     const aiPanel = document.getElementById('ai-panel');
     if (aiPanel && aiPanel.style.display === 'flex') renderAIQuickPrompts();
+
+    // Auto-expand the sidebar group containing the active item
+    if (el) {
+      const group = el.closest('.sb-group');
+      if (group) {
+        group.classList.remove('collapsed');
+        const section = group.previousElementSibling;
+        if (section && section.classList.contains('sb-collapsible')) section.classList.remove('collapsed');
+      }
+    }
+  }
+
+  function toggleSbSection(sectionEl) {
+    sectionEl.classList.toggle('collapsed');
+    const group = sectionEl.nextElementSibling;
+    if (group && group.classList.contains('sb-group')) {
+      group.classList.toggle('collapsed');
+    }
   }
 
   // ── Phase detail pages ──
@@ -5706,7 +6092,7 @@ Quedo a sus órdenes,
     document.getElementById('main').scrollTop = 0;
     // Render interactive workspace for Phase 1
     if (num === 1 && typeof renderP1Workspace === 'function') renderP1Workspace();
-    if (num >= 2 && num <= 6 && typeof renderPhaseWorkspace === 'function') renderPhaseWorkspace(num);
+    if (num >= 2 && num <= 7 && typeof renderPhaseWorkspace === 'function') renderPhaseWorkspace(num);
   }
 
   // ══════════════════════════════════════════
@@ -5740,11 +6126,34 @@ Quedo a sus órdenes,
 
   async function dbSet(key, value) {
     if (!dbAvailable) return;
+    // Debounce writes: wait 400ms after last call for same key before actually writing
+    if (!dbSet._timers) dbSet._timers = {};
+    if (dbSet._timers[key]) clearTimeout(dbSet._timers[key]);
+    setSyncStatus('saving');
+    dbSet._timers[key] = setTimeout(async () => {
+      try {
+        await _setDoc(_doc(db, 'labqro', key), { value });
+        setSyncStatus('live');
+      } catch(e) {
+        console.warn('Firestore write failed for key:', key, e);
+        setSyncStatus('offline');
+      }
+      delete dbSet._timers[key];
+    }, 400);
+  }
+
+  // Immediate write variant for critical saves (e.g., kanban moves, CRM stage changes)
+  async function dbSetNow(key, value) {
+    if (!dbAvailable) return;
+    if (dbSet._timers && dbSet._timers[key]) { clearTimeout(dbSet._timers[key]); delete dbSet._timers[key]; }
     setSyncStatus('saving');
     try {
       await _setDoc(_doc(db, 'labqro', key), { value });
       setSyncStatus('live');
-    } catch(e) { setSyncStatus('offline'); }
+    } catch(e) {
+      console.warn('Firestore write failed for key:', key, e);
+      setSyncStatus('offline');
+    }
   }
 
   function dbWatch(key, cb) {
@@ -5832,94 +6241,18 @@ Quedo a sus órdenes,
   docList.forEach(d => { docStatMap[d.id] = d.status; });
 
   function renderChecklist() {
-    // Progress strip
-    const done = checklistData.filter(c => checks[c.id]).length;
-    const total = checklistData.length;
-    const pct = Math.round(done / total * 100);
-    const docsDone = docList.filter(d => docStatMap[d.id] === 4).length;
-
-    const clDoneEl = document.getElementById('cl-done');
-    const clPctEl  = document.getElementById('cl-pct');
-    const clDocEl  = document.getElementById('cl-docs-done');
-    if (clDoneEl) clDoneEl.textContent = done;
-    if (clPctEl)  { clPctEl.textContent = pct + '%'; clPctEl.style.color = pct >= 70 ? 'var(--green-dark)' : pct >= 30 ? 'var(--blue)' : 'var(--amber)'; }
-    if (clDocEl)  clDocEl.textContent = docsDone;
-
-    // Groups
-    const wrap = document.getElementById('cl-groups');
-    if (!wrap) return;
-    wrap.innerHTML = clGroups.map(g => {
-      const items = checklistData.filter(c => g.ids.includes(c.id));
-      const gDone = items.filter(c => checks[c.id]).length;
-      const gTotal = items.length;
-      const gPct = Math.round(gDone / gTotal * 100);
-      const isOpen = wrap.querySelector(`#clg-${g.id}`)?.classList.contains('open') !== false;
-
-      return `<div class="cl-group open" id="clg-${g.id}">
-        <div class="cl-group-header" onclick="toggleClGroup('${g.id}')">
-          <div class="cl-group-icon" style="background:${g.iconBg};color:${g.iconColor}">${g.icon}</div>
-          <div class="cl-group-info">
-            <div class="cl-group-name">${g.label}</div>
-            <div class="cl-group-meta">${g.desc}</div>
-          </div>
-          <div class="cl-group-right">
-            <svg width="36" height="36" viewBox="0 0 36 36" class="cl-mini-ring">
-              <circle cx="18" cy="18" r="14" fill="none" stroke="var(--bg-tertiary)" stroke-width="3.5"/>
-              <circle cx="18" cy="18" r="14" fill="none" stroke="${g.barColor}" stroke-width="3.5"
-                stroke-dasharray="${(2*Math.PI*14).toFixed(1)}"
-                stroke-dashoffset="${((1 - gPct/100) * 2*Math.PI*14).toFixed(1)}"
-                stroke-linecap="round" transform="rotate(-90 18 18)"
-                style="transition:stroke-dashoffset 0.5s ease"/>
-              <text x="18" y="22" text-anchor="middle" font-size="9" font-weight="500" fill="var(--text-primary)" font-family="var(--font-mono)">${gPct}%</text>
-            </svg>
-            <div style="text-align:right;min-width:36px">
-              <div style="font-size:14px;font-weight:500;font-family:var(--font-mono);color:${gDone===gTotal?'var(--green-dark)':'var(--text-primary)'}">${gDone}<span style="font-size:10px;color:var(--text-tertiary);font-weight:400">/${gTotal}</span></div>
-              <div style="font-size:9px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.05em">done</div>
-            </div>
-            <span class="cl-group-chevron">›</span>
-          </div>
-        </div>
-        <div class="cl-group-bar-wrap"><div class="cl-group-bar-fill" style="width:${gPct}%;background:${g.barColor}"></div></div>
-        <div class="cl-group-body">
-          ${items.map(c => `
-            <div class="cl-item" onclick="toggleCheck('${c.id}')">
-              <div class="check-box ${checks[c.id]?'checked':''}" style="margin-top:2px">${checks[c.id]?'✓':''}</div>
-              <div class="cl-item-body">
-                <div class="check-text ${checks[c.id]?'done':''}">${c.text}</div>
-                <div class="check-sub">${c.sub}</div>
-              </div>
-              ${checks[c.id] ? `<div style="flex-shrink:0;font-size:11px;color:var(--green-dark);font-weight:500;padding:2px 8px;border-radius:10px;background:#eaf3de;align-self:center">Done</div>` : ''}
-            </div>`).join('')}
-        </div>
-      </div>`;
-    }).join('');
-
-    if (typeof permits !== 'undefined' && typeof physicians !== 'undefined') updateDashboard();
+    // Checklist page removed — tasks now live inside Phase workspaces
+    // Only call updateDashboard if phase system is initialized
+    if (typeof phaseConfigs !== 'undefined' && typeof permits !== 'undefined' && typeof physicians !== 'undefined') updateDashboard();
   }
 
-  function toggleClGroup(id) {
-    const el = document.getElementById('clg-' + id);
-    if (el) el.classList.toggle('open');
-  }
+  function toggleClGroup(id) { }
+  function switchClView(view, el) { }
+  function toggleCheck(id) { }
+  function filterChecklist(f, el) { }
 
-  function switchClView(view, el) {
-    document.getElementById('cl-tasks-view').style.display = view === 'tasks' ? 'block' : 'none';
-    document.getElementById('cl-docs-view').style.display  = view === 'docs'  ? 'block' : 'none';
-    document.querySelectorAll('#cl-view-tasks, #cl-view-docs').forEach(t => t.classList.remove('active'));
-    if (el) el.classList.add('active');
-  }
-
-  function toggleCheck(id) {
-    checks[id] = !checks[id];
-    syncCheckToDoc(id, checks[id]);
-    renderChecklist();
-    dbSet('checks', checks);
-  }
-
-  // Keep legacy filterChecklist for any dashboard references
-  function filterChecklist(f, el) { renderChecklist(); }
-
-  renderChecklist();
+  // Deferred — updateDashboard will be called later once all systems are initialized
+  // renderChecklist();
 
   // ══════════════════════════════════════════
   // ── PHASE 1 INTERACTIVE TASK WORKSPACE ──
@@ -7202,6 +7535,56 @@ Quedo a sus órdenes,
       ], template:{name:'First 90 Days',desc:'Post-launch operational checklist',nav:'first90'} },
   ];
 
+  var p7Tasks = [
+    { id:'p7t1', name:'First 90 days operations', icon:'📋', iconBg:'#e6f1fb', iconColor:'#185fa5',
+      desc:'Daily QC, TAT tracking, volume monitoring, staff performance reviews.',
+      tags:[{text:'Starts Day 1',cls:'tag-critical'},{text:'See First 90 Days',cls:'tag-resource'}],
+      subtasks:[
+        { text:'Establish daily QC protocol (all analyzers before first patient)', panel:'scorecard', fields:[{label:'QC SOP written?',type:'select',options:['Yes','No']},{label:'QC log template created?',type:'select',options:['Yes','No']},{label:'Acceptable ranges documented?',type:'select',options:['Yes','No']}], hint:'NOM-166 requires daily QC runs with documented acceptance criteria. This is non-negotiable.' },
+        { text:'Set up TAT tracking (target: 4h for routine panels)', panel:'notes', hint:'Track turnaround time from sample receipt to result delivery. 4h is your differentiator. Review weekly.' },
+        { text:'Weekly volume review — actual vs projected by channel', panel:'action', nav:'volume', hint:'Compare Volume Projector targets to actual. Adjust channel ramp assumptions monthly.' },
+        { text:'Month 1 staff performance review', panel:'notes', hint:'Review each team member after 30 days. QFB oversight, lab tech accuracy, reception patient experience.' },
+        { text:'Month 3 operational audit', panel:'scorecard', fields:[{label:'Avg daily volume (month 3)',type:'number'},{label:'Avg TAT (hours)',type:'number'},{label:'QC failure rate (%)',type:'number'},{label:'Patient complaints received',type:'number'},{label:'Reagent waste (%)',type:'number'}], hint:'Formal review: are you hitting targets? What needs adjustment?' },
+      ], template:{name:'First 90 Days',desc:'Post-launch operational playbook',nav:'first90'} },
+    { id:'p7t2', name:'Quality management system (SGC)', icon:'📋', iconBg:'#eeedfe', iconColor:'#534ab7',
+      desc:'NOM-166 quality manual, PACAL enrollment, internal audits.',
+      tags:[{text:'Required for accreditation',cls:'tag-critical'}],
+      subtasks:[
+        { text:'Complete NOM-166 quality manual', panel:'action', nav:'quality', hint:'SOPs for every process: pre-analytical, analytical, post-analytical. Required for any future EMA accreditation.' },
+        { text:'Enroll in PACAL external quality program', panel:'scorecard', fields:[{label:'PACAL enrolled?',type:'select',options:['Yes','Pending','No']},{label:'First proficiency test date',type:'date'},{label:'Analytes registered',type:'number'}], hint:'PACAL is the main external QC program in Mexico. Monthly proficiency samples. Results must be documented.' },
+        { text:'Schedule first internal audit (month 3)', panel:'notes', hint:'Self-audit against NOM-166 requirements. Document findings, create corrective action plan.' },
+        { text:'Establish corrective action (CAPA) process', panel:'notes', hint:'When things go wrong (QC failure, patient complaint, equipment malfunction) — document, investigate, fix, verify.' },
+      ], template:{name:'Quality (SGC)',desc:'Quality management tools and checklists',nav:'quality'} },
+    { id:'p7t3', name:'SAT / Tax compliance operations', icon:'$', iconBg:'#eaf3de', iconColor:'#3b6d11',
+      desc:'Monthly ISR, IVA, ISN filings. CFDI setup. Annual declaration prep.',
+      tags:[{text:'Day 17 monthly deadline',cls:'tag-critical'}],
+      subtasks:[
+        { text:'Verify CFDI 4.0 invoicing is operational', panel:'action', nav:'sat-compliance', hint:'Every patient payment needs a CFDI. Test the PAC integration with your LIS before opening.' },
+        { text:'Set up monthly tax calendar with accountant', panel:'scorecard', fields:[{label:'Accountant contracted?',type:'select',options:['Yes','No']},{label:'Monthly fee (MXN)',type:'text'},{label:'ISR provisional setup?',type:'select',options:['Yes','Pending','No']},{label:'ISN QRO registered?',type:'select',options:['Yes','No']}], hint:'ISR + IVA due day 17 monthly. ISN Querétaro due day 17. IMSS/INFONAVIT bimestral via SUA.' },
+        { text:'First month ISR provisional filing', panel:'notes', hint:'Even if revenue is zero in month 1, you still file. Get this right from the start.' },
+        { text:'Prepare for PTU calculation (Year 2)', panel:'notes', hint:'10% of fiscal profit to employees. Applicable after first profitable year with employees >60 days.' },
+      ], template:{name:'SAT / Tax Compliance',desc:'Tax calendar, CFDI, ISR tools',nav:'sat-compliance'} },
+    { id:'p7t4', name:'Revenue growth & physician activation', icon:'📈', iconBg:'#e1f5ee', iconColor:'#0f6e56',
+      desc:'Convert physician pipeline to active referrers. Grow walk-in volume.',
+      tags:[{text:'Ongoing',cls:'tag-time'}],
+      subtasks:[
+        { text:'Follow up with all Phase 6 physician contacts', panel:'action', nav:'physicians', hint:'Move contacts from "Visited" to "Referring" stage. Takes 3-5 touches. Track in CRM.' },
+        { text:'Activate first corporate health contract', panel:'action', nav:'contracts', hint:'Even one 50-employee contract = 50 studies at $1,200/employee = $60K revenue.' },
+        { text:'Launch Google Ads campaign ("laboratorio clínico Querétaro")', panel:'scorecard', fields:[{label:'Campaign live?',type:'select',options:['Yes','No']},{label:'Monthly budget (MXN)',type:'text'},{label:'Target keywords',type:'text'},{label:'Landing page URL',type:'text'}], hint:'$4K/mo on Google Ads drives walk-in discovery. Track conversion rate.' },
+        { text:'Review revenue mix vs targets at Month 3', panel:'action', nav:'revmix', hint:'Is the channel split matching projections? If corporate is lagging, double down on physician outreach.' },
+        { text:'Evaluate toma a domicilio launch timing', panel:'action', nav:'domicilio', hint:'Launch home collection when you see 40+ monthly requests. Requires dedicated flebotomista + vehicle.' },
+      ], template:{name:'Volume Projector',desc:'Track volume by channel',nav:'volume'} },
+    { id:'p7t5', name:'Working capital & cash management', icon:'💵', iconBg:'#faeeda', iconColor:'#854f0b',
+      desc:'AR collection, supplier payment terms, cash reserve monitoring.',
+      tags:[{text:'Weekly review',cls:'tag-tip'}],
+      subtasks:[
+        { text:'Set up AR aging report (track physician and corporate receivables)', panel:'action', nav:'working-capital', hint:'Walk-in = immediate. Physicians = Net 15–30. Corporate = Net 30–90. Monitor weekly.' },
+        { text:'Negotiate reagent supplier payment terms', panel:'notes', hint:'Target Net 30 minimum. Net 60 if volume justifies. This reduces working capital pressure.' },
+        { text:'Monthly cash flow review vs projections', panel:'action', nav:'cashflow', hint:'Compare actual cash balance to the Cash Flow Calendar projections. Adjust if drifting.' },
+        { text:'Maintain 3-month operating reserve', panel:'notes', hint:'Never let cash balance drop below 3× monthly operating costs. This is your safety margin.' },
+      ], template:{name:'Working Capital',desc:'DSO, DPO, and cash conversion cycle',nav:'working-capital'} },
+  ];
+
 
   // ═══ Generic Phase Workspace Renderer (reuses Phase 1 pattern) ═══
   var phaseConfigs = {
@@ -7210,8 +7593,9 @@ Quedo a sus órdenes,
     4: { tasks: function(){ return p4Tasks; }, stateKey: 'p4TaskState', color: '#534ab7' },
     5: { tasks: function(){ return p5Tasks; }, stateKey: 'p5TaskState', color: '#22c55e' },
     6: { tasks: function(){ return p6Tasks; }, stateKey: 'p6TaskState', color: '#0ea5e9' },
+    7: { tasks: function(){ return p7Tasks; }, stateKey: 'p7TaskState', color: '#1d9e75' },
   };
-  var phaseStates = { 2:{}, 3:{}, 4:{}, 5:{}, 6:{} };
+  var phaseStates = { 2:{}, 3:{}, 4:{}, 5:{}, 6:{}, 7:{} };
   var _phasesReady = false;
 
   function initPhaseState(num) {
@@ -7228,7 +7612,7 @@ Quedo a sus órdenes,
     });
   }
 
-  [2,3,4,5,6].forEach(function(n) { initPhaseState(n); });
+  [2,3,4,5,6,7].forEach(function(n) { initPhaseState(n); });
   _phasesReady = true;
 
   var phaseSaveTimers = {};
@@ -7462,6 +7846,16 @@ Quedo a sus órdenes,
 
   function fmt(n) { return Math.round(n).toLocaleString('en-US'); }
 
+  // Formula audit tooltip generator
+  // Usage: ftip('Title', 'formula line', 'result line', 'optional note')
+  function ftip(title, formula, result, note) {
+    return ' <span class="ftip">ⓘ<span class="fpop">' +
+      '<div class="fp-t">' + title + '</div>' +
+      '<div class="fp-f">' + formula + (result ? '<br>' + result : '') + '</div>' +
+      (note ? '<div class="fp-n">' + note + '</div>' : '') +
+    '</span></span>';
+  }
+
   // ── Accurate IMSS burden (always on) ──
   // _staffingReady declared at top of script
   function calcPayroll(staff) {
@@ -7675,13 +8069,13 @@ Quedo a sus órdenes,
     const payback        = annualEbitda > 0 ? (startup / annualEbitda).toFixed(1) : '\u221e';
     const utilPct        = Math.round(studies / 800 * 100);
 
-    document.getElementById('co-revenue').textContent  = '$' + fmt(revenue);
-    document.getElementById('co-costs').textContent    = '-$' + fmt(totalCost);
-    document.getElementById('co-ebitda').textContent   = (ebitda >= 0 ? '$' : '-$') + fmt(Math.abs(ebitda));
+    document.getElementById('co-revenue').innerHTML  = '$' + fmt(revenue) + ftip('Revenue', studies + ' studies × $' + fmt(ticket) + ' ticket', '= $' + fmt(revenue) + ' MXN/mo');
+    document.getElementById('co-costs').innerHTML    = '-$' + fmt(totalCost) + ftip('Total costs', '$' + fmt(payroll) + ' payroll + $' + fmt(reagentCost) + ' reagents + $' + fmt(rentUtil) + ' rent/util + $' + fmt(misc) + ' misc', '= $' + fmt(totalCost) + ' MXN/mo');
+    document.getElementById('co-ebitda').innerHTML   = (ebitda >= 0 ? '$' : '-$') + fmt(Math.abs(ebitda)) + ftip('EBITDA', '$' + fmt(revenue) + ' revenue − $' + fmt(totalCost) + ' costs', '= ' + (ebitda>=0?'$':'-$') + fmt(Math.abs(ebitda)) + ' (' + margin + '% margin)');
     document.getElementById('co-ebitda').style.color   = ebitda >= 0 ? 'var(--blue)' : 'var(--red)';
-    document.getElementById('cr-patient').textContent  = '$' + fmt(patientRevenue);
-    document.getElementById('cr-corp').textContent     = '$' + fmt(corpRevenue);
-    document.getElementById('cr-payroll').textContent  = '-$' + fmt(payroll);
+    document.getElementById('cr-patient').innerHTML  = '$' + fmt(patientRevenue) + ftip('Walk-in revenue', '$' + fmt(revenue) + ' total × ' + (100-corpPct) + '% non-corporate', '= $' + fmt(patientRevenue));
+    document.getElementById('cr-corp').innerHTML     = '$' + fmt(corpRevenue) + ftip('Corporate revenue', '$' + fmt(revenue) + ' total × ' + corpPct + '% corporate', '= $' + fmt(corpRevenue));
+    document.getElementById('cr-payroll').innerHTML  = '-$' + fmt(payroll) + ftip('Payroll (burdened)', '$' + fmt(pd.base) + ' base × 1.48 burden multiplier', 'IMSS ' + fmt(pd.imss) + ' + INFONAVIT ' + fmt(pd.infonavit) + ' + SAR ' + fmt(pd.sar) + ' + ISN ' + fmt(pd.isn) + ' + Aguinaldo ' + fmt(pd.aguinaldo) + ' + Prima ' + fmt(pd.presta), 'Burden rate = ~48% above base salary');
 
     const bdEl = document.getElementById('cr-payroll-breakdown');
     if (bdEl) {
@@ -7701,13 +8095,13 @@ Quedo a sus órdenes,
       ).join('');
     }
 
-    document.getElementById('cr-reagent').textContent  = '-$' + fmt(reagentCost);
-    document.getElementById('cr-rent').textContent     = '-$' + fmt(rentUtil);
-    document.getElementById('cr-misc').textContent     = '-$' + fmt(misc);
-    document.getElementById('cr-margin').textContent   = margin + '%';
+    document.getElementById('cr-reagent').innerHTML  = '-$' + fmt(reagentCost) + ftip('Reagent cost', useModeler ? 'Per-test model: sum of (cost/test × volume) across ' + reagentData.length + ' tests' : '$' + fmt(revenue) + ' revenue × ' + reagentPct + '%', '= $' + fmt(reagentCost) + ' (' + effectiveReagentPct + '% of revenue)', useModeler ? 'Using Reagent Modeler data — edit in Revenue Mix page' : 'Flat % estimate — configure Reagent Modeler for per-test accuracy');
+    document.getElementById('cr-rent').innerHTML     = '-$' + fmt(rentUtil) + ftip('Rent + utilities', '$' + fmt(rent) + ' rent + $5,000 utilities', '= $' + fmt(rentUtil) + ' MXN/mo');
+    document.getElementById('cr-misc').innerHTML     = '-$' + fmt(misc) + ftip('Miscellaneous', 'Insurance, LIS subscription, supplies, maintenance', 'Fixed at $15,000 MXN/mo');
+    document.getElementById('cr-margin').innerHTML   = margin + '%' + ftip('EBITDA margin', (ebitda>=0?'$':'-$') + fmt(Math.abs(ebitda)) + ' EBITDA ÷ $' + fmt(revenue) + ' revenue × 100', '= ' + margin + '%', margin >= 20 ? 'Healthy margin for a clinical lab' : margin >= 0 ? 'Thin margin — review costs' : 'Negative — not yet viable at this volume');
     document.getElementById('cr-margin').style.color   = margin >= 20 ? 'var(--green-dark)' : margin >= 0 ? 'var(--amber)' : 'var(--red)';
-    document.getElementById('co-breakeven').textContent = breakeven;
-    document.getElementById('co-payback').textContent  = payback === '\u221e' ? '\u221e' : payback + ' yr';
+    document.getElementById('co-breakeven').innerHTML = breakeven + ftip('Break-even', '$' + fmt(fixedCosts) + ' fixed costs ÷ $' + fmt(Math.round(varMargin)) + ' contribution margin/study', '= ' + breakeven + ' studies/mo', 'Contribution margin = ticket − variable cost per study');
+    document.getElementById('co-payback').innerHTML  = (payback === '\u221e' ? '\u221e' : payback + ' yr') + ftip('Payback period', '$' + fmt(startup) + ' startup ÷ ($' + fmt(Math.abs(ebitda)) + ' × 12 months)', '= ' + (payback === '\u221e' ? 'Infinite (negative EBITDA)' : payback + ' years'), 'Simple payback — does not account for ramp or time value of money');
     document.getElementById('cb-util').style.width     = Math.min(utilPct, 100) + '%';
     document.getElementById('cb-util').style.background = utilPct > 80 ? 'var(--amber)' : 'var(--green)';
     document.getElementById('cb-util-text').textContent = utilPct + '% of 800/mo capacity';
@@ -7715,6 +8109,22 @@ Quedo a sus órdenes,
     if (document.getElementById('calc-view-3yr') && document.getElementById('calc-view-3yr').style.display !== 'none') render3YrChart();
   }
   calcUpdate();
+
+  // Helper: get equipment section total from Cost Estimator (for depreciation)
+  function getEstimatorEquipmentTotal() {
+    if (typeof estValues === 'undefined' || typeof estSections === 'undefined') return 800000;
+    try {
+      let total = 0;
+      const sec = estSections.find(s => s.id === 'sec-equipment');
+      if (!sec) return 800000;
+      sec.subgroups.forEach(sg => {
+        sg.items.forEach(item => {
+          total += +(estValues[item.id] || item.default || 0);
+        });
+      });
+      return total || 800000;
+    } catch(e) { return 800000; }
+  }
 
   // ── 3-Year projection ──
   function getMonthlyParams() {
@@ -7730,18 +8140,40 @@ Quedo a sus órdenes,
 
   function calcMonthData(p, monthIdx) {
     const ramp     = monthIdx < 3 ? 0.40 : monthIdx < 6 ? 0.65 : monthIdx < 12 ? 0.85 : monthIdx < 24 ? 1.0 : 1.10;
-    const revenue  = Math.round(p.studies * ramp) * p.ticket;
-    const payroll  = calcPayroll(p.staff).total;
+
+    // Apply channel mix blended ticket if Volume Projector data is available
+    let blendedTicket = p.ticket;
+    if (typeof volData !== 'undefined' && volData.length) {
+      // Calculate weighted ticket from channel mix at current ramp month
+      let totalVol = 0, weightedRev = 0;
+      volData.forEach(ch => {
+        const v = typeof getChannelVol === 'function' ? getChannelVol(ch, monthIdx + 1) : ch.target12;
+        totalVol += v;
+        weightedRev += v * p.ticket * (ch.ticketMult || 1.0);
+      });
+      if (totalVol > 0) blendedTicket = Math.round(weightedRev / totalVol);
+    }
+
+    const revenue  = Math.round(p.studies * ramp) * blendedTicket;
+    const staffCostsCalc = typeof getStaffingTotalCost === 'function' ? getStaffingTotalCost() : null;
+    const payroll  = staffCostsCalc ? staffCostsCalc.totalBurdened : calcPayroll(p.staff).total;
     const reagent  = Math.round(revenue * p.reagentPct / 100);
-    const rentUtil = p.rent + 5000;
+    const rentUtil = p.rent + Math.round(p.rent * 0.20); // rent + ~20% utilities
     const misc     = 15000;
+
+    // Equipment depreciation (25%/yr per LISR Art. 34 for lab equipment, straight-line)
+    // This reduces ISR taxable base but is non-cash
+    const equipmentValue = typeof getEstimatorEquipmentTotal === 'function' ? getEstimatorEquipmentTotal() : 800000;
+    const monthlyDepreciation = Math.round(equipmentValue * 0.25 / 12);
+
     const total    = payroll + reagent + rentUtil + misc;
     const ebitda   = revenue - total;
-    // ISR provision: 30% on positive taxable income (Personas Morales, Régimen General)
-    // Simplified: EBITDA ≈ taxable base (no D&A modeled); ISN Querétaro 3% on payroll included in burden
-    const isrProvision = ebitda > 0 ? Math.round(ebitda * 0.30) : 0;
+
+    // ISR: deduct depreciation from taxable base (it's a non-cash expense that reduces taxes)
+    const taxableBase = Math.max(0, ebitda - monthlyDepreciation);
+    const isrProvision = taxableBase > 0 ? Math.round(taxableBase * 0.30) : 0;
     const netIncome    = ebitda - isrProvision;
-    return { revenue, totalCost: total, ebitda, isrProvision, netIncome };
+    return { revenue, totalCost: total, ebitda, isrProvision, netIncome, monthlyDepreciation };
   }
 
   function render3YrChart() {
@@ -7808,6 +8240,14 @@ Quedo a sus órdenes,
         '<td style="padding:8px 10px;text-align:right;font-family:var(--font-mono);font-size:12px;font-weight:500;color:' + cashColor + '">' +
           (cumCash>=0?'$':'-$') + fmt(Math.abs(cumCash)) + '</td></tr>';
     });
+
+    // Add footnote about ISR model and depreciation
+    tbody.innerHTML += '<tr><td colspan="8" style="padding:10px;font-size:10px;color:var(--text-tertiary);line-height:1.6;border-top:1.5px solid var(--border-strong)">' +
+      '<strong>Notes:</strong> ISR at 30% flat rate (Personas Morales, Régimen General). ' +
+      'Equipment depreciation of 25%/yr (LISR Art. 34) reduces taxable base by ~$' + fmt(Math.round(getEstimatorEquipmentTotal() * 0.25 / 12)) + '/mo. ' +
+      'Annual ISR declaration uses accumulation method — actual liability may differ from monthly provisionals. ' +
+      'PTU (10% of fiscal profit to employees) not modeled separately — applicable from Year 2 if profitable.' +
+    '</td></tr>';
   }
 
   // ══ REAGENT MODELER (per-analyzer, per-vendor) ══
@@ -8080,6 +8520,119 @@ Quedo a sus órdenes,
           <button onclick="deleteSavedScenario(${i})" style="font-size:11px;padding:4px 8px;background:transparent;border:none;border-left:0.5px solid var(--border);cursor:pointer;color:var(--text-tertiary);font-family:var(--font)" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--text-tertiary)'">✕</button>
         </div>`;
       }).join('');
+
+    // Add "Compare all" button if 2+ scenarios
+    if (savedScenarios.length >= 2) {
+      row.innerHTML += '<button onclick="showScenarioComparison()" style="font-size:11px;padding:4px 12px;border-radius:20px;border:0.5px solid var(--blue);background:rgba(24,95,165,0.06);color:var(--blue);cursor:pointer;font-family:var(--font);margin-left:4px;white-space:nowrap" onmouseover="this.style.background=\'rgba(24,95,165,0.12)\'" onmouseout="this.style.background=\'rgba(24,95,165,0.06)\'">⬡ Compare all</button>';
+    }
+  }
+
+  function showScenarioComparison() {
+    if (!savedScenarios.length || savedScenarios.length < 2) return;
+    // Build comparison overlay
+    const overlay = document.createElement('div');
+    overlay.id = 'scenario-compare-overlay';
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(26,26,24,0.5);z-index:600;display:flex;align-items:center;justify-content:center';
+    overlay.onclick = e => { if (e.target === overlay) overlay.remove(); };
+
+    const panel = document.createElement('div');
+    panel.style.cssText = 'background:var(--bg-primary);border-radius:16px;width:800px;max-width:95vw;max-height:90vh;overflow-y:auto;padding:28px 32px;box-shadow:0 8px 40px rgba(0,0,0,0.2)';
+
+    let html = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">' +
+      '<div><div style="font-size:18px;font-weight:500;color:var(--text-primary)">Scenario Comparison</div>' +
+      '<div style="font-size:11px;color:var(--text-tertiary);margin-top:2px">Side-by-side view of all saved scenarios</div></div>' +
+      '<button onclick="this.closest(\'#scenario-compare-overlay\').remove()" style="width:28px;height:28px;border-radius:6px;border:0.5px solid var(--border);background:none;cursor:pointer;font-size:14px;color:var(--text-tertiary)">✕</button>' +
+    '</div>';
+
+    // Table header
+    html += '<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:12px">';
+    html += '<thead><tr style="border-bottom:1.5px solid var(--border-strong)">' +
+      '<th style="text-align:left;padding:8px 10px;font-size:10px;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-tertiary);font-weight:500">Metric</th>';
+    savedScenarios.forEach(s => {
+      html += '<th style="text-align:right;padding:8px 10px;font-size:10px;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-tertiary);font-weight:500;min-width:120px">' + s.name + '</th>';
+    });
+    html += '</tr></thead><tbody>';
+
+    // Rows
+    const metrics = [
+      { label: 'Studies / month', key: 'studies', fmt: v => v },
+      { label: 'Avg ticket (MXN)', key: 'ticket', fmt: v => '$' + fmt(v) },
+      { label: 'Staff count', key: 'staff', fmt: v => v },
+      { label: 'Rent / month', key: 'rent', fmt: v => '$' + fmt(v) },
+      { label: 'Reagent cost %', key: 'reagent', fmt: v => v + '%' },
+      { label: 'Startup capital', key: 'startup', fmt: v => '$' + fmt(v) },
+    ];
+    // Computed metrics
+    const computed = [
+      { label: 'Monthly revenue', fn: s => s.studies * s.ticket, fmt: v => '$' + fmt(v), color: 'var(--green-dark)' },
+      { label: 'Monthly payroll (est.)', fn: s => { try { return calcPayroll(s.staff).total; } catch(e) { return s.staff * 22000; } }, fmt: v => '$' + fmt(v), color: 'var(--red)' },
+      { label: 'Monthly EBITDA', fn: s => { const rev = s.studies * s.ticket; const pay = (typeof calcPayroll === 'function') ? calcPayroll(s.staff).total : s.staff * 22000; return rev - pay - Math.round(rev * s.reagent / 100) - s.rent - Math.round(s.rent*0.2) - 15000; }, fmt: v => (v >= 0 ? '$' : '-$') + fmt(Math.abs(v)), color: v => v >= 0 ? 'var(--blue)' : 'var(--red)' },
+      { label: 'EBITDA margin', fn: s => { const rev = s.studies * s.ticket; const pay = (typeof calcPayroll === 'function') ? calcPayroll(s.staff).total : s.staff * 22000; const ebitda = rev - pay - Math.round(rev * s.reagent / 100) - s.rent - Math.round(s.rent*0.2) - 15000; return rev > 0 ? Math.round(ebitda / rev * 100) : 0; }, fmt: v => v + '%', color: v => v >= 20 ? 'var(--green-dark)' : v >= 0 ? 'var(--amber)' : 'var(--red)' },
+      { label: 'Break-even (studies)', fn: s => { const pay = (typeof calcPayroll === 'function') ? calcPayroll(s.staff).total : s.staff * 22000; const fixed = pay + s.rent + Math.round(s.rent*0.2) + 15000; const vm = s.ticket * (1 - s.reagent/100); return vm > 0 ? Math.ceil(fixed / vm) : 999; }, fmt: v => v + ' studies', color: v => v <= 200 ? 'var(--green-dark)' : v <= 350 ? 'var(--blue)' : 'var(--amber)' },
+      { label: 'Payback (simple)', fn: s => { const rev = s.studies * s.ticket; const pay = (typeof calcPayroll === 'function') ? calcPayroll(s.staff).total : s.staff * 22000; const ebitda = rev - pay - Math.round(rev * s.reagent / 100) - s.rent - Math.round(s.rent*0.2) - 15000; return ebitda > 0 ? (s.startup / (ebitda * 12)).toFixed(1) : '∞'; }, fmt: v => v + ' years', color: v => v !== '∞' && +v <= 2 ? 'var(--green-dark)' : v !== '∞' && +v <= 3.5 ? 'var(--blue)' : 'var(--amber)' },
+    ];
+
+    // Input metrics
+    metrics.forEach(m => {
+      html += '<tr style="border-bottom:0.5px solid var(--border)"><td style="padding:7px 10px;color:var(--text-secondary)">' + m.label + '</td>';
+      savedScenarios.forEach(s => {
+        html += '<td style="padding:7px 10px;text-align:right;font-family:var(--font-mono);font-weight:500">' + m.fmt(s[m.key]) + '</td>';
+      });
+      html += '</tr>';
+    });
+
+    // Divider
+    html += '<tr><td colspan="' + (savedScenarios.length + 1) + '" style="padding:8px 10px;font-size:10px;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-tertiary);font-weight:500;background:var(--bg-secondary);border-top:1.5px solid var(--border-strong)">Computed results</td></tr>';
+
+    // Computed metrics
+    computed.forEach(m => {
+      html += '<tr style="border-bottom:0.5px solid var(--border)"><td style="padding:7px 10px;color:var(--text-secondary);font-weight:500">' + m.label + '</td>';
+      savedScenarios.forEach(s => {
+        const val = m.fn(s);
+        const clr = typeof m.color === 'function' ? m.color(val) : m.color;
+        html += '<td style="padding:7px 10px;text-align:right;font-family:var(--font-mono);font-weight:500;color:' + clr + '">' + m.fmt(val) + '</td>';
+      });
+      html += '</tr>';
+    });
+
+    html += '</tbody></table></div>';
+
+    // Chart: stacked bar comparison
+    html += '<div style="margin-top:20px"><canvas id="chart-scenario-compare" height="200"></canvas></div>';
+
+    panel.innerHTML = html;
+    overlay.appendChild(panel);
+    document.body.appendChild(overlay);
+
+    // Render comparison chart
+    setTimeout(() => {
+      const ctx = document.getElementById('chart-scenario-compare');
+      if (!ctx) return;
+      const labels = savedScenarios.map(s => s.name);
+      const revs = savedScenarios.map(s => s.studies * s.ticket);
+      const costs = savedScenarios.map(s => {
+        const pay = (typeof calcPayroll === 'function') ? calcPayroll(s.staff).total : s.staff * 22000;
+        return pay + Math.round(s.studies * s.ticket * s.reagent / 100) + s.rent + Math.round(s.rent*0.2) + 15000;
+      });
+      const ebitdas = revs.map((r, i) => r - costs[i]);
+      new Chart(ctx, {
+        type: 'bar',
+        data: { labels, datasets: [
+          { label: 'Revenue', data: revs, backgroundColor: 'rgba(29,158,117,0.7)', borderRadius: 4 },
+          { label: 'Total Costs', data: costs, backgroundColor: 'rgba(163,45,45,0.5)', borderRadius: 4 },
+          { label: 'EBITDA', data: ebitdas, backgroundColor: ebitdas.map(e => e >= 0 ? 'rgba(24,95,165,0.7)' : 'rgba(163,45,45,0.3)'), borderRadius: 4 },
+        ]},
+        options: {
+          responsive: true, maintainAspectRatio: true,
+          plugins: { legend: { labels: { font: { size: 11 }, boxWidth: 12 } },
+            tooltip: { callbacks: { label: c => ' $' + fmt(c.raw) + ' MXN' } } },
+          scales: {
+            x: { grid: { display: false } },
+            y: { ticks: { callback: v => '$' + (v/1000).toFixed(0) + 'K' }, grid: { color: 'rgba(0,0,0,0.05)' } }
+          }
+        }
+      });
+    }, 100);
   }
 
   // ══════════════════════════════════════════
@@ -8272,12 +8825,17 @@ Quedo a sus órdenes,
   }
 
   function openCompetitorEditor() {
-    // Deep copy pricingData for editing
-    competitorEditorDraft = pricingData.map(r => Object.assign({}, r));
+    // Deep copy fullPricingData for editing
+    competitorEditorDraft = fullPricingData.map(r => Object.assign({}, r));
+    renderCompetitorEditorRows();
+    document.getElementById('competitor-editor-overlay').style.display = 'flex';
+  }
+
+  function renderCompetitorEditorRows() {
     const rows = document.getElementById('competitor-editor-rows');
     if (!rows) return;
     rows.innerHTML = competitorEditorDraft.map((r, i) => {
-      if (r.cat) {
+      if (r.cat && !r.study) {
         return `<div style="grid-column:1/-1;padding:8px 8px 4px;font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-tertiary);border-top:0.5px solid var(--border);margin-top:6px">${r.cat}</div>`;
       }
       const inp = (field, val, color) =>
@@ -8285,14 +8843,43 @@ Quedo a sus órdenes,
           style="width:100%;text-align:right;border:0.5px solid var(--border);border-radius:4px;padding:4px 6px;font-size:12px;font-family:var(--font-mono);color:${color};background:var(--bg-primary);outline:none"
           oninput="competitorEditorDraft[${i}].${field}=+this.value||0"
           onfocus="this.style.borderColor='var(--green)'" onblur="this.style.borderColor='var(--border)'">`;
-      return `<div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:0;border-bottom:0.5px solid var(--border);padding:3px 0">
-        <div style="padding:5px 8px;font-size:12px;color:var(--text-primary);display:flex;align-items:center">${r.study}</div>
+      return `<div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 28px;gap:0;border-bottom:0.5px solid var(--border);padding:3px 0;align-items:center">
+        <div style="padding:5px 8px;font-size:12px;color:var(--text-primary)">${r.study}</div>
         <div style="padding:3px 6px">${inp('sd', r.sd, 'var(--text-primary)')}</div>
         <div style="padding:3px 6px">${inp('chopo', r.chopo, 'var(--blue)')}</div>
         <div style="padding:3px 6px">${inp('hospital', r.hospital, 'var(--text-secondary)')}</div>
+        <div style="padding:2px 2px;display:flex;align-items:center;justify-content:center">
+          <button onclick="deleteCompetitorRow(${i})" title="Remove"
+            style="width:20px;height:20px;border:none;background:none;color:var(--text-tertiary);cursor:pointer;font-size:13px;border-radius:4px;display:flex;align-items:center;justify-content:center;transition:color 0.1s,background 0.1s"
+            onmouseover="this.style.color='var(--red)';this.style.background='#fcebeb'"
+            onmouseout="this.style.color='var(--text-tertiary)';this.style.background='none'">✕</button>
+        </div>
       </div>`;
     }).join('');
-    document.getElementById('competitor-editor-overlay').style.display = 'flex';
+  }
+
+  function deleteCompetitorRow(i) {
+    competitorEditorDraft.splice(i, 1);
+    renderCompetitorEditorRows();
+  }
+
+  function addCompetitorRow() {
+    const name  = document.getElementById('new-study-name').value.trim();
+    const sd    = +document.getElementById('new-study-sd').value    || 0;
+    const chopo = +document.getElementById('new-study-chopo').value || 0;
+    const hosp  = +document.getElementById('new-study-hosp').value  || 0;
+    if (!name) {
+      document.getElementById('new-study-name').style.borderColor = 'var(--red)';
+      return;
+    }
+    // Estimate a sensible default LabQro price: midway between SD and Chopo if both present, else 2× SD
+    const yours = chopo && sd ? Math.round((sd + chopo) / 2) : sd ? Math.round(sd * 1.9) : 0;
+    competitorEditorDraft.push({ study: name, sd, chopo, hospital: hosp, yours, group: 'Otros' });
+    // Clear inputs
+    ['new-study-name','new-study-sd','new-study-chopo','new-study-hosp'].forEach(id => {
+      const el = document.getElementById(id); if (el) { el.value = ''; el.style.borderColor = 'var(--border)'; }
+    });
+    renderCompetitorEditorRows();
   }
 
   function closeCompetitorEditor() {
@@ -8300,20 +8887,19 @@ Quedo a sus órdenes,
   }
 
   function saveCompetitorPrices() {
-    // Commit draft to live data
-    competitorEditorDraft.forEach((r, i) => {
-      if (pricingData[i] && r.study) {
-        pricingData[i].sd       = r.sd;
-        pricingData[i].chopo    = r.chopo;
-        pricingData[i].hospital = r.hospital;
-      }
-    });
-    // Persist competitor prices separately
-    const competitorPrices = pricingData.map(r => ({ sd: r.sd, chopo: r.chopo, hospital: r.hospital }));
+    // Replace fullPricingData contents with the draft (handles adds + deletes)
+    fullPricingData.length = 0;
+    competitorEditorDraft.forEach(r => fullPricingData.push(Object.assign({}, r)));
+
+    // Persist competitor prices and custom rows
+    const competitorPrices = fullPricingData.map(r => ({
+      study: r.study || null, cat: r.cat || null,
+      sd: r.sd, chopo: r.chopo, hospital: r.hospital,
+      yours: r.yours, group: r.group
+    }));
     dbSet('competitorPrices', competitorPrices);
     closeCompetitorEditor();
     renderFullPricingTable();
-    updatePricingSummary();
   }
 
   function resetCompetitorPrices() {
@@ -8337,21 +8923,26 @@ Quedo a sus órdenes,
   // Init on dbReady
   window.addEventListener('dbReady', () => {
     loadCompetitorVerification();
-    // Restore saved competitor prices if present
+    // Restore saved competitor prices / custom rows if present
     dbGet('competitorPrices').then(saved => {
-      if (saved) {
+      if (!saved || !saved.length) return;
+      // If saved data has study/cat keys it's the full-row format — replace entirely
+      if (saved[0] && (saved[0].study !== undefined || saved[0].cat !== undefined)) {
+        fullPricingData.length = 0;
+        saved.forEach(r => fullPricingData.push(r));
+      } else {
+        // Legacy: just prices by index
         saved.forEach((r, i) => {
-          if (pricingData[i] && r) {
-            if (r.sd       !== undefined) pricingData[i].sd       = r.sd;
-            if (r.chopo    !== undefined) pricingData[i].chopo    = r.chopo;
-            if (r.hospital !== undefined) pricingData[i].hospital = r.hospital;
+          if (fullPricingData[i] && r) {
+            if (r.sd       !== undefined) fullPricingData[i].sd       = r.sd;
+            if (r.chopo    !== undefined) fullPricingData[i].chopo    = r.chopo;
+            if (r.hospital !== undefined) fullPricingData[i].hospital = r.hospital;
           }
         });
-        // Re-render if pricing page is active
-        if (document.getElementById('page-pricing') &&
-            document.getElementById('page-pricing').classList.contains('active')) {
-          renderFullPricingTable();
-        }
+      }
+      if (document.getElementById('page-pricing') &&
+          document.getElementById('page-pricing').classList.contains('active')) {
+        renderFullPricingTable();
       }
     });
   });
@@ -8815,7 +9406,7 @@ Quedo a sus órdenes,
     if (isBlocked(permits[pi]) && newCol > permits[pi].col) return;
     permits[pi].col = newCol;
     renderKanban();
-    dbSet('permits', permits);
+    dbSetNow('permits', permits);
     updateDashboard();
   }
   renderKanban();
@@ -8949,43 +9540,78 @@ Quedo a sus órdenes,
   // ── LIVE DASHBOARD UPDATER ──
   // ══════════════════════════════════════════
   function updateDashboard() {
-    // Checklist progress
-    const done = checklistData.filter(c => checks[c.id]).length;
-    const total = checklistData.length;
-    const pct = Math.round(done / total * 100);
-    const progEl = document.getElementById('dash-progress');
-    if (progEl) {
-      progEl.textContent = pct + '%';
-      progEl.className = 'metric-val' + (pct >= 70 ? ' green' : pct >= 30 ? ' blue' : '');
+    // ── Overall progress from ALL phases (1–7) ──
+    function getAllPhasesProgress() {
+      var totalDone = 0, totalAll = 0;
+      // Phase 1
+      if (typeof getP1Progress === 'function') {
+        var p1 = getP1Progress();
+        totalDone += p1.done; totalAll += p1.total;
+      }
+      // Phases 2–7 (only if phase system is initialized)
+      if (typeof phaseConfigs !== 'undefined' && typeof phaseStates !== 'undefined') {
+        [2,3,4,5,6,7].forEach(function(n) {
+          if (!phaseConfigs[n] || !phaseStates[n]) return;
+          var tasks = phaseConfigs[n].tasks();
+          tasks.forEach(function(t) {
+            var st = phaseStates[n][t.id];
+            if (!st || !st.subtasks) return;
+            st.subtasks.forEach(function(s) { totalAll++; if (s.done) totalDone++; });
+          });
+        });
+      }
+      return { done: totalDone, total: Math.max(totalAll, 1), pct: Math.round(totalDone / Math.max(totalAll, 1) * 100) };
     }
+
+    var prog = getAllPhasesProgress();
+    var pct = prog.pct;
 
     // Permits completed (kanban col 3)
     const permDone = permits.filter(p => p.col === 3).length;
     const permTotal = permits.length;
-    const permEl = document.getElementById('dash-permits');
-    if (permEl) {
-      permEl.textContent = permDone + ' / ' + permTotal;
-      permEl.style.color = permDone === permTotal ? 'var(--green-dark)' : 'var(--blue)';
-    }
 
-    // Physicians tracked
-    const physTotal = physicians.length;
-    const physEl = document.getElementById('dash-physicians');
-    if (physEl) {
-      physEl.textContent = physTotal + ' tracked';
-      physEl.style.fontSize = '15px';
+    // ── Hero financial snapshot (live from calculator sliders) ──
+    const studies = document.getElementById('s-studies') ? +document.getElementById('s-studies').value : 300;
+    const ticket  = document.getElementById('s-ticket')  ? +document.getElementById('s-ticket').value  : 600;
+    const staffN  = document.getElementById('s-staff')   ? +document.getElementById('s-staff').value   : 4;
+    const rent    = document.getElementById('s-rent')     ? +document.getElementById('s-rent').value    : 25000;
+    const startup = document.getElementById('s-startup')  ? +document.getElementById('s-startup').value : 1800000;
+    const reagPct = document.getElementById('s-reagent')  ? +document.getElementById('s-reagent').value : 35;
+    const revenue = studies * ticket;
+    const pd      = typeof calcPayroll === 'function' ? calcPayroll(staffN) : { total: staffN * 22000 };
+    const payroll = pd.total || pd;
+    const reagent = Math.round(revenue * reagPct / 100);
+    const costs   = payroll + reagent + rent + Math.round(rent * 0.2) + 15000;
+    const ebitda  = revenue - costs;
+    const margin  = revenue > 0 ? Math.round(ebitda / revenue * 100) : 0;
+    const varM    = ticket * (1 - reagPct / 100);
+    const fixed   = payroll + rent + Math.round(rent * 0.2) + 15000;
+    const be      = varM > 0 ? Math.ceil(fixed / varM) : 999;
+    const pb      = ebitda > 0 ? (startup / (ebitda * 12)).toFixed(1) : '—';
+
+    const setH = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
+    setH('dash-h-revenue', '$' + fmt(revenue));
+    setH('dash-h-rev-detail', studies + ' studies × $' + fmt(ticket) + ' avg ticket');
+    const ebitdaEl = document.getElementById('dash-h-ebitda');
+    if (ebitdaEl) {
+      ebitdaEl.textContent = (ebitda >= 0 ? '$' : '-$') + fmt(Math.abs(ebitda));
+      ebitdaEl.style.color = ebitda >= 0 ? '#5eafe6' : '#ef6b6b';
     }
+    setH('dash-h-ebitda-detail', margin + '% margin · ' + (ebitda >= 0 ? 'Profitable' : 'Pre-profit'));
+    setH('dash-h-breakeven', be);
+    setH('dash-h-startup', '$' + fmt(startup));
+    setH('dash-h-payback', pb !== '—' ? 'Payback: ~' + pb + ' years' : 'Not yet profitable');
 
     // Overall progress ring — blend checklist + permits
     const overallPct = Math.round((pct + Math.round(permDone / Math.max(permTotal,1) * 100)) / 2);
-    const circumference = 138.2;
+    const circumference = 169.6;
     const offset = circumference - (overallPct / 100) * circumference;
     const ring = document.getElementById('dash-ring');
     const ringPct = document.getElementById('dash-ring-pct');
     const ringLabel = document.getElementById('dash-ring-label');
     if (ring) {
       ring.style.strokeDashoffset = offset;
-      ring.style.stroke = overallPct >= 70 ? 'var(--green)' : overallPct >= 30 ? 'var(--blue)' : 'var(--amber)';
+      ring.style.stroke = overallPct >= 70 ? '#5ee6b5' : overallPct >= 30 ? '#5eafe6' : '#efac5e';
     }
     if (ringPct) ringPct.textContent = overallPct + '%';
 
@@ -8993,58 +9619,157 @@ Quedo a sus órdenes,
     const stage = overallPct < 10 ? 'Research' : overallPct < 25 ? 'Legal' : overallPct < 50 ? 'Regulatory' : overallPct < 75 ? 'Operations' : overallPct < 95 ? 'Pre-launch' : 'Launched 🎉';
     if (ringLabel) ringLabel.textContent = stage;
 
-    // Phase progress bars — map checklist cats + ids to phases
-    const phaseMap = {
-      1: [],  // Phase 1 progress driven by interactive workspace (p1TaskState)
-      2: [],  // Phase 2 progress driven by interactive workspace
-      3: [],  // Phase 3 progress driven by interactive workspace
-      4: [],  // Phase 4 progress driven by interactive workspace
-      5: [],  // Phase 5 progress driven by interactive workspace
-      6: [],  // Phase 6 progress driven by interactive workspace
-    };
-    const phaseColors = { 1:'#185fa5', 2:'#f59e0b', 3:'#ef4444', 4:'#8b5cf6', 5:'#22c55e', 6:'#0ea5e9' };
-    Object.entries(phaseMap).forEach(([num, items]) => {
-      if (!items.length) return;
-      const donePct = Math.round(items.filter(c => checks[c.id]).length / items.length * 100);
-      const bar = document.getElementById('phase-bar-' + num);
-      const badge = document.getElementById('phase-badge-' + num);
-      if (bar) { bar.style.width = donePct + '%'; bar.style.background = phaseColors[num]; }
-      if (badge) {
-        if (donePct === 100) { badge.className = 'badge badge-done'; badge.textContent = 'Complete'; }
-        else if (donePct > 0) { badge.className = 'badge badge-progress'; badge.textContent = 'In progress'; }
-        else { badge.className = 'badge badge-todo'; badge.textContent = 'To do'; }
-      }
-    });
-
-    // Phase 1 uses the interactive workspace — update its bar from p1State
+    // Phase progress bars — driven by interactive workspace states
     if (typeof updateP1DashboardBar === 'function') updateP1DashboardBar();
-    [2,3,4,5,6].forEach(function(n) { if (typeof updatePhaseDashboardBar === 'function') updatePhaseDashboardBar(n); });
+    [2,3,4,5,6,7].forEach(function(n) { if (typeof updatePhaseDashboardBar === 'function') updatePhaseDashboardBar(n); });
 
     // Sub-line
     const subEl = document.getElementById('dash-sub');
     if (subEl) subEl.textContent = `Laboratorio Clínico · Querétaro · Stage: ${stage}`;
 
-    // Next actions — top 5 unchecked checklist items
+    // Next actions — top 5 incomplete subtasks across all phases
     const nextEl = document.getElementById('dash-next-actions');
     if (nextEl) {
-      const pending = checklistData.filter(c => !checks[c.id]).slice(0, 5);
+      var pending = [];
+      var phaseNames = {1:'Phase 1',2:'Phase 2',3:'Phase 3',4:'Phase 4',5:'Phase 5',6:'Phase 6',7:'Phase 7'};
+      var phColors = {1:'#185fa5',2:'#f59e0b',3:'#ef4444',4:'#8b5cf6',5:'#22c55e',6:'#0ea5e9',7:'#1d9e75'};
+
+      // Phase 1
+      if (typeof p1Tasks !== 'undefined' && typeof p1State !== 'undefined') {
+        p1Tasks.forEach(function(t) {
+          t.subtasks.forEach(function(sub, si) {
+            var st = p1State[t.id] && p1State[t.id].subtasks[si];
+            if (st && !st.done && pending.length < 8) {
+              pending.push({ text: typeof sub === 'string' ? sub : sub.text, phase: 1, taskName: t.name });
+            }
+          });
+        });
+      }
+      // Phases 2–7
+      [2,3,4,5,6,7].forEach(function(n) {
+        if (!phaseConfigs[n] || !phaseStates[n]) return;
+        phaseConfigs[n].tasks().forEach(function(t) {
+          var st = phaseStates[n][t.id];
+          if (!st || !st.subtasks) return;
+          t.subtasks.forEach(function(sub, si) {
+            if (st.subtasks[si] && !st.subtasks[si].done && pending.length < 8) {
+              pending.push({ text: typeof sub === 'string' ? sub : sub.text, phase: n, taskName: t.name });
+            }
+          });
+        });
+      });
+
+      pending = pending.slice(0, 5);
       if (!pending.length) {
-        nextEl.innerHTML = `<div style="font-size:12px;color:var(--green-dark);padding:8px 0;font-weight:500">🎉 All checklist items complete!</div>`;
+        nextEl.innerHTML = '<div style="font-size:12px;color:var(--green-dark);padding:8px 0;font-weight:500">All phase tasks complete!</div>';
       } else {
-        const catColors = { legal:'#854f0b', regulatory:'#a32d2d', ops:'#185fa5' };
-        nextEl.innerHTML = pending.map(c => `
-          <div class="phase-row" style="padding:8px 0;cursor:pointer" onclick="nav('checklist',document.querySelectorAll('.sb-item')[document.querySelectorAll('.sb-item').length-2])">
-            <div class="action-dot"></div>
-            <div class="phase-body">
-              <div style="display:flex;align-items:center;gap:6px">
-                <div class="phase-name" style="font-size:12px">${c.text}</div>
-                <span style="font-size:9px;padding:1px 6px;border-radius:10px;background:${catColors[c.cat]+'22'};color:${catColors[c.cat]};font-weight:500">${c.cat}</span>
-              </div>
-              <div class="phase-desc">${c.sub}</div>
-            </div>
-          </div>`).join('');
+        nextEl.innerHTML = pending.map(function(c) {
+          return '<div class="phase-row" style="padding:8px 0;cursor:pointer" onclick="openPhase(' + c.phase + ')">' +
+            '<div class="action-dot" style="background:' + (phColors[c.phase]||'var(--blue)') + '"></div>' +
+            '<div class="phase-body">' +
+              '<div style="display:flex;align-items:center;gap:6px">' +
+                '<div class="phase-name" style="font-size:12px">' + c.text + '</div>' +
+                '<span style="font-size:9px;padding:1px 6px;border-radius:10px;background:' + (phColors[c.phase]||'#185fa5') + '22;color:' + (phColors[c.phase]||'#185fa5') + ';font-weight:500">' + phaseNames[c.phase] + '</span>' +
+              '</div>' +
+              '<div class="phase-desc">' + c.taskName + '</div>' +
+            '</div>' +
+          '</div>';
+        }).join('');
       }
     }
+
+    // Mini Gantt on dashboard
+    renderDashMiniGantt();
+  }
+
+  // Global version for investor summary and PDF export
+  function getAllPhasesProgressGlobal() {
+    var totalDone = 0, totalAll = 0;
+    if (typeof getP1Progress === 'function') {
+      var p1 = getP1Progress(); totalDone += p1.done; totalAll += p1.total;
+    }
+    if (typeof phaseConfigs !== 'undefined' && typeof phaseStates !== 'undefined') {
+      [2,3,4,5,6,7].forEach(function(n) {
+        if (!phaseConfigs[n] || !phaseStates[n]) return;
+        phaseConfigs[n].tasks().forEach(function(t) {
+          var st = phaseStates[n][t.id]; if (!st || !st.subtasks) return;
+          st.subtasks.forEach(function(s) { totalAll++; if (s.done) totalDone++; });
+        });
+      });
+    }
+    return { done: totalDone, total: Math.max(totalAll, 1), pct: Math.round(totalDone / Math.max(totalAll, 1) * 100) };
+  }
+
+  // ── Dashboard Mini Gantt ──
+  function renderDashMiniGantt() {
+    var wrap = document.getElementById('dash-mini-gantt');
+    if (!wrap) return;
+
+    var phases = [
+      { label: 'Research & Planning',       start: 0,  end: 2,  color: '#185fa5' },
+      { label: 'Legal & Corporate',         start: 1,  end: 4,  color: '#f59e0b' },
+      { label: 'COFEPRIS & Permits',        start: 3,  end: 10, color: '#ef4444' },
+      { label: 'Infrastructure',            start: 5,  end: 10, color: '#8b5cf6' },
+      { label: 'Staffing & Training',       start: 7,  end: 11, color: '#22c55e' },
+      { label: 'Launch & Marketing',        start: 9,  end: 14, color: '#0ea5e9' },
+      { label: 'Operations',               start: 12, end: 18, color: '#1d9e75' },
+    ];
+    var totalMonths = 18;
+    var labelW = 150;
+
+    // Month headers
+    var moHdr = '<div style="width:' + labelW + 'px;flex-shrink:0;font-size:9px;color:var(--text-tertiary);font-weight:500">Phase</div>';
+    moHdr += '<div style="flex:1;display:grid;grid-template-columns:repeat(' + totalMonths + ',1fr);gap:0">';
+    for (var m = 1; m <= totalMonths; m++) {
+      moHdr += '<div style="font-size:8px;color:var(--text-tertiary);text-align:center;font-family:var(--font-mono);padding:0 1px">M' + m + '</div>';
+    }
+    moHdr += '</div>';
+
+    // Rows
+    var rows = '';
+    phases.forEach(function(ph) {
+      var leftPct = (ph.start / totalMonths * 100).toFixed(1);
+      var widthPct = ((ph.end - ph.start) / totalMonths * 100).toFixed(1);
+      rows += '<div style="display:flex;align-items:center;padding:3px 0;min-height:24px">' +
+        '<div style="width:' + labelW + 'px;flex-shrink:0;font-size:11px;font-weight:500;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:10px">' + ph.label + '</div>' +
+        '<div style="flex:1;position:relative;height:16px;background:var(--bg-secondary);border-radius:3px;overflow:hidden">' +
+          '<div style="position:absolute;left:' + leftPct + '%;width:' + widthPct + '%;height:100%;background:' + ph.color + ';border-radius:3px;opacity:0.85;display:flex;align-items:center;justify-content:center;font-size:7px;color:rgba(255,255,255,0.9);font-weight:500;letter-spacing:0.02em">' +
+            'M' + (ph.start + 1) + '–' + ph.end +
+          '</div>' +
+        '</div>' +
+      '</div>';
+    });
+
+    // TODAY marker — based on overall phase progress + permits
+    var phaseProg = 0, phaseTotal = 0;
+    // Phase 1
+    if (typeof getP1Progress === 'function') { var p1p = getP1Progress(); phaseProg += p1p.done; phaseTotal += p1p.total; }
+    // Phases 2–7
+    if (typeof phaseConfigs !== 'undefined' && typeof phaseStates !== 'undefined') {
+      [2,3,4,5,6,7].forEach(function(n) {
+        if (!phaseConfigs[n] || !phaseStates[n]) return;
+        phaseConfigs[n].tasks().forEach(function(t) {
+          var st = phaseStates[n][t.id]; if (!st || !st.subtasks) return;
+          st.subtasks.forEach(function(s) { phaseTotal++; if (s.done) phaseProg++; });
+        });
+      });
+    }
+    var pmDone = permits ? permits.filter(function(p){ return p.col === 3; }).length : 0;
+    var pmTotal = permits ? permits.length : 1;
+    var overallProg = ((phaseProg / Math.max(phaseTotal,1)) + (pmDone / Math.max(pmTotal,1))) / 2;
+    var progressMonth = Math.max(0.5, Math.min(totalMonths, overallProg * totalMonths));
+    var todayFraction = progressMonth / totalMonths;
+
+    wrap.innerHTML =
+      '<div style="min-width:480px">' +
+        '<div style="display:flex;align-items:center;padding-bottom:5px;margin-bottom:3px;border-bottom:0.5px solid var(--border)">' + moHdr + '</div>' +
+        '<div style="position:relative">' +
+          rows +
+          '<div style="position:absolute;top:0;bottom:0;left:calc(' + labelW + 'px + (100% - ' + labelW + 'px) * ' + todayFraction.toFixed(4) + ');width:2px;background:var(--red);z-index:2;pointer-events:none">' +
+            '<div style="position:absolute;top:-13px;left:50%;transform:translateX(-50%);font-size:7px;font-weight:600;color:var(--red);font-family:var(--font-mono);white-space:nowrap">TODAY</div>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
   }
 
   // ══════════════════════════════════════════
@@ -9053,13 +9778,13 @@ Quedo a sus órdenes,
   function movePhysician(pi, newStage) {
     physicians[pi].stage = newStage;
     renderCRM();
-    dbSet('physicians', physicians);
+    dbSetNow('physicians', physicians);
     updateDashboard();
   }
   function removePhysician(pi) {
     physicians.splice(pi, 1);
     renderCRM();
-    dbSet('physicians', physicians);
+    dbSetNow('physicians', physicians);
     updateDashboard();
   }
 
@@ -9100,7 +9825,7 @@ Quedo a sus órdenes,
     const keys = ['checks','permits','physicians','notes','locations','docStatMap',
                   'savedScenarios','pricingYours','lastPage','estValues','budgetEntries',
                   'eqData','suppliers','fullPricingYours','mockChecks','satCfdi','staffingModel',
-                  'corpContracts','f90Checks','gngChecks','gngReviewDate','p1TaskState','p2TaskState','p3TaskState','p4TaskState','p5TaskState','p6TaskState'];
+                  'corpContracts','f90Checks','gngChecks','gngReviewDate','p1TaskState','p2TaskState','p3TaskState','p4TaskState','p5TaskState','p6TaskState','p7TaskState'];
     const results = await Promise.all(keys.map(k => dbGet(k)));
     const get = (key) => results[keys.indexOf(key)];
 
@@ -9172,13 +9897,13 @@ Quedo a sus órdenes,
     const savedP1 = get('p1TaskState');
     if (savedP1) { Object.assign(p1State, savedP1); initP1State(); }
     // Restore Phase 2-6 workspace states
-    [2,3,4,5,6].forEach(function(n) {
+    [2,3,4,5,6,7].forEach(function(n) {
       var saved = get(phaseConfigs[n].stateKey);
       if (saved) { Object.assign(phaseStates[n], saved); initPhaseState(n); }
     });
 
     // Restore last active page — remap any stale route names from old versions
-    const pageRemaps = { documents: 'checklist', timeline: 'roadmap' };
+    const pageRemaps = { documents: 'dashboard', checklist: 'dashboard', timeline: 'roadmap' };
     const resolvedPage = pageRemaps[lastPage] || lastPage;
     if (resolvedPage && document.getElementById('page-' + resolvedPage)) {
       const matchingBtn = [...document.querySelectorAll('.sb-item')].find(b =>
@@ -9502,9 +10227,16 @@ Quedo a sus órdenes,
     const rent       = +(document.getElementById('s-rent')    || {value:'25000'}).value || 25000;
 
     const payroll    = staffCosts ? staffCosts.totalBurdened : calcPayroll(staff).total;
-    const rentUtil   = rent + 5000;
+    const rentUtil   = rent + Math.round(rent * 0.20); // rent + ~20% utilities
     const misc       = 15000;
     const fixedCost  = payroll + rentUtil + misc;
+
+    // IVA cash flow modeling:
+    // Lab services = IVA tasa 0% (no IVA charged to patients)
+    // Purchases = 16% IVA paid upfront, recoverable via SAT devolución (~40-60 days lag)
+    const IVA_RATE = 0.16;
+    const IVA_RECOVERY_LAG = 2; // months before SAT refunds IVA credit
+    let ivaCreditsQueue = []; // queue of IVA credits awaiting refund
 
     const months = [];
     let balance = opening;
@@ -9514,22 +10246,33 @@ Quedo a sus órdenes,
 
     for (let m = 1; m <= 18; m++) {
       let inflow = 0, outflow = 0, phase;
+      let ivaPaidThisMonth = 0;
+      let ivaRecovered = 0;
+
+      // Recover IVA credits from previous months
+      ivaCreditsQueue = ivaCreditsQueue.filter(credit => {
+        if (credit.recoveryMonth <= m) {
+          ivaRecovered += credit.amount;
+          return false;
+        }
+        return true;
+      });
 
       if (m < launchMonth) {
         // Pre-launch: burn only
         phase = m <= 3 ? 'Research' : m <= 5 ? 'Legal' : m <= 8 ? 'Permits/Build' : 'Staffing';
         outflow = burnRate;
-        inflow  = 0;
+        // Pre-launch purchases (equipment, buildout) carry IVA
+        ivaPaidThisMonth = Math.round(burnRate * 0.6 * IVA_RATE); // ~60% of burn is IVA-eligible purchases
+        inflow  = ivaRecovered; // recovered IVA credits
       } else {
         // Post-launch: use Volume Projector ramp curves if available
         const postLaunchMonth = m - launchMonth + 1;
         const vpData = getVolProjectorMonth(postLaunchMonth);
 
         if (vpData && vpData.vol > 0) {
-          // Connected to Volume Projector — uses actual channel ramp + weighted ticket
           inflow = vpData.revenue;
         } else {
-          // Fallback to simple ramp if volume projector isn't initialized
           const studies = +(document.getElementById('s-studies') || {value:'250'}).value || 250;
           const ticket  = +(document.getElementById('s-ticket')  || {value:'600'}).value || 600;
           const ramp = postLaunchMonth <= 2 ? 0.35 : postLaunchMonth <= 4 ? 0.55 : postLaunchMonth <= 6 ? 0.75 : postLaunchMonth <= 10 ? 0.90 : 1.0;
@@ -9537,7 +10280,16 @@ Quedo a sus órdenes,
         }
         const reagCost = Math.round(inflow * reagPct / 100);
         outflow = fixedCost + reagCost;
+        // IVA on reagents and supplies (~reagent cost is IVA-eligible)
+        ivaPaidThisMonth = Math.round(reagCost * IVA_RATE);
+        outflow += ivaPaidThisMonth; // actual cash out includes IVA
+        inflow += ivaRecovered; // add recovered IVA credits to inflow
         phase   = 'Operations';
+      }
+
+      // Queue IVA credit for recovery
+      if (ivaPaidThisMonth > 0) {
+        ivaCreditsQueue.push({ amount: ivaPaidThisMonth, recoveryMonth: m + IVA_RECOVERY_LAG });
       }
 
       const net     = inflow - outflow;
@@ -9629,7 +10381,7 @@ Quedo a sus órdenes,
     if (!physicians[pi].firstContact) physicians[pi].firstContact = new Date().toISOString().split('T')[0];
     physicians[pi].lastContact = new Date().toISOString().split('T')[0];
     renderCRM();
-    dbSet('physicians', physicians);
+    dbSetNow('physicians', physicians);
     updateDashboard();
   }
 
@@ -9637,7 +10389,7 @@ Quedo a sus órdenes,
     physicians[pi].referrals = (physicians[pi].referrals || 0) + 1;
     physicians[pi].lastContact = new Date().toISOString().split('T')[0];
     renderCRM();
-    dbSet('physicians', physicians);
+    dbSetNow('physicians', physicians);
   }
 
   function showWhatsAppTemplate() {
@@ -10303,7 +11055,20 @@ Quedo a sus órdenes,
     const deductions    = Math.round(rev * dedPct / 100);
     const fiscalProfit  = Math.max(0, rev - deductions);
     const isrProvisional= Math.round(fiscalProfit * 0.30);
-    const isnQro        = Math.round(rev * 0.03 * 0.40); // ~40% of rev is payroll approx
+
+    // ISN = 3% of gross payroll (NOT revenue). Pull actual payroll from staffing model or calculator.
+    const staff       = +(document.getElementById('s-staff') || {value:'4'}).value || 4;
+    const staffCosts  = typeof getStaffingTotalCost === 'function' ? getStaffingTotalCost() : null;
+    const grossPayroll= staffCosts ? staffCosts.totalBase : (staff * 15000);
+    const isnQro      = Math.round(grossPayroll * 0.03);
+
+    // IMSS burden breakdown (for visibility)
+    const imssPatronal     = Math.round(grossPayroll * 0.2040); // Cuotas patronales ~20.40%
+    const retiroCesantia   = Math.round(grossPayroll * 0.0515); // Retiro 2% + Cesantía 3.15%
+    const infonavit        = Math.round(grossPayroll * 0.05);   // INFONAVIT 5%
+    const sarContrib       = Math.round(grossPayroll * 0.02);   // SAR 2%
+    const totalBurden      = imssPatronal + retiroCesantia + infonavit + sarContrib + isnQro;
+
     const totalTax      = isrProvisional + isnQro;
     const effectiveRate = rev > 0 ? Math.round(totalTax / rev * 100) : 0;
 
@@ -10315,10 +11080,18 @@ Quedo a sus órdenes,
         '<div class="calc-row"><div class="calc-row-label">Fiscal profit (base gravable)</div><div class="calc-row-val">$' + fmt(fiscalProfit) + '</div></div>' +
         '<div class="calc-divider"></div>' +
         '<div class="calc-row"><div class="calc-row-label">ISR provisional (30%)</div><div class="calc-row-val red">-$' + fmt(isrProvisional) + '</div></div>' +
-        '<div class="calc-row"><div class="calc-row-label">ISN Querétaro (~3% of payroll est.)</div><div class="calc-row-val red">-$' + fmt(isnQro) + '</div></div>' +
+        '<div class="calc-row"><div class="calc-row-label">ISN Querétaro (3% of $' + fmt(grossPayroll) + ' payroll)</div><div class="calc-row-val red">-$' + fmt(isnQro) + '</div></div>' +
         '<div class="calc-divider"></div>' +
         '<div class="calc-row" style="font-weight:500"><div class="calc-row-label" style="color:var(--text-primary)">Est. total monthly tax</div><div class="calc-row-val" style="color:var(--red);font-size:15px">-$' + fmt(totalTax) + '</div></div>' +
-        '<div class="calc-row"><div class="calc-row-label">Effective tax rate</div><div class="calc-row-val" style="color:var(--amber)">' + effectiveRate + '%</div></div>';
+        '<div class="calc-row"><div class="calc-row-label">Effective tax rate</div><div class="calc-row-val" style="color:var(--amber)">' + effectiveRate + '%</div></div>' +
+        '<div class="calc-divider" style="margin:8px 0"></div>' +
+        '<div style="font-size:10px;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-tertiary);font-weight:500;margin-bottom:6px">Employer burden breakdown (monthly)</div>' +
+        '<div class="calc-row"><div class="calc-row-label">IMSS cuotas patronales (~20.4%)</div><div class="calc-row-val">$' + fmt(imssPatronal) + '</div></div>' +
+        '<div class="calc-row"><div class="calc-row-label">Retiro + Cesantía y Vejez (~5.15%)</div><div class="calc-row-val">$' + fmt(retiroCesantia) + '</div></div>' +
+        '<div class="calc-row"><div class="calc-row-label">INFONAVIT (5%)</div><div class="calc-row-val">$' + fmt(infonavit) + '</div></div>' +
+        '<div class="calc-row"><div class="calc-row-label">SAR (2%)</div><div class="calc-row-val">$' + fmt(sarContrib) + '</div></div>' +
+        '<div class="calc-row"><div class="calc-row-label">ISN Querétaro (3%)</div><div class="calc-row-val">$' + fmt(isnQro) + '</div></div>' +
+        '<div class="calc-row" style="font-weight:500"><div class="calc-row-label" style="color:var(--text-primary)">Total employer burden</div><div class="calc-row-val" style="color:var(--amber)">$' + fmt(totalBurden) + ' MXN/mo (~' + (grossPayroll > 0 ? Math.round(totalBurden/grossPayroll*100) : 0) + '%)</div></div>';
     }
   }
 
@@ -10537,8 +11310,8 @@ Quedo a sus órdenes,
     const indEl = document.getElementById('demand-indicators');
     if (indEl) {
       const indicators = [
-        { label:'Querétaro metro population (2024)', value:'~1.1 million', detail:'Growing at 2.8%/yr — one of the fastest in Mexico' },
-        { label:'Estimated private health market (annual)', value:'~$8B MXN', detail:'Includes private clinics, labs, pharmacies, dental' },
+        { label:'Querétaro metro population (2024)', value:'~1.3 million (INEGI 2024)', detail:'Growing at 2.8%/yr — one of the fastest in Mexico' },
+        { label:'Estimated private health market (annual)', value:'~$9.2B MXN (COFEPRIS registry 2023)', detail:'Includes private clinics, labs, pharmacies, dental' },
         { label:'Est. clinical lab studies/yr (QRO metro)', value:'~4–5M studies', detail:'Derived from ~4 studies/person/year in mid-income urban populations' },
         { label:'Current private lab market share', value:'~35–40%', detail:'Rest is IMSS/ISSSTE; private is growing as IMSS backlogs worsen' },
         { label:'Target market (walk-in private)', value:'~1.5M studies/yr', detail:'Your serviceable market in Year 1–2 at 1–2 locations' },
@@ -10754,18 +11527,55 @@ Quedo a sus órdenes,
     const yours   = studies.filter(r => r.yours).map(r => r.yours);
     const sd      = studies.filter(r => r.sd).map(r => r.sd);
     const chopo   = studies.filter(r => r.chopo).map(r => r.chopo);
+    const hosp    = studies.filter(r => r.hospital).map(r => r.hospital);
     const avgY    = yours.length ? Math.round(yours.reduce((a,b)=>a+b,0)/yours.length) : 0;
     const avgSD   = sd.length    ? Math.round(sd.reduce((a,b)=>a+b,0)/sd.length) : 1;
     const avgChopo= chopo.length ? Math.round(chopo.reduce((a,b)=>a+b,0)/chopo.length) : 1;
+    const avgHosp = hosp.length  ? Math.round(hosp.reduce((a,b)=>a+b,0)/hosp.length) : 1;
     const vsSD    = avgY && avgSD ? Math.round((avgY-avgSD)/avgSD*100) : 0;
     const vsChopo = avgY && avgChopo ? Math.round((avgY-avgChopo)/avgChopo*100) : 0;
+    const vsHosp  = avgY && avgHosp  ? Math.round((avgY-avgHosp)/avgHosp*100)   : 0;
     const pos     = vsChopo < -20 ? 'Budget' : vsChopo < -5 ? 'Value' : vsChopo < 10 ? 'Mid-market' : vsChopo < 30 ? 'Premium' : 'Hospital-tier';
+    const posColor = (pos === 'Mid-market' || pos === 'Value') ? 'var(--green-dark)' : 'var(--amber)';
 
     const setEl = (id, v, color) => { const e=document.getElementById(id); if(e){ e.textContent=v; if(color) e.style.color=color; } };
     setEl('pm-count',    count);
     setEl('pm-vs-sd',    (vsSD > 0 ? '+' : '') + vsSD + '%', vsSD > 20 ? 'var(--red)' : vsSD > 0 ? 'var(--amber)' : 'var(--green-dark)');
     setEl('pm-vs-chopo', (vsChopo > 0 ? '+' : '') + vsChopo + '%', vsChopo > 20 ? 'var(--red)' : vsChopo > 0 ? 'var(--amber)' : 'var(--green-dark)');
-    setEl('pricing-position', pos, pos === 'Mid-market' || pos === 'Value' ? 'var(--green-dark)' : 'var(--amber)');
+    setEl('pricing-position', pos, posColor);
+
+    // Populate Pricing strategy summary card
+    const summaryEl = document.getElementById('pricing-summary');
+    if (summaryEl) {
+      const fmtPct = (v, lowerIsBetter) => {
+        const sign = v > 0 ? '+' : '';
+        const col = lowerIsBetter
+          ? (v < 0 ? 'var(--green-dark)' : v < 20 ? 'var(--amber)' : 'var(--red)')
+          : (v > 0 ? 'var(--green-dark)' : 'var(--red)');
+        return `<span style="font-weight:500;color:${col}">${sign}${v}%</span>`;
+      };
+      const posDesc = {
+        'Budget':       'Pricing below Salud Digna — not recommended for sustainable margins.',
+        'Value':        'Below Chopo but above SD — competitive entry positioning.',
+        'Mid-market':   'Comfortably below Chopo and above SD — the target sweet spot.',
+        'Premium':      'Above Chopo — justify with TAT, service, or specialty tests.',
+        'Hospital-tier':'At hospital rates — only viable with specialized or niche tests.',
+      };
+      summaryEl.innerHTML = `
+        <div class="calc-row"><div class="calc-row-label">Avg LabQro price</div><div class="calc-row-val" style="color:var(--green-dark);font-family:var(--font-mono)">$${avgY} MXN</div></div>
+        <div class="calc-row"><div class="calc-row-label">Avg Salud Digna</div><div class="calc-row-val" style="font-family:var(--font-mono)">$${avgSD} MXN</div></div>
+        <div class="calc-row"><div class="calc-row-label">Avg Chopo</div><div class="calc-row-val" style="font-family:var(--font-mono)">$${avgChopo} MXN</div></div>
+        <div class="calc-row"><div class="calc-row-label">Avg Hospital</div><div class="calc-row-val" style="font-family:var(--font-mono)">$${avgHosp} MXN</div></div>
+        <div class="calc-divider"></div>
+        <div class="calc-row"><div class="calc-row-label">vs. Salud Digna</div><div class="calc-row-val">${fmtPct(vsSD, false)} premium</div></div>
+        <div class="calc-row"><div class="calc-row-label">vs. Chopo</div><div class="calc-row-val">${fmtPct(vsChopo, true)}</div></div>
+        <div class="calc-row"><div class="calc-row-label">vs. Hospital</div><div class="calc-row-val">${fmtPct(vsHosp, true)}</div></div>
+        <div class="calc-divider"></div>
+        <div style="padding:10px 12px;background:${posColor === 'var(--green-dark)' ? 'var(--bg-success,#eaf3de)' : '#faeeda'};border-radius:var(--radius-md);font-size:12px;line-height:1.6;color:${posColor === 'var(--green-dark)' ? '#3b6d11' : '#633806'}">
+          <strong style="font-weight:500">Position: ${pos}</strong><br>${posDesc[pos] || ''}
+        </div>`;
+    }
+
     // Persist your prices
     clearTimeout(window._priceSaveTimer);
     window._priceSaveTimer = setTimeout(() => {
@@ -11065,9 +11875,7 @@ Quedo a sus órdenes,
     if (!wrap) return;
     const prompts = getContextualPrompts();
     wrap.innerHTML = prompts.map(p =>
-      '<button onclick="sendAIPrompt(' + JSON.stringify(p.text) + ')" ' +
-        'style="font-size:10px;padding:4px 10px;border:0.5px solid var(--border);border-radius:20px;background:var(--bg-secondary);color:var(--text-secondary);cursor:pointer;font-family:var(--font);white-space:nowrap;transition:all 0.12s" ' +
-        'onmouseover="this.style.background=\'var(--bg-tertiary)\'" onmouseout="this.style.background=\'var(--bg-secondary)\'">' +
+      '<button class="ai-chip" onclick="sendAIPrompt(' + JSON.stringify(p.text) + ')">' +
         p.label + '</button>'
     ).join('');
   }
@@ -11102,8 +11910,8 @@ Quedo a sus órdenes,
     const rent       = document.getElementById('s-rent')    ? +document.getElementById('s-rent').value    : 25000;
     const startup    = document.getElementById('s-startup') ? +document.getElementById('s-startup').value : 1800000;
     const reagentPct = document.getElementById('s-reagent') ? +document.getElementById('s-reagent').value : 35;
-    const checksDone = typeof checklistData !== 'undefined' ? checklistData.filter(c => checks[c.id]).length : 0;
-    const totalCheck = typeof checklistData !== 'undefined' ? checklistData.length : 18;
+    const checksDone = typeof getAllPhasesProgressGlobal === 'function' ? getAllPhasesProgressGlobal().done : 0;
+    const totalCheck = typeof getAllPhasesProgressGlobal === 'function' ? getAllPhasesProgressGlobal().total : 1;
     const permitsDone= typeof permits !== 'undefined' ? permits.filter(p => p.col === 3).length : 0;
     const physTotal  = typeof physicians !== 'undefined' ? physicians.length : 0;
     const physActive = typeof physicians !== 'undefined' ? physicians.filter(p => p.stage >= 3).length : 0;
@@ -11152,7 +11960,7 @@ Quedo a sus órdenes,
         var lines = [];
         var allTasks = [];
         try { p1Tasks.forEach(function(t){ allTasks.push({phase:1,tasks:[t]}); }); } catch(e){}
-        try { for(var n=2;n<=6;n++){ if(phaseConfigs[n]) phaseConfigs[n].tasks().forEach(function(t){ allTasks.push({phase:n,task:t}); }); } } catch(e){}
+        try { for(var n=2;n<=7;n++){ if(phaseConfigs[n]) phaseConfigs[n].tasks().forEach(function(t){ allTasks.push({phase:n,task:t}); }); } } catch(e){}
 
         // Phase 1 — list and scorecard steps
         try {
@@ -11416,8 +12224,8 @@ Quedo a sus órdenes,
         '<p style="font-size:13px;color:#5f5e5a;line-height:1.75;margin:0">LabQro is a clinical laboratory targeting the mid-market healthcare gap in Querétaro, Mexico — one of the country\'s fastest-growing cities (+2.8%/yr). IMSS labs operate at chronic overcapacity, and the dominant private chains (Salud Digna, Chopo) sacrifice quality for volume. LabQro differentiates on 4-hour turnaround, WhatsApp result delivery, and a physician-first referral model.</p>'
       ) +
       section('Market Size', '#534ab7',
-        row('QRO metro population (2024)', '~1.1 million') +
-        row('Estimated private lab market (annual)', '~$8B MXN') +
+        row('QRO metro population (2024)', '~1.3 million (INEGI 2024)') +
+        row('Estimated private lab market (annual)', '~$9.2B MXN (COFEPRIS registry 2023)') +
         row('Target addressable market (Year 1–2)', '~1.5M studies/yr') +
         row('Break-even market share required', '<0.03%') +
         row('Key demand driver', 'IMSS chronic overcapacity')
@@ -12207,8 +13015,13 @@ Quedo a sus órdenes,
     // Break-even table
     const tbl = document.getElementById('sensitivity-table');
     if (!tbl) return;
-    const payroll = calcPayroll(base.staff).total;
-    const fixed = payroll + base.rent + 5000 + 15000;
+    // Use staffing model if available, else calculator
+    const staffCostsForSens = typeof getStaffingTotalCost === 'function' ? getStaffingTotalCost() : null;
+    const payroll = staffCostsForSens ? staffCostsForSens.totalBurdened : calcPayroll(base.staff).total;
+    // Pull utilities from rent slider (rent + ~20% for utilities) and misc from working capital assumptions
+    const utilities = Math.round(base.rent * 0.20); // ~20% of rent for CFE, agua, gas, internet
+    const misc = 15000; // Insurance, supplies, LIS subscription
+    const fixed = payroll + base.rent + utilities + misc;
 
     let html = '<thead><tr><th></th>' + ticketScenarios.map(t => '<th style="text-align:center">' + t.label + '</th>').join('') + '</tr></thead><tbody>';
     qfbCosts.forEach(q => {
@@ -12236,12 +13049,28 @@ Quedo a sus órdenes,
       rampDelays.forEach(r => {
         phtml += '<tr><td style="font-weight:500">' + r.label + '</td>';
         ticketScenarios.forEach(t => {
+          // Calculate payback by simulating 36 months of cash flow with ramp
           const rev = base.studies * t.val;
-          const costs = payroll + Math.round(rev * base.reagPct / 100) + base.rent + 5000 + 15000;
-          const ebitda = rev - costs;
-          const annual = ebitda * (12 - Math.max(0, r.launch - 10));
-          const pb = annual > 0 ? (base.startup / (ebitda * 12)).toFixed(1) : '∞';
-          const color = pb !== '∞' && +pb <= 2 ? 'var(--green-dark)' : pb !== '∞' && +pb <= 3.5 ? 'var(--blue)' : 'var(--amber)';
+          const opCosts = payroll + Math.round(rev * base.reagPct / 100) + base.rent + 5000 + 15000;
+          const steadyEbitda = rev - opCosts;
+          let cumCash = -base.startup;
+          let paybackMonth = null;
+          for (let m = 1; m <= 36; m++) {
+            if (m < r.launch) {
+              // Pre-launch: burn only (rent + partial payroll + setup costs)
+              cumCash -= (base.rent + payroll * 0.5 + 20000);
+            } else {
+              // Post-launch: ramp from 30% to 100% over 6 months
+              const postLaunch = m - r.launch + 1;
+              const rampFactor = Math.min(1, 0.3 + 0.7 * Math.min(postLaunch / 6, 1));
+              const mRev = Math.round(rev * rampFactor);
+              const mCost = payroll + Math.round(mRev * base.reagPct / 100) + base.rent + 5000 + 15000;
+              cumCash += (mRev - mCost);
+            }
+            if (cumCash >= 0 && paybackMonth === null) paybackMonth = m;
+          }
+          const pb = paybackMonth ? (paybackMonth / 12).toFixed(1) : (steadyEbitda > 0 ? '>' + (36/12).toFixed(0) : '∞');
+          const color = paybackMonth && paybackMonth <= 24 ? 'var(--green-dark)' : paybackMonth && paybackMonth <= 36 ? 'var(--blue)' : 'var(--amber)';
           phtml += '<td style="text-align:center;font-family:var(--font-mono);font-weight:500;color:' + color + '">' + pb + ' yr</td>';
         });
         phtml += '</tr>';
@@ -12261,6 +13090,46 @@ Quedo a sus órdenes,
         '<div class="fin-row"><div class="fin-label">Cash runway if zero revenue</div><div class="fin-val red">~' + Math.round(base.startup / (payroll + base.rent + 20000)) + ' months</div></div>' +
         '<div class="fin-row"><div class="fin-label">If avg ticket drops 25%, break-even at</div><div class="fin-val amber">' +
           (base.ticket * 0.75 * (1 - base.reagPct/100) > 0 ? Math.ceil(fixed / (base.ticket * 0.75 * (1 - base.reagPct/100))) : '∞') + ' studies/mo</div></div>';
+    }
+
+    // ── Break-even chart (#26) ──
+    const beCtx = document.getElementById('chart-breakeven');
+    if (beCtx) {
+      if (typeof window._beChart !== 'undefined' && window._beChart) window._beChart.destroy();
+      const volumeSteps = [];
+      const revenueData = [], costData = [], profitData = [];
+      for (let v = 0; v <= 600; v += 25) {
+        volumeSteps.push(v);
+        const rev = v * base.ticket;
+        const reagCost = Math.round(rev * base.reagPct / 100);
+        const totalCost = fixed + reagCost;
+        revenueData.push(rev);
+        costData.push(totalCost);
+        profitData.push(rev - totalCost);
+      }
+      window._beChart = new Chart(beCtx, {
+        type: 'line',
+        data: {
+          labels: volumeSteps,
+          datasets: [
+            { label: 'Revenue', data: revenueData, borderColor: '#1d9e75', backgroundColor: 'rgba(29,158,117,0.08)', tension: 0, pointRadius: 0, borderWidth: 2.5, fill: true },
+            { label: 'Total Costs', data: costData, borderColor: '#a32d2d', backgroundColor: 'rgba(163,45,45,0.06)', tension: 0, pointRadius: 0, borderWidth: 2.5, fill: true },
+            { label: 'Profit / Loss', data: profitData, borderColor: '#185fa5', backgroundColor: 'rgba(24,95,165,0.05)', tension: 0, pointRadius: 0, borderWidth: 1.5, borderDash: [4,4], fill: true },
+          ]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: true,
+          plugins: {
+            legend: { labels: { font: { size: 11 }, boxWidth: 12 } },
+            tooltip: { callbacks: { title: items => items[0].label + ' studies/mo', label: c => ' $' + fmt(c.raw) + ' MXN' } },
+            annotation: {} // placeholder
+          },
+          scales: {
+            x: { title: { display: true, text: 'Studies / month', font: { size: 11 } }, grid: { display: false }, ticks: { font: { size: 9 } } },
+            y: { title: { display: true, text: 'MXN / month', font: { size: 11 } }, ticks: { font: { size: 10 }, callback: v => '$' + (v/1000).toFixed(0) + 'K' }, grid: { color: 'rgba(0,0,0,0.05)' } }
+          }
+        }
+      });
     }
   }
 
@@ -13021,8 +13890,8 @@ Quedo a sus órdenes,
     // ═══ CHECKLIST PROGRESS ═══
     checkSpace(15);
     sectionTitle('8. Operational Readiness', blue);
-    const checksDone = checklistData.filter(c => checks[c.id]).length;
-    dataRow('Checklist', checksDone + '/' + checklistData.length + ' items (' + Math.round(checksDone/checklistData.length*100) + '%)');
+    const phaseProg = typeof getAllPhasesProgressGlobal === 'function' ? getAllPhasesProgressGlobal() : {done:0,total:1,pct:0};
+    dataRow('Phase progress', phaseProg.done + '/' + phaseProg.total + ' subtasks (' + phaseProg.pct + '%)');
     dataRow('Mock inspection', Object.values(mockChecks).filter(Boolean).length + '/50 items passed');
     dataRow('Physician CRM', physicians.length + ' contacts, ' + physicians.filter(p => p.stage >= 3).length + ' active referrers');
 
@@ -13322,6 +14191,157 @@ Each array must have exactly 4–5 concise, specific, actionable items in Englis
   }
 
   document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeRegPanel(); closeWorkPanel(); } });
+
+  // ══════════════════════════════════════════
+  // ── EXCEL EXPORT (#23) ──
+  // ══════════════════════════════════════════
+  function exportEstimatorXlsx() {
+    if (typeof XLSX === 'undefined') { alert('SheetJS not loaded — check internet connection.'); return; }
+    const wb = XLSX.utils.book_new();
+    const rows = [['LabQro — Startup Cost Estimator','','','',''],['','','','',''],['Item','Budget (MXN)','Actual (MXN)','Diff','Notes']];
+    try {
+      estSections.forEach(sec => {
+        rows.push([sec.label,'','','','']);
+        sec.subgroups.forEach(sg => {
+          rows.push(['  ' + sg.label,'','','','']);
+          sg.items.forEach(item => {
+            const budget = +(estValues[item.id] || item.default || 0);
+            const actual = +(estActuals && estActuals[item.id] || 0);
+            const diff = actual > 0 ? actual - budget : 0;
+            rows.push(['    ' + item.label, budget, actual || '', diff || '', item.notes || '']);
+          });
+        });
+      });
+      // Grand total
+      let grandBudget = 0, grandActual = 0;
+      estSections.forEach(sec => { sec.subgroups.forEach(sg => { sg.items.forEach(item => {
+        grandBudget += +(estValues[item.id] || item.default || 0);
+        grandActual += +(estActuals && estActuals[item.id] || 0);
+      })})});
+      rows.push(['','','','',''],['GRAND TOTAL', grandBudget, grandActual || '', grandActual > 0 ? grandActual - grandBudget : '', '']);
+    } catch(e) { rows.push(['Error building data: ' + e.message]); }
+    const ws = XLSX.utils.aoa_to_sheet(rows);
+    ws['!cols'] = [{wch:40},{wch:16},{wch:16},{wch:14},{wch:50}];
+    XLSX.utils.book_append_sheet(wb, ws, 'Cost Estimator');
+    XLSX.writeFile(wb, 'LabQro_CostEstimator_' + new Date().toISOString().split('T')[0] + '.xlsx');
+  }
+
+  function exportPricingXlsx() {
+    if (typeof XLSX === 'undefined') { alert('SheetJS not loaded.'); return; }
+    const wb = XLSX.utils.book_new();
+    const rows = [['LabQro — Pricing Matrix','','','','',''],['','','','','',''],
+      ['Study','Category','LabQro ($)','Salud Digna ($)','Chopo ($)','Hospital ($)']];
+    try {
+      pricingData.forEach(p => {
+        rows.push([p.name, p.cat || '', p.labqro || '', p.sd || '', p.chopo || '', p.hosp || '']);
+      });
+    } catch(e) { rows.push(['Error: ' + e.message]); }
+    const ws = XLSX.utils.aoa_to_sheet(rows);
+    ws['!cols'] = [{wch:36},{wch:16},{wch:14},{wch:16},{wch:14},{wch:14}];
+    XLSX.utils.book_append_sheet(wb, ws, 'Pricing');
+    XLSX.writeFile(wb, 'LabQro_Pricing_' + new Date().toISOString().split('T')[0] + '.xlsx');
+  }
+
+  function export3YrXlsx() {
+    if (typeof XLSX === 'undefined') { alert('SheetJS not loaded.'); return; }
+    const wb = XLSX.utils.book_new();
+    const p = getMonthlyParams();
+    const rows = [['LabQro — 3-Year Financial Projection','','','','','',''],['','','','','','',''],
+      ['Month','Revenue','Total Costs','EBITDA','Margin %','ISR Provision','Net Income']];
+    let cumCash = -p.startup;
+    for (let i = 0; i < 36; i++) {
+      const d = calcMonthData(p, i);
+      cumCash += d.netIncome;
+      const margin = d.revenue > 0 ? Math.round(d.ebitda / d.revenue * 100) : 0;
+      rows.push(['M' + (i+1), d.revenue, d.totalCost, d.ebitda, margin + '%', d.isrProvision, d.netIncome]);
+    }
+    rows.push(['','','','','','',''],['Startup investment', -p.startup,'','','','',''],['Final cumulative cash', cumCash]);
+    const ws = XLSX.utils.aoa_to_sheet(rows);
+    ws['!cols'] = [{wch:10},{wch:14},{wch:14},{wch:14},{wch:10},{wch:14},{wch:14}];
+    XLSX.utils.book_append_sheet(wb, ws, '3-Year P&L');
+
+    // Add reagent modeler sheet
+    const rRows = [['LabQro — Reagent Cost Model','','','','',''],['','','','','',''],
+      ['Test','Analyzer','Price ($)','Cost/Run ($)','Volume/mo','Margin %']];
+    try {
+      const comodato = getComodatoPremium();
+      reagentData.forEach(t => {
+        const mult = getAnalyzerMult(t.analyzerKey);
+        const cost = t.analyzerKey ? Math.round(t.baseCost * mult * (1 + comodato)) : Math.round(t.baseCost);
+        const margin = t.price > 0 ? Math.round((t.price - cost) / t.price * 100) : 0;
+        let analyzer = 'Manual';
+        if (t.analyzerKey) { const c = analyzerCatalog[t.analyzerKey]; const o = c.options[rgSelectedAnalyzer[t.analyzerKey]]; analyzer = o.vendor + ' ' + o.model; }
+        rRows.push([t.name, analyzer, t.price, cost, t.vol, margin + '%']);
+      });
+    } catch(e) { rRows.push(['Error: ' + e.message]); }
+    const ws2 = XLSX.utils.aoa_to_sheet(rRows);
+    ws2['!cols'] = [{wch:36},{wch:22},{wch:10},{wch:14},{wch:10},{wch:10}];
+    XLSX.utils.book_append_sheet(wb, ws2, 'Reagent Model');
+
+    XLSX.writeFile(wb, 'LabQro_3YrProjection_' + new Date().toISOString().split('T')[0] + '.xlsx');
+  }
+
+  function exportFullBusinessPlanXlsx() {
+    if (typeof XLSX === 'undefined') { alert('SheetJS not loaded.'); return; }
+    const wb = XLSX.utils.book_new();
+    const p = getMonthlyParams();
+
+    // Sheet 1: Executive Summary
+    const s1 = [['LabQro — Executive Summary',''],['',''],
+      ['Startup investment', '$' + fmt(p.startup) + ' MXN'],
+      ['Monthly revenue (target)', '$' + fmt(p.studies * p.ticket) + ' MXN'],
+      ['Studies/month', p.studies], ['Avg ticket', '$' + fmt(p.ticket) + ' MXN'],
+      ['Staff count', p.staff], ['Reagent cost %', p.reagentPct + '%'],
+      ['Monthly rent', '$' + fmt(p.rent) + ' MXN'],
+    ];
+    const ws1 = XLSX.utils.aoa_to_sheet(s1);
+    ws1['!cols'] = [{wch:30},{wch:24}];
+    XLSX.utils.book_append_sheet(wb, ws1, 'Summary');
+
+    // Sheet 2: 36-month P&L
+    const s2 = [['Month','Revenue','Costs','EBITDA','ISR','Net Income','Cum Cash']];
+    let cum = -p.startup;
+    for (let i = 0; i < 36; i++) {
+      const d = calcMonthData(p, i); cum += d.netIncome;
+      s2.push(['M'+(i+1), d.revenue, d.totalCost, d.ebitda, d.isrProvision, d.netIncome, cum]);
+    }
+    const ws2 = XLSX.utils.aoa_to_sheet(s2);
+    XLSX.utils.book_append_sheet(wb, ws2, 'P&L 36mo');
+
+    // Sheet 3: Permits status
+    const s3 = [['Permit','Status','Critical','Depends On','Filed Date','Target Date']];
+    const colLabels = ['Not started','In progress','Submitted','Complete'];
+    permits.forEach(pm => {
+      s3.push([pm.name, colLabels[pm.col] || '', pm.critical ? 'YES' : '', pm.dep || '', pm.filedDate || '', pm.targetDate || '']);
+    });
+    const ws3 = XLSX.utils.aoa_to_sheet(s3);
+    ws3['!cols'] = [{wch:34},{wch:14},{wch:10},{wch:28},{wch:14},{wch:14}];
+    XLSX.utils.book_append_sheet(wb, ws3, 'Permits');
+
+    // Sheet 4: Physician CRM
+    const s4 = [['Name','Specialty','Clinic','Stage','Notes','Referrals','Last Contact']];
+    const stageNames = ['Identified','Contacted','Meeting scheduled','Sending referrals','Active partner'];
+    physicians.forEach(ph => {
+      s4.push([ph.name, ph.spec || '', ph.clinic || '', stageNames[ph.stage] || '', ph.notes || '', ph.referrals || 0, ph.lastContact || '']);
+    });
+    const ws4 = XLSX.utils.aoa_to_sheet(s4);
+    ws4['!cols'] = [{wch:24},{wch:18},{wch:22},{wch:20},{wch:30},{wch:10},{wch:14}];
+    XLSX.utils.book_append_sheet(wb, ws4, 'Physician CRM');
+
+    // Sheet 5: SWOT
+    if (swotData && swotData.s) {
+      const maxLen = Math.max(swotData.s.length, swotData.w.length, swotData.o.length, swotData.t.length);
+      const s5 = [['Strengths','Weaknesses','Opportunities','Threats']];
+      for (let i = 0; i < maxLen; i++) {
+        s5.push([swotData.s[i]||'', swotData.w[i]||'', swotData.o[i]||'', swotData.t[i]||'']);
+      }
+      const ws5 = XLSX.utils.aoa_to_sheet(s5);
+      ws5['!cols'] = [{wch:40},{wch:40},{wch:40},{wch:40}];
+      XLSX.utils.book_append_sheet(wb, ws5, 'SWOT');
+    }
+
+    XLSX.writeFile(wb, 'LabQro_BusinessPlan_' + new Date().toISOString().split('T')[0] + '.xlsx');
+  }
 </script>
 </body>
 </html>
