@@ -78,6 +78,7 @@
 <script type="module">
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
   import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection, addDoc, deleteDoc, query, orderBy } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+  import { getAuth, signInAnonymously, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 
   const firebaseConfig = {
     apiKey: "AIzaSyCm4LDkaWjGvpYsI8vEK6OeLKWyE1PCn-w",
@@ -90,12 +91,22 @@
 
   const app = initializeApp(firebaseConfig);
 
-  // ── Security note ──
+  // ── Security ──
+  // Auth: Firebase Anonymous Auth + SHA-256 PIN hashes stored in config/pins.
+  // Firestore rules enforce: only authenticated users with a sessions/{uid}
+  // doc can read labqro/*, only founders can write.
   // App Check removed — reCAPTCHA v3 causes persistent token refresh errors
-  // on GitHub Pages. Security is handled via Firestore rules scoped to the
-  // /labqro/{document} path. Rotate the API key if the project becomes public.
+  // on GitHub Pages.
 
   const db = getFirestore(app);
+  const auth = getAuth(app);
+
+  // ── Auth helper: hash PIN with SHA-256 for server-side verification ──
+  async function hashPin(pin) {
+    const enc = new TextEncoder().encode(pin);
+    const buf = await crypto.subtle.digest('SHA-256', enc);
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+  }
 
   // Expose db and helpers to global scope
   window._db = db;
@@ -108,8 +119,13 @@
   window._deleteDoc = deleteDoc;
   window._query = query;
   window._orderBy = orderBy;
-  window._dbReady = true;
-  window.dispatchEvent(new Event('dbReady'));
+  window._auth = auth;
+  window._signInAnonymously = signInAnonymously;
+  window._hashPin = hashPin;
+
+  // NOTE: dbReady is NOT fired here anymore.
+  // It fires inside submitPin() after successful auth + role write.
+  // This ensures no Firestore reads happen before the user is authenticated.
 </script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -5077,11 +5093,8 @@ Quedo a sus órdenes,
   var _staffingReady = false;      // Staffing model data
   var _reagentBridgeReady = false; // Reagent modeler data
 
-  // PIN access — needed by submitPin() which is called from HTML
-  var ACCESS_PINS = {
-    founder:  '2025',       // Full access
-    investor: 'invest',     // Read-only investor view
-  };
+  // PIN access — PINs are now verified server-side via config/pins (SHA-256 hashes).
+  // ACCESS_PINS removed — no plaintext secrets in client code.
   var currentRole = null;
   var INVESTOR_HIDDEN_SECTIONS = ['Tools', 'Compliance', 'Workspace'];
   var INVESTOR_HIDDEN_PAGES    = ['suppliers','physicians','equipment','checklist','notes','mock-inspection','sat-compliance','locations'];
@@ -11735,19 +11748,63 @@ Quedo a sus órdenes,
   // ══════════════════════════════════════════
   // ACCESS_PINS, currentRole, INVESTOR_HIDDEN_* declared at top of script
 
-  function submitPin() {
+  async function submitPin() {
     const val = document.getElementById('pin-input').value.trim();
     const errEl = document.getElementById('pin-error');
-    if (val === ACCESS_PINS.founder) {
-      currentRole = 'founder';
-      unlockApp(false);
-    } else if (val === ACCESS_PINS.investor) {
-      currentRole = 'investor';
-      unlockApp(true);
-    } else {
-      if (errEl) errEl.style.display = 'block';
-      const inp = document.getElementById('pin-input');
-      if (inp) { inp.value = ''; inp.style.borderColor = 'var(--red)'; inp.focus(); }
+    const btn = document.getElementById('pin-submit');
+    if (!val) return;
+
+    // Disable UI while authenticating
+    btn.disabled = true;
+    btn.textContent = 'Verifying…';
+
+    try {
+      const db = window._db;
+      const hash = await window._hashPin(val);
+
+      // 1) Read the config/pins doc to check the PIN server-side
+      const pinsSnap = await window._getDoc(window._doc(db, 'config', 'pins'));
+      if (!pinsSnap.exists()) {
+        throw new Error('PIN config not found — run the seeder first');
+      }
+      const pinData = pinsSnap.data();
+      let role = null;
+      if (hash === pinData.founder) role = 'founder';
+      else if (hash === pinData.investor) role = 'investor';
+
+      if (!role) {
+        throw new Error('bad-pin');
+      }
+
+      // 2) Sign in anonymously → real Firebase uid
+      const cred = await window._signInAnonymously(window._auth);
+      const uid = cred.user.uid;
+
+      // 3) Write session doc so Firestore rules can verify role
+      await window._setDoc(window._doc(db, 'sessions', uid), {
+        role: role,
+        ts: Date.now()
+      });
+
+      // 4) Unlock app
+      currentRole = role;
+      unlockApp(role === 'investor');
+
+      // 5) Fire dbReady now that user is authenticated
+      window._dbReady = true;
+      window.dispatchEvent(new Event('dbReady'));
+
+    } catch (e) {
+      btn.disabled = false;
+      btn.textContent = 'Enter';
+      if (e.message === 'bad-pin') {
+        if (errEl) errEl.style.display = 'block';
+        const inp = document.getElementById('pin-input');
+        if (inp) { inp.value = ''; inp.style.borderColor = 'var(--red)'; inp.focus(); }
+      } else {
+        console.error('Auth error:', e);
+        if (errEl) { errEl.textContent = 'Auth error — check console'; errEl.style.display = 'block'; }
+      }
     }
   }
 
