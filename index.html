@@ -78,7 +78,7 @@
 <script type="module">
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
   import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection, addDoc, deleteDoc, query, orderBy } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
-  import { getAuth, signInAnonymously, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+  import { getAuth, signInAnonymously, onAuthStateChanged, browserSessionPersistence, setPersistence } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 
   const firebaseConfig = {
     apiKey: "AIzaSyCm4LDkaWjGvpYsI8vEK6OeLKWyE1PCn-w",
@@ -121,6 +121,8 @@
   window._orderBy = orderBy;
   window._auth = auth;
   window._signInAnonymously = signInAnonymously;
+  window._setPersistence = setPersistence;
+  window._browserSessionPersistence = browserSessionPersistence;
   window._hashPin = hashPin;
 
   // NOTE: dbReady is NOT fired here anymore.
@@ -11758,6 +11760,8 @@ Quedo a sus órdenes,
     btn.disabled = true;
     btn.textContent = 'Verifying…';
 
+    const isLocal = location.protocol === 'file:';
+
     try {
       const db = window._db;
       const hash = await window._hashPin(val);
@@ -11776,21 +11780,27 @@ Quedo a sus órdenes,
         throw new Error('bad-pin');
       }
 
-      // 2) Sign in anonymously → real Firebase uid
-      const cred = await window._signInAnonymously(window._auth);
-      const uid = cred.user.uid;
+      // 2) Authenticate
+      //    Hosted: full anonymous auth + session doc → Firestore rules enforced
+      //    file://: Firebase Auth doesn't work on file:// origins, so we skip it.
+      //            PIN was already verified against the Firestore hash above.
+      //            Firestore rules must allow unauthenticated reads for this to work.
+      if (!isLocal) {
+        const cred = await window._signInAnonymously(window._auth);
+        const uid = cred.user.uid;
 
-      // 3) Write session doc so Firestore rules can verify role
-      await window._setDoc(window._doc(db, 'sessions', uid), {
-        role: role,
-        ts: Date.now()
-      });
+        // 3) Write session doc so Firestore rules can verify role
+        await window._setDoc(window._doc(db, 'sessions', uid), {
+          role: role,
+          ts: Date.now()
+        });
+      }
 
       // 4) Unlock app
       currentRole = role;
       unlockApp(role === 'investor');
 
-      // 5) Fire dbReady now that user is authenticated
+      // 5) Fire dbReady now that user is verified
       window._dbReady = true;
       window.dispatchEvent(new Event('dbReady'));
 
