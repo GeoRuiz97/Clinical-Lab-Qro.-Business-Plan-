@@ -615,8 +615,9 @@
     display: none;
     position: absolute;
     bottom: calc(100% + 8px);
-    left: 50%;
-    transform: translateX(-50%);
+    right: -8px;
+    left: auto;
+    transform: none;
     background: #1a1a18;
     color: #e8e8e4;
     border-radius: 10px;
@@ -636,8 +637,9 @@
     content: '';
     position: absolute;
     top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
+    right: 14px;
+    left: auto;
+    transform: none;
     border: 6px solid transparent;
     border-top-color: #1a1a18;
   }
@@ -908,6 +910,10 @@
   }
   .phase-row.clickable:hover::after { transform: translateX(3px); color: var(--text-primary); }
 
+  /* ─── MINI GANTT CLICKABLE ROWS ─── */
+  .mini-gantt-row:hover { background: var(--bg-secondary); }
+  .mini-gantt-row:hover div[style*="opacity:0.85"] { opacity: 1 !important; }
+
   /* ─── BACK NAV ─── */
   .back-btn {
     display: inline-flex; align-items: center; gap: 6px;
@@ -1104,77 +1110,6 @@
   .tw-progress-stat { background: var(--bg-primary); border: 0.5px solid var(--border); border-radius: var(--radius-md); padding: 12px 14px; text-align: center; }
   .tw-progress-val { font-size: 22px; font-weight: 500; font-family: var(--font-mono); }
   .tw-progress-label { font-size: 10px; color: var(--text-tertiary); margin-top: 2px; text-transform: uppercase; letter-spacing: 0.06em; }
-
-  /* ─── ROADMAP ACCORDION ─── */
-  .rm-phase {
-    border: 0.5px solid var(--border);
-    border-radius: var(--radius-lg);
-    background: var(--bg-primary);
-    margin-bottom: 10px;
-    overflow: hidden;
-  }
-  .rm-phase-header {
-    display: flex; align-items: center; gap: 12px;
-    padding: 14px 18px; cursor: pointer;
-    transition: background 0.12s;
-    user-select: none;
-  }
-  .rm-phase-header:hover { background: var(--bg-secondary); }
-  .rm-phase-num {
-    width: 30px; height: 30px; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 13px; font-weight: 500; flex-shrink: 0;
-  }
-  .rm-phase-title { flex: 1; }
-  .rm-phase-name { font-size: 14px; font-weight: 500; color: var(--text-primary); }
-  .rm-phase-meta { font-size: 11px; color: var(--text-tertiary); margin-top: 2px; }
-  .rm-phase-chevron {
-    font-size: 12px; color: var(--text-tertiary); flex-shrink: 0;
-    transition: transform 0.22s ease;
-  }
-  .rm-phase.open .rm-phase-chevron { transform: rotate(90deg); }
-
-  .rm-phase-body {
-    max-height: 0; overflow: hidden;
-    transition: max-height 0.3s ease;
-    border-top: 0px solid var(--border);
-  }
-  .rm-phase.open .rm-phase-body {
-    max-height: 2000px;
-    border-top: 0.5px solid var(--border);
-  }
-  .rm-phase-inner { padding: 4px 0 8px; }
-
-  .rm-item {
-    display: flex; align-items: flex-start; gap: 12px;
-    padding: 10px 18px; cursor: pointer;
-    transition: background 0.12s;
-    border-bottom: 0.5px solid var(--border);
-  }
-  .rm-item:last-child { border-bottom: none; }
-  .rm-item:hover { background: var(--bg-secondary); }
-  .rm-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
-  .rm-item-body { flex: 1; }
-  .rm-item-name { font-size: 13px; font-weight: 500; color: var(--text-primary); }
-  .rm-item-desc { font-size: 12px; color: var(--text-secondary); margin-top: 2px; line-height: 1.5; }
-  .rm-item-time { font-size: 11px; color: var(--text-tertiary); margin-top: 3px; }
-  .rm-item-expand {
-    max-height: 0; overflow: hidden;
-    transition: max-height 0.22s ease;
-  }
-  .rm-item.open .rm-item-expand { max-height: 400px; }
-  .rm-item-detail {
-    margin-top: 10px; padding: 10px 12px;
-    background: var(--bg-secondary); border-radius: var(--radius-md);
-    font-size: 12px; color: var(--text-secondary); line-height: 1.7;
-  }
-  .rm-item-detail strong { color: var(--text-primary); font-weight: 500; }
-  .rm-item-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 8px; }
-  .rm-item-chevron {
-    font-size: 11px; color: var(--text-tertiary); flex-shrink: 0;
-    margin-top: 3px; transition: transform 0.18s;
-  }
-  .rm-item.open .rm-item-chevron { transform: rotate(90deg); }
 
   /* ─── BUDGET TRACKER ─── */
   .budget-category {
@@ -1902,6 +1837,45 @@
   }
 
   /* ─── PIN GATE ─── */
+
+  /* ─── UNIT ECONOMICS ─── */
+  .ue-cell-input {
+    width: 100%; text-align: right; border: none; background: transparent;
+    font-size: 12px; font-family: var(--font-mono); font-weight: 500;
+    color: var(--green-dark); outline: none; padding: 3px 5px;
+    border-radius: 4px; transition: background 0.1s, box-shadow 0.1s;
+    min-width: 52px;
+  }
+  .ue-cell-input:hover  { background: rgba(29,158,117,0.07); }
+  .ue-cell-input:focus  { background: rgba(29,158,117,0.12); box-shadow: inset 0 0 0 1.5px var(--green); }
+  .ue-name-input {
+    width: 100%; border: none; background: transparent;
+    font-size: 12px; font-family: var(--font); font-weight: 500;
+    color: var(--text-primary); outline: none; padding: 3px 5px;
+    border-radius: 4px; transition: background 0.1s;
+  }
+  .ue-name-input:hover { background: rgba(0,0,0,0.03); }
+  .ue-name-input:focus { background: rgba(29,158,117,0.07); box-shadow: inset 0 0 0 1.5px var(--green); }
+  .ue-del-btn {
+    width: 22px; height: 22px; border-radius: 50%; border: none;
+    background: transparent; color: var(--text-tertiary); cursor: pointer;
+    font-size: 11px; display: flex; align-items: center; justify-content: center;
+    transition: all 0.12s; flex-shrink: 0;
+  }
+  .ue-del-btn:hover { background: #fcebeb; color: var(--red); }
+  #uc-table { table-layout: auto; border-collapse: collapse; }
+  #uc-table thead th { white-space: nowrap; padding: 10px 8px; font-size: 10px; }
+  #uc-table tbody tr td { padding: 7px 8px; border-bottom: 0.5px solid var(--border); vertical-align: middle; font-size: 12px; white-space: nowrap; }
+  #uc-table tbody tr:hover td { background: rgba(0,0,0,0.018); }
+  #uc-table tbody tr td:first-child { white-space: normal; }
+  .ue-margin-hi  { color: var(--green-dark) !important; font-weight: 600; }
+  .ue-margin-mid { color: var(--amber) !important; font-weight: 500; }
+  .ue-margin-lo  { color: var(--red) !important; font-weight: 600; }
+
+  @media (max-width: 900px) {
+    #uc-kpi-strip { grid-template-columns: repeat(3, 1fr) !important; }
+  }
+
   #pin-gate {
     position: fixed; inset: 0; background: var(--bg-tertiary);
     z-index: 9999; display: flex; align-items: center; justify-content: center;
@@ -2070,6 +2044,21 @@
 </div>
 
 
+
+<!-- ═══ DATA FLOW MAP OVERLAY ═══ -->
+<div id="dataflow-overlay" style="display:none;position:fixed;inset:0;background:rgba(26,26,24,0.45);z-index:600;align-items:center;justify-content:center" onclick="if(event.target===this)this.style.display='none'">
+  <div id="df-modal" style="background:#fff;border-radius:14px;width:680px;max-width:95vw;max-height:94vh;overflow-y:auto;padding:24px 28px 20px;box-shadow:0 8px 40px rgba(0,0,0,0.2)">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <div>
+        <div style="font-size:17px;font-weight:500;color:#1a1a18">Data Flow Map</div>
+        <div style="font-size:11px;color:#999;margin-top:2px">Click any module to navigate there</div>
+      </div>
+      <button onclick="document.getElementById('dataflow-overlay').style.display='none'" style="padding:5px 12px;border:1px solid #ddd;border-radius:7px;font-size:12px;cursor:pointer;background:#fff;font-family:var(--font);color:#666">Close</button>
+    </div>
+    <div id="dataflow-chart"></div>
+  </div>
+</div>
+
 <!-- ═══ MOBILE HAMBURGER ═══ -->
 <button id="hamburger" onclick="toggleSidebar()" aria-label="Menu">
   <span></span><span></span><span></span>
@@ -2098,7 +2087,7 @@
   <div class="sb-section sb-collapsible" onclick="toggleSbSection(this)">Strategy <span class="sb-chevron">›</span></div>
   <div class="sb-group">
     <button class="sb-item" onclick="nav('roadmap',this)">
-      <div class="sb-icon" style="background:#e6f1fb;color:#185fa5">→</div> Roadmap & Timeline
+      <div class="sb-icon" style="background:#e6f1fb;color:#185fa5">→</div> Gantt Timeline
     </button>
     <button class="sb-item" onclick="nav('canvas',this)">
       <div class="sb-icon" style="background:#f5e6f0;color:#7a2d6b">⊡</div> Business Model Canvas
@@ -2141,6 +2130,9 @@
     <button class="sb-item" onclick="nav('pricing',this)">
       <div class="sb-icon" style="background:#f5e6f0;color:#7a2d6b">≡</div> Pricing Matrix
     </button>
+    <button class="sb-item" onclick="nav('unit-cost',this)">
+      <div class="sb-icon" style="background:#e1f5ee;color:#0f6e56">⚗</div> Unit Cost & Profitability
+    </button>
   </div>
 
   <!-- ── Setup & Procurement ── -->
@@ -2148,9 +2140,6 @@
   <div class="sb-group">
     <button class="sb-item" onclick="nav('locations',this)">
       <div class="sb-icon" style="background:#e6f1fb;color:#185fa5">⊕</div> Location Scoring
-    </button>
-    <button class="sb-item" onclick="nav('equipment',this)">
-      <div class="sb-icon" style="background:#eeedfe;color:#534ab7">▥</div> Equipment Compare
     </button>
     <button class="sb-item" onclick="nav('staffing',this)">
       <div class="sb-icon" style="background:#dde8f8;color:#2a5ea8">👥</div> Staffing Model
@@ -2246,6 +2235,7 @@
           <span id="sync-label">Connecting…</span>
         </div>
         <button class="btn btn-primary" style="font-size:11px;padding:5px 14px" onclick="openInvestorSummary()">📄 Investor Summary</button>
+        <button class="btn" style="font-size:11px;padding:5px 14px;color:var(--blue);border-color:rgba(24,95,165,0.3)" onclick="openDataFlowMap()">⊡ Data Flow Map</button>
       </div>
     </div>
 
@@ -2290,7 +2280,7 @@
         <div class="card-title" style="margin:0">18-month timeline</div>
         <a onclick="nav('roadmap',null)" style="font-size:11px;color:var(--blue);cursor:pointer;text-decoration:none">Full Gantt →</a>
       </div>
-      <div id="dash-mini-gantt" style="overflow-x:auto"></div>
+      <div id="dash-mini-gantt"></div>
     </div>
 
     <!-- ── Two-column main area (equal height) ── -->
@@ -2388,407 +2378,14 @@
 
   <!-- ── ROADMAP + TIMELINE (merged) ── -->
   <section id="page-roadmap" class="page">
-    <div class="page-title">Roadmap & Timeline</div>
-    <div class="page-sub">Phase plan and 18-month Gantt view</div>
+    <div class="page-title">Gantt Timeline</div>
+    <div class="page-sub">18-month project timeline with critical path and milestones</div>
 
-    <div class="tab-row" style="margin-bottom:18px">
-      <div class="tab active" id="rt-tab-roadmap" onclick="switchRTTab('roadmap')">Phase roadmap</div>
-      <div class="tab" id="rt-tab-timeline" onclick="switchRTTab('timeline')">Gantt timeline</div>
-    </div>
+    <div id="rt-roadmap" style="display:none"></div>
+    <div id="rt-tab-roadmap" style="display:none"></div>
+    <div id="rt-tab-timeline" style="display:none"></div>
 
-    <!-- ROADMAP TAB -->
-    <div id="rt-roadmap">
-
-      <!-- Phase 1 -->
-      <div class="rm-phase open" id="rm-phase-1">
-        <div class="rm-phase-header" onclick="toggleRmPhase(1)">
-          <div class="rm-phase-num" style="background:#e6f1fb;color:#185fa5">1</div>
-          <div class="rm-phase-title">
-            <div class="rm-phase-name">Research & Planning</div>
-            <div class="rm-phase-meta">Months 1–2 · Est. $15,000–30,000 MXN</div>
-          </div>
-          <span class="badge badge-progress">Current phase</span>
-          <span class="rm-phase-chevron">›</span>
-        </div>
-        <div class="rm-phase-body">
-          <div class="rm-phase-inner">
-            <div class="rm-item" onclick="toggleRmItem(this)">
-              <div class="rm-dot" style="background:#185fa5"></div>
-              <div class="rm-item-body">
-                <div class="rm-item-name">Market research — Querétaro</div>
-                <div class="rm-item-desc">Population, income levels, competitor density by zone, unmet demand analysis</div>
-                <div class="rm-item-expand">
-                  <div class="rm-item-detail">
-                    <strong>What to do:</strong> Map all existing labs within 5km of each candidate zone. Compare pricing, test menus, and hours. Survey 20–30 patients at IMSS waiting rooms about their lab habits and pain points. Pull INEGI population data for Juriquilla, Satélite, and Centro.<br><br>
-                    <strong>Key question to answer:</strong> Which zone has the highest unmet demand relative to existing supply?<br><br>
-                    <strong>Deliverable:</strong> One-page competitive map per zone with a recommendation.
-                    <div class="rm-item-tags">
-                      <span class="task-tag tag-time">2–3 weeks</span>
-                      <span class="task-tag tag-cost">Low cost</span>
-                      <span class="task-tag tag-tip">Do this before signing any lease</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <span class="rm-item-chevron">›</span>
-            </div>
-            <div class="rm-item" onclick="toggleRmItem(this)">
-              <div class="rm-dot" style="background:#185fa5"></div>
-              <div class="rm-item-body">
-                <div class="rm-item-name">Define business model</div>
-                <div class="rm-item-desc">Direct patient, physician referral, corporate contracts, IMSS subrogación</div>
-                <div class="rm-item-expand">
-                  <div class="rm-item-detail">
-                    <strong>Revenue mix to target:</strong> 60% direct patient walk-in, 30% physician referral, 10% corporate/IMSS. The physician referral channel has the highest LTV — a single referring médico can send 30–80 patients/month.<br><br>
-                    <strong>IMSS subrogación:</strong> High volume but low margin and slow payment (60–90 days). Only pursue once you have operational stability.<br><br>
-                    <strong>Deliverable:</strong> Written business model canvas with revenue assumptions.
-                    <div class="rm-item-tags">
-                      <span class="task-tag tag-time">1 week</span>
-                      <span class="task-tag tag-tip">Physician referral = highest ROI channel</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <span class="rm-item-chevron">›</span>
-            </div>
-            <div class="rm-item" onclick="toggleRmItem(this)">
-              <div class="rm-dot" style="background:#185fa5"></div>
-              <div class="rm-item-body">
-                <div class="rm-item-name">Financial modeling</div>
-                <div class="rm-item-desc">Startup costs, break-even, 3-year P&L, funding sources</div>
-                <div class="rm-item-expand">
-                  <div class="rm-item-detail">
-                    <strong>Key inputs to model:</strong> Equipment (purchase vs comodato), rent by zone, staffing (QFB + 2 techs + front desk minimum), reagent costs by test volume, and COFEPRIS permit fees.<br><br>
-                    <strong>Break-even target:</strong> ~250–300 studies/month at an avg ticket of $600 MXN. Most labs reach this in months 4–8 post-launch.<br><br>
-                    <strong>Funding options:</strong> Personal capital, NAFIN PyME loan (up to $2M MXN at ~12%), or silent partner. Use the Financial Calculator page to model scenarios.
-                    <div class="rm-item-tags">
-                      <span class="task-tag tag-time">1–2 weeks</span>
-                      <span class="task-tag tag-resource">See: Financial Calculator</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <span class="rm-item-chevron">›</span>
-            </div>
-            <div class="rm-item" onclick="toggleRmItem(this)">
-              <div class="rm-dot" style="background:#185fa5"></div>
-              <div class="rm-item-body">
-                <div class="rm-item-name">Location shortlist</div>
-                <div class="rm-item-desc">Min 60m², ground floor, parking, near high-traffic medical zones</div>
-                <div class="rm-item-expand">
-                  <div class="rm-item-detail">
-                    <strong>NOM-007 requirements:</strong> Minimum usable area ~60m². Must have separate reception, sample collection, analysis, and waste areas. Ground floor strongly preferred for patient access.<br><br>
-                    <strong>Top zones:</strong> Juriquilla/Zibatá (high income, low competition), Satélite/Epigmenio (high foot traffic, IMSS overflow), Centro/Constituyentes (visibility, médicos nearby).<br><br>
-                    <strong>Before signing:</strong> Confirm uso de suelo allows servicios médicos. Negotiate rent-free buildout period (target 2–3 months).
-                    <div class="rm-item-tags">
-                      <span class="task-tag tag-critical">Confirm uso de suelo first</span>
-                      <span class="task-tag tag-time">2–4 weeks</span>
-                      <span class="task-tag tag-resource">See: Location Scoring tool</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <span class="rm-item-chevron">›</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Phase 2 -->
-      <div class="rm-phase" id="rm-phase-2">
-        <div class="rm-phase-header" onclick="toggleRmPhase(2)">
-          <div class="rm-phase-num" style="background:#faeeda;color:#854f0b">2</div>
-          <div class="rm-phase-title">
-            <div class="rm-phase-name">Legal & Corporate</div>
-            <div class="rm-phase-meta">Months 2–4 · Est. $53,000–135,000 MXN</div>
-          </div>
-          <span class="badge badge-todo">Upcoming</span>
-          <span class="rm-phase-chevron">›</span>
-        </div>
-        <div class="rm-phase-body">
-          <div class="rm-phase-inner">
-            <div class="rm-item" onclick="toggleRmItem(this)">
-              <div class="rm-dot" style="background:#888780"></div>
-              <div class="rm-item-body">
-                <div class="rm-item-name">Constitución de empresa (S.A. de C.V.)</div>
-                <div class="rm-item-desc">Notario, acta constitutiva, razón social</div>
-                <div class="rm-item-time">~2–4 weeks · ~$15,000–25,000 MXN</div>
-                <div class="rm-item-expand">
-                  <div class="rm-item-detail">
-                    <strong>Why S.A. de C.V.:</strong> Limits personal liability, has clean structure for partners or investors, and is the format COFEPRIS expects for clinical labs. Avoid Persona Física — too much personal exposure.<br><br>
-                    <strong>What the notario needs:</strong> Proposed razón social (check availability at SE portal first), partner names and CURP, capital split, and your objeto social — make it broad: <em>"Prestación de servicios de laboratorio de análisis clínicos, toma de muestras, y servicios de salud en general."</em><br><br>
-                    <strong>Tip:</strong> The notario process takes 2–4 weeks. Start this the moment you have your location locked.
-                    <div class="rm-item-tags">
-                      <span class="task-tag tag-cost">$15,000–25,000 MXN</span>
-                      <span class="task-tag tag-time">2–4 weeks</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <span class="rm-item-chevron">›</span>
-            </div>
-            <div class="rm-item" onclick="toggleRmItem(this)">
-              <div class="rm-dot" style="background:#888780"></div>
-              <div class="rm-item-body">
-                <div class="rm-item-name">RFC ante el SAT</div>
-                <div class="rm-item-desc">Tax registration, CFDI setup, régimen fiscal</div>
-                <div class="rm-item-expand">
-                  <div class="rm-item-detail">
-                    <strong>Process:</strong> Register online at sat.gob.mx with your Acta Constitutiva and e.firma. Choose <em>Régimen General de Ley Personas Morales</em>. This enables you to issue CFDI invoices (required for corporate clients and IMSS).<br><br>
-                    <strong>Also get:</strong> e.firma (electronic signature) — needed for virtually every government portal. Schedule appointment at your nearest SAT office.<br><br>
-                    <strong>PAC provider:</strong> You'll need a PAC (Proveedor Autorizado de Certificación) to issue CFDIs. Facturama, Finkok, and SW SAPiens are popular affordable options (~$500–2,000 MXN/year).
-                    <div class="rm-item-tags">
-                      <span class="task-tag tag-cost">Free (SAT) + PAC fee</span>
-                      <span class="task-tag tag-time">1–2 weeks</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <span class="rm-item-chevron">›</span>
-            </div>
-            <div class="rm-item" onclick="toggleRmItem(this)">
-              <div class="rm-dot" style="background:#888780"></div>
-              <div class="rm-item-body">
-                <div class="rm-item-name">IMPI trademark (recommended)</div>
-                <div class="rm-item-desc">Register lab name and logo</div>
-                <div class="rm-item-expand">
-                  <div class="rm-item-detail">
-                    <strong>Why bother:</strong> If you plan to grow to multiple locations or franchise the model, your brand is a core asset. IMPI registration is cheap insurance against a competitor copying your name.<br><br>
-                    <strong>Process:</strong> File at impi.gob.mx. Choose class 44 (servicios médicos). Search for conflicts first. Filing fee ~$2,500 MXN. Approval takes 3–6 months but the filing date is what protects you.<br><br>
-                    <strong>Not urgent</strong> but do it early so the clock starts.
-                    <div class="rm-item-tags">
-                      <span class="task-tag tag-cost">~$2,500 MXN</span>
-                      <span class="task-tag tag-time">3–6 months for approval</span>
-                      <span class="task-tag tag-tip">Optional but smart</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <span class="rm-item-chevron">›</span>
-            </div>
-            <div class="rm-item" onclick="toggleRmItem(this)">
-              <div class="rm-dot" style="background:#888780"></div>
-              <div class="rm-item-body">
-                <div class="rm-item-name">Lease contract for lab space</div>
-                <div class="rm-item-desc">Must specify uso de suelo: servicios médicos</div>
-                <div class="rm-item-expand">
-                  <div class="rm-item-detail">
-                    <strong>Critical clause:</strong> The lease must explicitly state the permitted use as <em>"servicios médicos / laboratorio clínico."</em> COFEPRIS will check this during inspection. A generic commercial lease will not be accepted.<br><br>
-                    <strong>Negotiate:</strong> Rent-free period during buildout (2–3 months is standard for commercial medical space). Permission for structural modifications (plumbing for sinks, waste room, ventilation). Long initial term (3–5 years) gives you stability and leverage.<br><br>
-                    <strong>Deposit:</strong> Typically 2 months. Factor into startup capital.
-                    <div class="rm-item-tags">
-                      <span class="task-tag tag-critical">Uso de suelo wording required</span>
-                      <span class="task-tag tag-cost">2 months deposit</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <span class="rm-item-chevron">›</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Phase 3 -->
-      <div class="rm-phase" id="rm-phase-3">
-        <div class="rm-phase-header" onclick="toggleRmPhase(3)">
-          <div class="rm-phase-num" style="background:#fcebeb;color:#a32d2d">3</div>
-          <div class="rm-phase-title">
-            <div class="rm-phase-name">COFEPRIS & Sanitary Permits</div>
-            <div class="rm-phase-meta">Months 3–9 · Allow 6+ months</div>
-          </div>
-          <div style="display:flex;gap:5px">
-            <span class="badge badge-todo">Upcoming</span>
-            <span class="badge badge-urgent">Critical path</span>
-          </div>
-          <span class="rm-phase-chevron">›</span>
-        </div>
-        <div class="rm-phase-body">
-          <div class="rm-phase-inner">
-            <div class="rm-item" onclick="toggleRmItem(this)">
-              <div class="rm-dot" style="background:#ef9f27"></div>
-              <div class="rm-item-body">
-                <div class="rm-item-name">Licencia Sanitaria — COFEPRIS</div>
-                <div class="rm-item-desc">Main permit to operate. Requires Director Técnico, physical inspection, equipment list</div>
-                <div class="rm-item-time">60–120 business days officially — plan for more</div>
-                <div class="rm-item-expand">
-                  <div class="rm-item-detail">
-                    <strong>This is your longest dependency.</strong> File as early as possible — everything else waits on this.<br><br>
-                    <strong>What COFEPRIS will inspect:</strong> Physical layout matching submitted floor plan, all listed equipment present and calibrated, QFB Director Técnico named and cédula on file, RPBI waste plan in place, hygiene and safety standards met.<br><br>
-                    <strong>Common rejection reasons:</strong> Floor plan mismatch, missing equipment calibration certs, incomplete RPBI contract, QFB cédula not registered with DGP.<br><br>
-                    <strong>Pre-inspection tip:</strong> Hire a COFEPRIS consultant (~$5,000–10,000 MXN) for a mock inspection before the real one. Saves months.
-                    <div class="rm-item-tags">
-                      <span class="task-tag tag-cost">$5,000–15,000 MXN in fees</span>
-                      <span class="task-tag tag-critical">Start immediately after RFC</span>
-                      <span class="task-tag tag-resource">See: Regulatory page</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <span class="rm-item-chevron">›</span>
-            </div>
-            <div class="rm-item" onclick="toggleRmItem(this)">
-              <div class="rm-dot" style="background:#ef9f27"></div>
-              <div class="rm-item-body">
-                <div class="rm-item-name">Cumplimiento NOM-007-SSA3-2011</div>
-                <div class="rm-item-desc">General lab organization and infrastructure standards</div>
-                <div class="rm-item-expand">
-                  <div class="rm-item-detail">
-                    <strong>What it covers:</strong> Physical space requirements (areas de recepción, toma de muestra, análisis, lavado, almacén), minimum equipment, lighting, ventilation, and biosafety measures.<br><br>
-                    <strong>Key requirement:</strong> Each functional area must be physically separated — you can't take samples in the same space where you run analyzers.<br><br>
-                    <strong>Architect tip:</strong> Hire a local architect familiar with this NOM before finalizing your buildout plan. Retrofitting is expensive.
-                    <div class="rm-item-tags">
-                      <span class="task-tag tag-time">Ongoing compliance</span>
-                      <span class="task-tag tag-tip">Plan buildout around this NOM</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <span class="rm-item-chevron">›</span>
-            </div>
-            <div class="rm-item" onclick="toggleRmItem(this)">
-              <div class="rm-dot" style="background:#ef9f27"></div>
-              <div class="rm-item-body">
-                <div class="rm-item-name">Cumplimiento NOM-087-SEMARNAT (RPBI)</div>
-                <div class="rm-item-desc">Biological hazardous waste management plan</div>
-                <div class="rm-item-expand">
-                  <div class="rm-item-detail">
-                    <strong>What you need:</strong> Written RPBI management plan, signed contract with an authorized waste transporter, red containers for sharps and biohazard waste, monthly generation log.<br><br>
-                    <strong>Transporters in Querétaro:</strong> ECOQUIM and STERICYCLE are authorized. Get quotes from both — pricing varies significantly by pickup frequency.<br><br>
-                    <strong>This document</strong> is required before COFEPRIS will schedule your inspection.
-                    <div class="rm-item-tags">
-                      <span class="task-tag tag-cost">~$800–1,500 MXN/mo transporter fee</span>
-                      <span class="task-tag tag-critical">Required for COFEPRIS inspection</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <span class="rm-item-chevron">›</span>
-            </div>
-            <div class="rm-item" onclick="toggleRmItem(this)">
-              <div class="rm-dot" style="background:#ef9f27"></div>
-              <div class="rm-item-body">
-                <div class="rm-item-name">Aviso de funcionamiento</div>
-                <div class="rm-item-desc">Filed via COFEPRIS portal (SIVISAM) — required before opening</div>
-                <div class="rm-item-expand">
-                  <div class="rm-item-detail">
-                    <strong>What it is:</strong> An electronic notice filed at sivisam.cofepris.gob.mx that formally registers your lab as an operational health establishment. Different from the Licencia Sanitaria — this is a notice, not a permit.<br><br>
-                    <strong>When to file:</strong> File this before or simultaneously with the Licencia Sanitaria application. The SIVISAM account and Aviso number are prerequisites for the Licencia process.<br><br>
-                    <strong>Cost:</strong> Minimal — mainly government portal fees.
-                    <div class="rm-item-tags">
-                      <span class="task-tag tag-time">1–2 weeks</span>
-                      <span class="task-tag tag-cost">Minimal cost</span>
-                      <span class="task-tag tag-resource">Portal: sivisam.cofepris.gob.mx</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <span class="rm-item-chevron">›</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Phase 4–6 -->
-      <div class="rm-phase" id="rm-phase-4">
-        <div class="rm-phase-header" onclick="toggleRmPhase(4)">
-          <div class="rm-phase-num" style="background:#eeedfe;color:#534ab7">4–6</div>
-          <div class="rm-phase-title">
-            <div class="rm-phase-name">Infrastructure, Staffing & Launch</div>
-            <div class="rm-phase-meta">Months 6–18 · Run in parallel with permits</div>
-          </div>
-          <span class="badge badge-todo">Upcoming</span>
-          <span class="rm-phase-chevron">›</span>
-        </div>
-        <div class="rm-phase-body">
-          <div class="rm-phase-inner">
-            <div class="rm-item" onclick="toggleRmItem(this)">
-              <div class="rm-dot" style="background:#888780"></div>
-              <div class="rm-item-body">
-                <div class="rm-item-name">Equipment procurement</div>
-                <div class="rm-item-desc">Hematology, chemistry, coagulation analyzers; centrifuges, cold chain</div>
-                <div class="rm-item-expand">
-                  <div class="rm-item-detail">
-                    <strong>Order early:</strong> Import lead times for analyzers can be 8–16 weeks. Order during the COFEPRIS waiting period so equipment is ready when your license arrives.<br><br>
-                    <strong>Comodato vs purchase:</strong> At &lt;300 tests/month, comodato (free analyzer, pay reagent markup) often wins financially. Above 400 tests/month, purchase saves money long-term. Use the Equipment Compare page to model this.<br><br>
-                    <strong>Minimum setup:</strong> Hematology analyzer (BHC), chemistry analyzer (QS panels), centrifuge x2, refrigerator 2–8°C, freezer -20°C, microscope.
-                    <div class="rm-item-tags">
-                      <span class="task-tag tag-cost">$580,000–1,200,000 MXN (purchase)</span>
-                      <span class="task-tag tag-time">Order in Month 4–5</span>
-                      <span class="task-tag tag-resource">See: Equipment Compare</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <span class="rm-item-chevron">›</span>
-            </div>
-            <div class="rm-item" onclick="toggleRmItem(this)">
-              <div class="rm-dot" style="background:#888780"></div>
-              <div class="rm-item-body">
-                <div class="rm-item-name">Hire Director Técnico (QFB)</div>
-                <div class="rm-item-desc">Required by law — cannot operate without one on file with COFEPRIS</div>
-                <div class="rm-item-expand">
-                  <div class="rm-item-detail">
-                    <strong>This is your most critical hire.</strong> Without a named QFB with a valid cédula profesional registered with the Dirección General de Profesiones, COFEPRIS will not issue your Licencia Sanitaria.<br><br>
-                    <strong>Options:</strong> Full-time (most compliant, $18,000–35,000 MXN/mo), part-time shared arrangement (some labs do this legally — verify with COFEPRIS Querétaro), or a consulting QFB firm.<br><br>
-                    <strong>Start recruiting now.</strong> Good QFBs with lab director experience in Querétaro are rare. Post at UAQ, UNAM pharmacy faculty alumni networks, and LinkedIn.
-                    <div class="rm-item-tags">
-                      <span class="task-tag tag-critical">Non-negotiable requirement</span>
-                      <span class="task-tag tag-cost">$18,000–35,000 MXN/mo</span>
-                      <span class="task-tag tag-time">Start recruiting now</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <span class="rm-item-chevron">›</span>
-            </div>
-            <div class="rm-item" onclick="toggleRmItem(this)">
-              <div class="rm-dot" style="background:#888780"></div>
-              <div class="rm-item-body">
-                <div class="rm-item-name">LIS / software setup</div>
-                <div class="rm-item-desc">Laboratory Information System, billing, patient portal</div>
-                <div class="rm-item-expand">
-                  <div class="rm-item-detail">
-                    <strong>What a LIS does:</strong> Manages sample tracking, result entry, report generation (PDF with your logo), patient records, and integrates with billing/CFDI issuance.<br><br>
-                    <strong>Options for Mexico:</strong> LabSoft (popular in QRO), HealthPath, MedLab, or SistemaLAB. Expect $3,000–8,000 MXN/month SaaS or a one-time license ~$50,000–120,000 MXN.<br><br>
-                    <strong>Must-have features:</strong> WhatsApp result delivery, barcode sample labeling, CFDI-integrated billing, multi-user with role permissions.
-                    <div class="rm-item-tags">
-                      <span class="task-tag tag-cost">$3,000–8,000 MXN/mo SaaS</span>
-                      <span class="task-tag tag-tip">WhatsApp delivery is a differentiator</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <span class="rm-item-chevron">›</span>
-            </div>
-            <div class="rm-item" onclick="toggleRmItem(this)">
-              <div class="rm-dot" style="background:#888780"></div>
-              <div class="rm-item-body">
-                <div class="rm-item-name">Soft launch + physician outreach</div>
-                <div class="rm-item-desc">Visit 30–50 local médicos, offer resultado en 4h, free pickup</div>
-                <div class="rm-item-expand">
-                  <div class="rm-item-detail">
-                    <strong>Physician outreach strategy:</strong> Visit offices in person. Bring a small kit: price list, business cards, a sample result report showing your turnaround time. Offer to pick up samples from their office for the first month free.<br><br>
-                    <strong>Your pitch:</strong> "Resultados en 4 horas, recolección gratis, entrega por WhatsApp." That's it. That's what they want to hear — their patients stop calling them asking why results aren't ready.<br><br>
-                    <strong>Track every contact</strong> in the Physician CRM. Follow up monthly. It takes 3–5 touches before a médico sends their first referral.
-                    <div class="rm-item-tags">
-                      <span class="task-tag tag-time">Month 9–12</span>
-                      <span class="task-tag tag-tip">4h turnaround is your #1 differentiator</span>
-                      <span class="task-tag tag-resource">See: Physician CRM</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <span class="rm-item-chevron">›</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- TIMELINE TAB -->
-    <div id="rt-timeline" style="display:none">
+    <div id="rt-timeline">
       <div class="card">
         <div class="gantt-wrap">
           <div class="gantt">
@@ -3141,7 +2738,6 @@
     <div style="display:flex;gap:6px;margin-bottom:16px">
       <button class="tab active" id="calc-tab-monthly" onclick="switchCalcTab('monthly',this)">Monthly P&amp;L</button>
       <button class="tab" id="calc-tab-3yr" onclick="switchCalcTab('3yr',this)">3-Year projection</button>
-      <button class="tab" id="calc-tab-reagent" onclick="switchCalcTab('reagent',this)">Reagent modeler</button>
     </div>
 
     <!-- ══ MONTHLY P&L VIEW ══ -->
@@ -3261,76 +2857,6 @@
       </div>
     </div>
 
-    <!-- ══ REAGENT MODELER VIEW ══ -->
-    <div id="calc-view-reagent" style="display:none">
-      <!-- Analyzer selector row -->
-      <div class="card" style="margin-bottom:14px">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px">
-          <div>
-            <div class="card-title" style="margin:0">Analyzer configuration</div>
-            <div style="font-size:11px;color:var(--text-tertiary);margin-top:2px">Select your analyzer per category — reagent costs update automatically</div>
-          </div>
-          <button class="btn" style="font-size:11px;padding:4px 12px;color:var(--text-tertiary)" onclick="resetReagentModeler()">Reset defaults</button>
-        </div>
-        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px" id="rg-analyzer-selectors"></div>
-        <!-- Comodato multiplier -->
-        <div style="display:flex;align-items:center;gap:16px;margin-top:14px;padding-top:12px;border-top:0.5px solid var(--border);flex-wrap:wrap">
-          <span style="font-size:12px;color:var(--text-secondary);font-weight:500">Comodato premium:</span>
-          <label style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text-secondary);cursor:pointer"><input type="radio" name="rg-comodato" value="0" checked onchange="updateReagentSummary()" style="accent-color:var(--green)"> None (purchased)</label>
-          <label style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text-secondary);cursor:pointer"><input type="radio" name="rg-comodato" value="0.20" onchange="updateReagentSummary()" style="accent-color:var(--green)"> +20% (1 analyzer)</label>
-          <label style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text-secondary);cursor:pointer"><input type="radio" name="rg-comodato" value="0.28" onchange="updateReagentSummary()" style="accent-color:var(--green)"> +28% (2 analyzers)</label>
-          <label style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text-secondary);cursor:pointer"><input type="radio" name="rg-comodato" value="0.35" onchange="updateReagentSummary()" style="accent-color:var(--green)"> +35% (all comodato)</label>
-        </div>
-      </div>
-
-      <div class="two-col">
-        <div>
-          <div class="card">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
-              <div class="card-title" style="margin:0">Per-test cost &amp; margin</div>
-              <div style="font-size:11px;color:var(--text-tertiary)">Edit patient price or volume</div>
-            </div>
-            <div style="overflow-x:auto">
-              <table style="width:100%;border-collapse:collapse;font-size:12px">
-                <thead>
-                  <tr style="border-bottom:1.5px solid var(--border-strong)">
-                    <th style="text-align:left;padding:7px 8px;font-size:10px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.05em;font-weight:500;white-space:nowrap">Test</th>
-                    <th style="text-align:left;padding:7px 8px;font-size:10px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.05em;font-weight:500">Analyzer</th>
-                    <th style="text-align:right;padding:7px 8px;font-size:10px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.05em;font-weight:500">Price</th>
-                    <th style="text-align:right;padding:7px 8px;font-size:10px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.05em;font-weight:500">Reagent/run</th>
-                    <th style="text-align:right;padding:7px 8px;font-size:10px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.05em;font-weight:500">Vol/mo</th>
-                    <th style="text-align:right;padding:7px 8px;font-size:10px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.05em;font-weight:500">Margin</th>
-                  </tr>
-                </thead>
-                <tbody id="reagent-tbody"></tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-        <div>
-          <div class="card" style="position:sticky;top:20px">
-            <div class="card-title">Monthly reagent summary</div>
-            <div class="calc-output" style="margin-bottom:10px">
-              <div class="calc-output-label">Total reagent cost (all tests)</div>
-              <div class="calc-output-val" id="rg-total-cost" style="color:var(--red)">$0</div>
-            </div>
-            <div class="calc-output" style="margin-bottom:10px">
-              <div class="calc-output-label">Total revenue (modeled tests)</div>
-              <div class="calc-output-val green" id="rg-total-rev">$0</div>
-            </div>
-            <div class="calc-output" style="margin-bottom:14px">
-              <div class="calc-output-label">Blended gross margin</div>
-              <div class="calc-output-val blue" id="rg-blended-margin">0%</div>
-            </div>
-            <div class="calc-divider" style="margin-bottom:12px"></div>
-            <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-tertiary);font-weight:500;margin-bottom:10px">By analyzer</div>
-            <div id="rg-by-analyzer"></div>
-            <div class="calc-divider" style="margin:12px 0"></div>
-            <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-tertiary);font-weight:500;margin-bottom:10px">By category</div>
-            <div id="rg-by-cat"></div>
-          </div>
-        </div>
-      </div>
     </div>
   </section>
 
@@ -3601,47 +3127,174 @@ Quedo a sus órdenes,
     <div class="crm-pipeline" id="crm-pipeline"></div>
   </section>
 
-  <!-- ── EQUIPMENT COMPARE ── -->
-  <section id="page-equipment" class="page">
-    <div class="page-title">Equipment comparison</div>
-    <div class="page-sub">Compare quotes side-by-side — the best value per category is highlighted</div>
-
-    <div class="eq-cat-tabs">
-      <div class="tab active" onclick="eqCatFilter('all',this)">All categories</div>
-      <div class="tab" onclick="eqCatFilter('hematology',this)">Hematology</div>
-      <div class="tab" onclick="eqCatFilter('chemistry',this)">Chemistry</div>
-      <div class="tab" onclick="eqCatFilter('coagulation',this)">Coagulation</div>
-      <div class="tab" onclick="eqCatFilter('other',this)">Other</div>
-    </div>
-
-    <div class="card" style="overflow-x:auto">
-      <div id="eq-table-wrap"></div>
-    </div>
-
-    <div class="two-col" style="margin-top:14px">
-      <div class="card">
-        <div class="card-title">Total cost comparison</div>
-        <div id="eq-totals"></div>
+  <!-- ═══ UNIT COST & PROFITABILITY ═══ -->
+  <section id="page-unit-cost" class="page">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;margin-bottom:4px">
+      <div>
+        <div class="page-title">Unit Cost & Profitability</div>
+        <div class="page-sub">Equipment procurement → per-test cost modeling → portfolio margin analysis</div>
       </div>
-      <div class="card">
-        <div class="card-title">5-Year TCO — Comodato vs. Purchase</div>
-        <div style="font-size:11px;color:var(--text-tertiary);margin-bottom:14px">Adjust volume and reagent premium to see true cost of ownership</div>
-        <div class="slider-group">
-          <div class="slider-label"><span>Monthly test volume</span><span class="slider-val" id="tco-v-vol">300</span></div>
-          <input type="range" min="50" max="800" step="10" value="300" id="tco-vol" oninput="renderTCO()">
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-sm" onclick="exportUnitCostXlsx()">📊 Export Excel</button>
+      </div>
+    </div>
+
+    <!-- Panel tabs -->
+    <div style="display:flex;gap:6px;margin-bottom:16px">
+      <button class="tab active" id="uc-tab-equipment" onclick="switchUCTab('equipment',this)">🔬 Instrument Compare</button>
+      <button class="tab" id="uc-tab-modeler" onclick="switchUCTab('modeler',this)">⚗ Unit Economics Modeler</button>
+    </div>
+
+    <!-- ══ PANEL 1: EQUIPMENT COMPARE ══ -->
+    <div id="uc-view-equipment">
+      <div class="eq-cat-tabs">
+        <div class="tab active" onclick="eqCatFilter('all',this)">All categories</div>
+        <div class="tab" onclick="eqCatFilter('hematology',this)">Hematology</div>
+        <div class="tab" onclick="eqCatFilter('chemistry',this)">Chemistry</div>
+        <div class="tab" onclick="eqCatFilter('immunoassay',this)">Immunoassay</div>
+        <div class="tab" onclick="eqCatFilter('coagulation',this)">Coagulation</div>
+      </div>
+
+      <div class="card" style="overflow-x:auto">
+        <div id="eq-table-wrap"></div>
+      </div>
+
+      <div class="two-col" style="margin-top:14px">
+        <div class="card">
+          <div class="card-title">Instrument price comparison</div>
+          <div style="font-size:11px;color:var(--text-tertiary);margin-bottom:12px">Purchase price (MXN) by category — cheapest highlighted</div>
+          <canvas id="chart-eq-compare" height="220"></canvas>
         </div>
-        <div class="slider-group">
-          <div class="slider-label"><span>Comodato reagent premium</span><span class="slider-val" id="tco-v-prem">30%</span></div>
-          <input type="range" min="10" max="60" step="1" value="30" id="tco-prem" oninput="renderTCO()">
+        <div class="card">
+          <div class="card-title">5-Year TCO — Comodato vs. Purchase</div>
+          <div style="font-size:11px;color:var(--text-tertiary);margin-bottom:14px">Adjust volume and reagent premium to see true cost of ownership</div>
+          <div class="slider-group">
+            <div class="slider-label"><span>Monthly test volume</span><span class="slider-val" id="tco-v-vol">300</span></div>
+            <input type="range" min="50" max="800" step="10" value="300" id="tco-vol" oninput="renderTCO()">
+          </div>
+          <div class="slider-group">
+            <div class="slider-label"><span>Comodato reagent premium</span><span class="slider-val" id="tco-v-prem">30%</span></div>
+            <input type="range" min="10" max="60" step="1" value="30" id="tco-prem" oninput="renderTCO()">
+          </div>
+          <div class="slider-group">
+            <div class="slider-label"><span>Annual maintenance (% of price)</span><span class="slider-val" id="tco-v-maint">10%</span></div>
+            <input type="range" min="5" max="20" step="1" value="10" id="tco-maint" oninput="renderTCO()">
+          </div>
+          <div style="margin-top:14px">
+            <canvas id="chart-tco" height="180"></canvas>
+          </div>
+          <div id="eq-comodato" style="margin-top:12px"></div>
         </div>
-        <div class="slider-group">
-          <div class="slider-label"><span>Annual maintenance (% of price)</span><span class="slider-val" id="tco-v-maint">10%</span></div>
-          <input type="range" min="5" max="20" step="1" value="10" id="tco-maint" oninput="renderTCO()">
+      </div>
+    </div>
+
+    <!-- ══ PANEL 2: UNIT ECONOMICS MODELER ══ -->
+    <div id="uc-view-modeler" style="display:none">
+
+      <!-- Analyzer configuration -->
+      <div class="card" style="margin-bottom:14px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px">
+          <div>
+            <div class="card-title" style="margin:0">Analyzer configuration</div>
+            <div style="font-size:11px;color:var(--text-tertiary);margin-top:2px">Select your analyzer per category — reagent costs and margins update automatically</div>
+          </div>
+          <div style="display:flex;gap:8px">
+            <button class="btn" style="font-size:11px;padding:4px 12px;color:var(--text-tertiary)" onclick="resetReagentModeler();renderUCModeler()">Reset defaults</button>
+            <button class="btn btn-sm btn-primary" onclick="openUCTestSelector()">☰ Configure Test Menu</button>
+          </div>
         </div>
-        <div style="margin-top:14px">
-          <canvas id="chart-tco" height="180"></canvas>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px" id="uc-analyzer-selectors"></div>
+        <!-- Comodato multiplier -->
+        <div style="display:flex;align-items:center;gap:16px;margin-top:14px;padding-top:12px;border-top:0.5px solid var(--border);flex-wrap:wrap">
+          <span style="font-size:12px;color:var(--text-secondary);font-weight:500">Comodato premium:</span>
+          <label style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text-secondary);cursor:pointer"><input type="radio" name="uc-comodato" value="0" checked onchange="onUCComodatoChange()" style="accent-color:var(--green)"> None (purchased)</label>
+          <label style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text-secondary);cursor:pointer"><input type="radio" name="uc-comodato" value="0.20" onchange="onUCComodatoChange()" style="accent-color:var(--green)"> +20% (1 analyzer)</label>
+          <label style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text-secondary);cursor:pointer"><input type="radio" name="uc-comodato" value="0.28" onchange="onUCComodatoChange()" style="accent-color:var(--green)"> +28% (2 analyzers)</label>
+          <label style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text-secondary);cursor:pointer"><input type="radio" name="uc-comodato" value="0.35" onchange="onUCComodatoChange()" style="accent-color:var(--green)"> +35% (all comodato)</label>
         </div>
-        <div id="eq-comodato" style="margin-top:12px"></div>
+      </div>
+
+      <!-- KPI strip -->
+      <div id="uc-kpi-strip" style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:14px">
+        <div class="est-kpi-card">
+          <div class="est-kpi-card-label">Tests in menu</div>
+          <div class="est-kpi-card-val blue" id="uc-kpi-count">—</div>
+        </div>
+        <div class="est-kpi-card">
+          <div class="est-kpi-card-label">Avg margin %</div>
+          <div class="est-kpi-card-val green" id="uc-kpi-avg-margin">—</div>
+        </div>
+        <div class="est-kpi-card">
+          <div class="est-kpi-card-label">Weighted margin</div>
+          <div class="est-kpi-card-val" id="uc-kpi-weighted" style="color:var(--green-dark)">—</div>
+          <div class="est-kpi-card-sub">Σ (Vol% × Margin)</div>
+        </div>
+        <div class="est-kpi-card">
+          <div class="est-kpi-card-label">Daily profit</div>
+          <div class="est-kpi-card-val amber" id="uc-kpi-daily-profit">—</div>
+          <div class="est-kpi-card-sub">26 working days/mo</div>
+        </div>
+        <div class="est-kpi-card">
+          <div class="est-kpi-card-label">Monthly contribution</div>
+          <div class="est-kpi-card-val blue" id="uc-kpi-monthly">—</div>
+        </div>
+      </div>
+
+      <!-- Main table -->
+      <div class="est-table-wrap" style="overflow-x:auto">
+        <table class="est-sheet" id="uc-table">
+          <thead>
+            <tr>
+              <th style="text-align:left;padding-left:14px;min-width:90px">Category</th>
+              <th style="text-align:left;min-width:170px">Test name</th>
+              <th class="est-money">Price</th>
+              <th class="est-money">Reagent</th>
+              <th class="est-money">Consum.</th>
+              <th class="est-money">Labor</th>
+              <th class="est-money">Eq. Amort.</th>
+              <th class="est-money" style="border-left:1.5px solid var(--border-strong)">Total Cost</th>
+              <th class="est-money">Margin $</th>
+              <th class="est-money">Margin %</th>
+              <th class="est-money">Vol/mo</th>
+              <th class="est-money" style="border-left:1.5px solid var(--border-strong)">Daily Profit</th>
+              <th style="width:26px"></th>
+            </tr>
+          </thead>
+          <tbody id="uc-tbody"></tbody>
+          <tfoot>
+            <tr class="est-grand-total" id="uc-totals-row">
+              <td style="padding-left:14px" colspan="2">PORTFOLIO TOTALS</td>
+              <td class="est-money" id="uc-tot-price">—</td>
+              <td class="est-money" id="uc-tot-reagent">—</td>
+              <td class="est-money" id="uc-tot-consumables">—</td>
+              <td class="est-money" id="uc-tot-labor">—</td>
+              <td class="est-money" id="uc-tot-equip">—</td>
+              <td class="est-money" style="border-left:1.5px solid rgba(255,255,255,0.15)" id="uc-tot-cost">—</td>
+              <td class="est-money" id="uc-tot-margin">—</td>
+              <td class="est-money" id="uc-tot-margin-pct">—</td>
+              <td class="est-money" id="uc-tot-vol">—</td>
+              <td class="est-money" style="border-left:1.5px solid rgba(255,255,255,0.15)" id="uc-tot-daily">—</td>
+              <td></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+      <!-- Charts + insights -->
+      <div class="two-col" style="margin-top:14px">
+        <div class="card">
+          <div class="card-title">Contribution margin by test</div>
+          <canvas id="chart-uc-margins" height="260"></canvas>
+        </div>
+        <div class="card">
+          <div class="card-title">Weighted margin breakdown</div>
+          <canvas id="chart-uc-weighted" height="260"></canvas>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:14px">
+        <div class="card-title">Margin insights</div>
+        <div id="uc-insights" style="font-size:12px;color:var(--text-secondary);line-height:1.7"></div>
       </div>
     </div>
   </section>
@@ -4228,17 +3881,34 @@ Quedo a sus órdenes,
       </div>
     </div>
 
+    <!-- How to use -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px">
+      <div style="padding:10px 14px;background:var(--bg-primary);border:0.5px solid var(--border);border-radius:var(--radius-md);display:flex;gap:10px;align-items:flex-start">
+        <div style="width:22px;height:22px;border-radius:50%;background:var(--bg-info);color:var(--text-info);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0">1</div>
+        <div><div style="font-size:11px;font-weight:500;color:var(--text-primary)">Expand sections</div><div style="font-size:10px;color:var(--text-tertiary);margin-top:2px">Click › on any row to see sub-items</div></div>
+      </div>
+      <div style="padding:10px 14px;background:var(--bg-primary);border:0.5px solid var(--border);border-radius:var(--radius-md);display:flex;gap:10px;align-items:flex-start">
+        <div style="width:22px;height:22px;border-radius:50%;background:var(--bg-success);color:var(--text-success);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0">2</div>
+        <div><div style="font-size:11px;font-weight:500;color:var(--text-primary)">Edit budget</div><div style="font-size:10px;color:var(--text-tertiary);margin-top:2px">Click any <span style="color:var(--green-dark);font-weight:500">green</span> cell to change amounts</div></div>
+      </div>
+      <div style="padding:10px 14px;background:var(--bg-primary);border:0.5px solid var(--border);border-radius:var(--radius-md);display:flex;gap:10px;align-items:flex-start">
+        <div style="width:22px;height:22px;border-radius:50%;background:var(--bg-warning);color:var(--text-warning);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0">3</div>
+        <div><div style="font-size:11px;font-weight:500;color:var(--text-primary)">Log actuals</div><div style="font-size:10px;color:var(--text-tertiary);margin-top:2px">Fill the Actual column as you receive quotes</div></div>
+      </div>
+      <div style="padding:10px 14px;background:var(--bg-primary);border:0.5px solid var(--border);border-radius:var(--radius-md);display:flex;gap:10px;align-items:flex-start">
+        <div style="width:22px;height:22px;border-radius:50%;background:var(--bg-tertiary);color:var(--text-secondary);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0">4</div>
+        <div><div style="font-size:11px;font-weight:500;color:var(--text-primary)">Auto-syncs</div><div style="font-size:10px;color:var(--text-tertiary);margin-top:2px">Totals feed into Financials &amp; Budget Tracker</div></div>
+      </div>
+    </div>
+
     <!-- Main spreadsheet -->
     <div class="est-table-wrap" style="overflow-x:auto">
       <table class="est-sheet" id="est-sheet-table"></table>
     </div>
 
-    <div style="padding:10px 16px;border-radius:var(--radius-md);background:var(--bg-secondary);border:0.5px solid var(--border);font-size:11px;color:var(--text-tertiary);display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-      <span>🔗 Grand total syncs to <strong style="color:var(--text-secondary)">Financials</strong> and <strong style="color:var(--text-secondary)">Budget Tracker</strong>.</span>
-      <span style="margin-left:auto;display:flex;gap:6px;align-items:center">
-        <button class="btn" style="font-size:10px;padding:4px 10px;color:var(--green-dark)" onclick="exportEstimatorXlsx()">📊 Export Excel</button>
-        Click <strong style="color:var(--text-secondary)">› rows</strong> to expand sub-items · Edit any green cell · Fill Actual as you receive quotes
-      </span>
+    <div style="padding:10px 16px;border-radius:var(--radius-md);background:var(--bg-secondary);border:0.5px solid var(--border);font-size:11px;color:var(--text-tertiary);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+      <span>🔗 Grand total syncs to <strong style="color:var(--text-secondary)">Financials</strong> and <strong style="color:var(--text-secondary)">Budget Tracker</strong> in real time.</span>
+      <button class="btn" style="font-size:10px;padding:4px 10px;color:var(--green-dark)" onclick="exportEstimatorXlsx()">📊 Export Excel</button>
     </div>
   </section>
 
@@ -4645,6 +4315,16 @@ Quedo a sus órdenes,
       <div class="card-title">Break-even chart</div>
       <div style="font-size:11px;color:var(--text-tertiary);margin-bottom:12px">Revenue vs. total costs as volume increases — the intersection is your break-even point</div>
       <canvas id="chart-breakeven" height="280"></canvas>
+
+      <div style="margin-top:16px;padding:14px 16px;background:var(--bg-secondary);border-radius:var(--radius-md);border:0.5px solid var(--border)">
+        <div style="font-size:12px;font-weight:500;color:var(--text-primary);margin-bottom:8px">How to read this chart</div>
+        <div style="font-size:12px;color:var(--text-secondary);line-height:1.7">
+          The <span style="color:#1d9e75;font-weight:500">green line</span> shows monthly revenue as your study volume grows. The <span style="color:#a32d2d;font-weight:500">red line</span> shows total costs — which is your fixed costs (rent, payroll, utilities, insurance) plus variable costs (reagents, which scale with volume). The point where these two lines cross is your <strong style="color:var(--text-primary)">break-even volume</strong> — the minimum number of studies per month where revenue covers all costs. Below that crossing point, you're operating at a loss; above it, every additional study contributes to profit.
+        </div>
+        <div style="font-size:12px;color:var(--text-secondary);line-height:1.7;margin-top:8px">
+          The <span style="color:#185fa5;font-weight:500">dashed blue line</span> shows profit (or loss) directly — it's the gap between revenue and costs at each volume level. When the blue line crosses zero, that's the same break-even point. Notice the red line doesn't start at zero — that's your fixed costs, which you pay regardless of volume. The gap between the slopes of the green and red lines represents your <strong style="color:var(--text-primary)">contribution margin</strong>: the fraction of each additional study's revenue that goes toward covering fixed costs and eventually profit.
+        </div>
+      </div>
     </div>
   </section>
 
@@ -5049,9 +4729,36 @@ Quedo a sus órdenes,
     </div>
   </section>
 
+  <!-- ═══ UNIT ECONOMICS ENGINE ═══ -->
+
 </main>
 
 <!-- ═══ REG DETAIL PANEL ═══ -->
+
+<!-- ═══ UC TEST SELECTOR PANEL ═══ -->
+<div id="uc-sel-overlay" style="position:fixed;inset:0;background:rgba(26,26,24,0.28);z-index:100;opacity:0;pointer-events:none;transition:opacity 0.22s ease" onclick="closeUCTestSelector()"></div>
+<div id="uc-sel-panel" style="position:fixed;top:0;right:0;bottom:0;width:480px;max-width:92vw;background:var(--bg-primary);border-left:0.5px solid var(--border);z-index:101;display:flex;flex-direction:column;transform:translateX(100%);transition:transform 0.26s cubic-bezier(0.22,1,0.36,1);overflow:hidden">
+  <div class="rp-header" style="border-bottom:2px solid var(--green)">
+    <div class="rp-icon" style="background:#e1f5ee;color:#0f6e56">☰</div>
+    <div class="rp-header-body">
+      <div class="rp-title">Configure Test Menu</div>
+      <div class="rp-subtitle">Select which tests to include in Unit Economics</div>
+    </div>
+    <button class="rp-close" onclick="closeUCTestSelector()">✕</button>
+  </div>
+  <div style="padding:10px 22px;border-bottom:0.5px solid var(--border);display:flex;gap:8px;align-items:center;flex-shrink:0">
+    <input type="text" id="uc-sel-search" placeholder="Search tests…" oninput="filterUCSelector()" style="flex:1;border:0.5px solid var(--border);border-radius:6px;padding:7px 10px;font-size:12px;font-family:var(--font);outline:none;color:var(--text-primary);background:var(--bg-primary)">
+    <button class="btn btn-sm" onclick="ucSelAll(true)">Select all</button>
+    <button class="btn btn-sm" onclick="ucSelAll(false)">Clear</button>
+  </div>
+  <div id="uc-sel-body" style="flex:1;overflow-y:auto;padding:14px 22px"></div>
+  <div style="padding:12px 22px;border-top:0.5px solid var(--border);display:flex;gap:8px;align-items:center;flex-shrink:0">
+    <div style="flex:1;font-size:12px;color:var(--text-secondary)"><span id="uc-sel-count" style="font-weight:500;color:var(--text-primary)">0</span> tests selected</div>
+    <button class="btn" onclick="closeUCTestSelector()">Cancel</button>
+    <button class="btn btn-primary" onclick="applyUCTestSelection()">Apply selection</button>
+  </div>
+</div>
+
 <div id="reg-panel-overlay" onclick="closeRegPanel()"></div>
 <div id="reg-panel">
   <div class="rp-header">
@@ -5099,7 +4806,7 @@ Quedo a sus órdenes,
   // ACCESS_PINS removed — no plaintext secrets in client code.
   var currentRole = null;
   var INVESTOR_HIDDEN_SECTIONS = ['Tools', 'Compliance', 'Workspace'];
-  var INVESTOR_HIDDEN_PAGES    = ['suppliers','physicians','equipment','checklist','notes','mock-inspection','sat-compliance','locations'];
+  var INVESTOR_HIDDEN_PAGES    = ['suppliers','physicians','checklist','notes','mock-inspection','sat-compliance','locations'];
 
   // ══════════════════════════════════════════
   // ── COST ESTIMATOR ──
@@ -5947,15 +5654,6 @@ Quedo a sus órdenes,
     }
   }
 
-  // ── Roadmap accordion ──
-  function toggleRmPhase(num) {
-    const el = document.getElementById('rm-phase-' + num);
-    el.classList.toggle('open');
-  }
-  function toggleRmItem(el) {
-    el.classList.toggle('open');
-  }
-
   // ── Checklist / Documents tab switcher ──
   function switchCDTab(tab) {
     // Legacy — redirect to new view switcher
@@ -5966,11 +5664,10 @@ Quedo a sus órdenes,
 
   // ── Roadmap / Timeline tab switcher ──
   function switchRTTab(tab) {
-    document.getElementById('rt-roadmap').style.display = tab === 'roadmap' ? 'block' : 'none';
-    document.getElementById('rt-timeline').style.display = tab === 'timeline' ? 'block' : 'none';
-    document.getElementById('rt-tab-roadmap').classList.toggle('active', tab === 'roadmap');
-    document.getElementById('rt-tab-timeline').classList.toggle('active', tab === 'timeline');
-    if (tab === 'timeline') initGantt();
+    // Roadmap tab removed — always show timeline
+    var rm = document.getElementById('rt-roadmap'); if (rm) rm.style.display = 'none';
+    var tl = document.getElementById('rt-timeline'); if (tl) tl.style.display = 'block';
+    initGantt();
   }
   let ganttInited = false;
   function initGantt() {
@@ -6081,7 +5778,7 @@ Quedo a sus órdenes,
     if (id === 'quality')        { renderQualityPage(); }
     if (id === 'domicilio')      { renderDomicilio(); }
     if (id === 'locations')      { /* tabs handle lazy render */ }
-    if (id === 'equipment')      { setTimeout(renderTCO, 100); }
+    if (id === 'unit-cost')      { renderUCPage(); }
     if (id === 'mock-inspection'){ renderMockChecklist(); }
     if (id === 'sat-compliance') { renderSATPage(); }
     if (id === 'market')         { renderDemandAnalysis(); }
@@ -6089,6 +5786,7 @@ Quedo a sus órdenes,
     if (id === 'swot')           { renderSwot(); }
     if (id === 'pricing')        { renderFullPricingTable(); renderFreshnessBadge(); }
     if (id === 'revmix')         { renderSpecialtyInputs(); updateRevMix(); }
+    if (id === 'roadmap')         { initGantt(); }
     // Re-render AI prompts if panel is open (context changes with page)
     const aiPanel = document.getElementById('ai-panel');
     if (aiPanel && aiPanel.style.display === 'flex') renderAIQuickPrompts();
@@ -7462,11 +7160,11 @@ Quedo a sus órdenes,
       desc:'Analyzers, centrifuges, cold chain. Order early — import lead times 8–16 weeks.',
       tags:[{text:'$400K–1.2M MXN',cls:'tag-cost'},{text:'Order in month 4–5',cls:'tag-time'}],
       subtasks:[
-        { text:'Finalize analyzer selections (use Equipment Compare)', panel:'action', nav:'equipment', hint:'Compare vendors, prices, comodato options. Use the Equipment Compare and TCO calculator.' },
+        { text:'Finalize analyzer selections (use Instrument Compare)', panel:'action', nav:'unit-cost', hint:'Compare vendors, prices, comodato options. Use the Instrument Compare and TCO calculator.' },
         { text:'Place orders / sign comodato agreements', panel:'list', fields:['Equipment','Vendor','Order date','Expected delivery','Cost/terms','Contact person'], hint:'Order 8–16 weeks before you need them. Comodato agreements need legal review.' },
         { text:'Receive and install equipment', panel:'list', fields:['Equipment','Delivery date','Serial number','Installation date','Calibrated?'], hint:'Verify serial numbers match invoices — COFEPRIS checks this.' },
         { text:'Calibrate all analyzers', panel:'list', fields:['Analyzer','Calibration date','Calibration by','Certificate received?','Next calibration due'], hint:'Calibration certificates must be on file for COFEPRIS inspection.' },
-      ], template:{name:'Equipment Compare',desc:'Side-by-side analyzer comparison and TCO',nav:'equipment'} },
+      ], template:{name:'Instrument Compare',desc:'Side-by-side analyzer comparison and TCO',nav:'unit-cost'} },
     { id:'p4t3', name:'Cold chain & sample storage', icon:'🧊', iconBg:'#eeedfe', iconColor:'#534ab7',
       desc:'Refrigerator 2–8°C, freezer -20°C, temperature monitoring. Critical for reagent integrity.',
       tags:[{text:'$30K–80K MXN',cls:'tag-cost'}],
@@ -7864,13 +7562,12 @@ Quedo a sus órdenes,
   // ── Calculator tab switcher ──
   let chart3yr = null;
   function switchCalcTab(tab, el) {
-    ['monthly','3yr','reagent'].forEach(t => {
+    ['monthly','3yr'].forEach(t => {
       document.getElementById('calc-view-' + t).style.display = t === tab ? 'block' : 'none';
     });
-    document.querySelectorAll('#calc-tab-monthly,#calc-tab-3yr,#calc-tab-reagent').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('#calc-tab-monthly,#calc-tab-3yr').forEach(b => b.classList.remove('active'));
     if (el) el.classList.add('active');
     if (tab === '3yr') render3YrChart();
-    if (tab === 'reagent') renderReagentModeler();
   }
 
   function fmt(n) { return Math.round(n).toLocaleString('en-US'); }
@@ -8405,7 +8102,7 @@ Quedo a sus órdenes,
       if (t.analyzerKey) {
         const c = analyzerCatalog[t.analyzerKey];
         const o = c.options[rgSelectedAnalyzer[t.analyzerKey]];
-        analyzerLabel = '<span style="font-size:10px;font-weight:500;padding:1px 6px;border-radius:8px;background:var(--bg-tertiary);color:var(--text-secondary)">' + o.vendor + ' ' + o.model + '</span>';
+        analyzerLabel = '<span style="font-size:10px;font-weight:500;padding:2px 8px;border-radius:8px;background:var(--bg-tertiary);color:var(--text-secondary);white-space:nowrap;display:inline-block;max-width:130px;overflow:hidden;text-overflow:ellipsis;vertical-align:middle" title="' + o.vendor + ' ' + o.model + '">' + o.vendor + ' ' + o.model + '</span>';
       } else {
         analyzerLabel = '<span style="font-size:10px;color:var(--text-tertiary)">Manual</span>';
       }
@@ -9161,31 +8858,48 @@ Quedo a sus órdenes,
   // ══════════════════════════════════════════
   // ── EQUIPMENT COMPARE ──
   // ══════════════════════════════════════════
-  const eqCategories = ['hematology','chemistry','coagulation','other'];
-  const eqCatNames = { hematology:'Hematología', chemistry:'Química Clínica', coagulation:'Coagulación', other:'Otros' };
+  const eqCategories = ['hematology','chemistry','immunoassay','coagulation'];
+  const eqCatNames = { hematology:'Hematología', chemistry:'Química Clínica', immunoassay:'Inmunoanálisis / Hormonas', coagulation:'Coagulación' };
   let eqData = {
     hematology: {
       specs: ['Brand / Model','Throughput (tests/hr)','Purchase price (MXN)','Comodato available','Min reagent volume/mo','Reagent cost/test','Maintenance (annual)','Warranty'],
       options: [
         ['Sysmex XN-550','60','$380,000','Yes','200 tests','$18','$25,000','2 yr'],
+        ['Sysmex XP-300','40','$180,000','Yes','120 tests','$14','$12,000','2 yr'],
         ['Mindray BC-5150','50','$220,000','Yes','150 tests','$15','$15,000','2 yr'],
-        ['Beckman DxH 520','55','$350,000','Yes','180 tests','$20','$22,000','3 yr'],
+        ['Mindray BC-3000+','35','$140,000','Yes','100 tests','$12','$10,000','2 yr'],
+        ['Abbott CELL-DYN Ruby','55','$420,000','Yes','200 tests','$20','$28,000','3 yr'],
       ]
     },
     chemistry: {
       specs: ['Brand / Model','Throughput (tests/hr)','Purchase price (MXN)','Comodato available','Min reagent volume/mo','Reagent cost/test','Maintenance (annual)','Warranty'],
       options: [
-        ['Roche c311','180','$450,000','Yes','300 tests','$12','$30,000','2 yr'],
+        ['Roche Cobas c311','180','$450,000','Yes','300 tests','$12','$30,000','2 yr'],
+        ['Roche Cobas c111','80','$280,000','Yes','150 tests','$11','$20,000','2 yr'],
         ['Beckman AU480','200','$500,000','Yes','350 tests','$14','$35,000','3 yr'],
-        ['Mindray BS-230','120','$280,000','Yes','200 tests','$10','$18,000','2 yr'],
+        ['Beckman AU680','250','$650,000','Yes','400 tests','$16','$40,000','3 yr'],
+        ['Mindray BS-200','100','$240,000','Yes','180 tests','$9','$16,000','2 yr'],
+        ['Mindray BS-380','150','$320,000','Yes','250 tests','$11','$20,000','2 yr'],
+        ['BioSystems A15','60','$180,000','No','100 tests','$8','$12,000','2 yr'],
+      ]
+    },
+    immunoassay: {
+      specs: ['Brand / Model','Throughput (tests/hr)','Purchase price (MXN)','Comodato available','Min reagent volume/mo','Reagent cost/test','Maintenance (annual)','Warranty'],
+      options: [
+        ['Roche Cobas e411','85','$520,000','Yes','200 tests','$44','$35,000','2 yr'],
+        ['Abbott Architect i1000','100','$580,000','Yes','250 tests','$42','$38,000','3 yr'],
+        ['Beckman Access 2','50','$380,000','Yes','150 tests','$40','$28,000','2 yr'],
+        ['Mindray CL-900i','80','$320,000','Yes','180 tests','$36','$22,000','2 yr'],
+        ['Siemens ADVIA Centaur','90','$620,000','Yes','250 tests','$46','$40,000','3 yr'],
       ]
     },
     coagulation: {
-      specs: ['Brand / Model','Throughput (tests/hr)','Purchase price (MXN)','Comodato available','Reagent cost/test','Warranty'],
+      specs: ['Brand / Model','Throughput (tests/hr)','Purchase price (MXN)','Comodato available','Reagent cost/test','Maintenance (annual)','Warranty'],
       options: [
-        ['Stago Start 4','40','$180,000','No','$22','2 yr'],
-        ['Sysmex CS-1600','60','$280,000','Yes','$18','3 yr'],
-        ['Mindray C3510','35','$120,000','No','$16','2 yr'],
+        ['Stago STA-R Max','60','$280,000','Yes','$22','$20,000','3 yr'],
+        ['Stago Start 4','40','$180,000','No','$18','$12,000','2 yr'],
+        ['Werfen ACL TOP 500','55','$320,000','Yes','$24','$25,000','3 yr'],
+        ['Mindray BC-30S','35','$120,000','No','$16','$8,000','2 yr'],
       ]
     },
     other: {
@@ -9277,48 +8991,101 @@ Quedo a sus órdenes,
 
   function saveEqData() {
     dbSet('eqData', {
-      hematology: { specs: eqData.hematology.specs, options: eqData.hematology.options },
-      chemistry:  { specs: eqData.chemistry.specs,  options: eqData.chemistry.options  },
-      coagulation:{ specs: eqData.coagulation.specs, options: eqData.coagulation.options},
-      other:      { specs: eqData.other.specs,       options: eqData.other.options      },
+      hematology:  { specs: eqData.hematology.specs,  options: eqData.hematology.options  },
+      chemistry:   { specs: eqData.chemistry.specs,    options: eqData.chemistry.options   },
+      immunoassay: { specs: eqData.immunoassay.specs,  options: eqData.immunoassay.options },
+      coagulation: { specs: eqData.coagulation.specs,  options: eqData.coagulation.options },
+      other:       { specs: eqData.other.specs,        options: eqData.other.options       },
     });
   }
 
+  var eqCompareChart = null;
+
   function renderEquipmentTotals() {
     let purchaseTotal = 0;
-    ['hematology','chemistry','coagulation'].forEach(cat => {
+    ['hematology','chemistry','immunoassay','coagulation'].forEach(cat => {
       const prices = eqData[cat].options.map(o => {
         const priceStr = o[2] || '';
         return parseInt(priceStr.replace(/[$,]/g,'')) || 0;
       });
       if (prices.length) purchaseTotal += Math.min(...prices);
     });
-    const otherTotal = eqData.other.options.reduce((s,o) => {
-      return s + (parseInt((o[2]||'').replace(/[$,]/g,'')) || 0);
-    }, 0);
 
-    const totalsEl = document.getElementById('eq-totals');
-    if (totalsEl) totalsEl.innerHTML = `
-      <div class="calc-row"><div class="calc-row-label">Best-price analyzers (3 categories)</div><div class="calc-row-val">$${fmt(purchaseTotal)}</div></div>
-      <div class="calc-row"><div class="calc-row-label">Other equipment</div><div class="calc-row-val">$${fmt(otherTotal)}</div></div>
-      <div class="calc-divider"></div>
-      <div class="calc-row" style="font-weight:500"><div class="calc-row-label" style="color:var(--text-primary)">Total (lowest per category)</div><div class="calc-row-val" style="color:var(--blue)">$${fmt(purchaseTotal + otherTotal)} MXN</div></div>
-      <div style="font-size:11px;color:var(--text-tertiary);margin-top:6px">With comodato on analyzers: ~$${fmt(otherTotal + 50000)} MXN upfront</div>
-    `;
+    // Render grouped bar chart comparing instruments per category
+    renderEqCompareChart();
 
     const comodatoEl = document.getElementById('eq-comodato');
     if (comodatoEl) comodatoEl.innerHTML = `
       <div style="font-size:12px;color:var(--text-secondary);line-height:1.7;margin-bottom:12px">
-        <strong style="color:var(--text-primary)">Purchase scenario:</strong> $${fmt(purchaseTotal)} upfront for analyzers. You buy reagents at market rate (~$10–18/test). Full control, no volume commitments.
+        <strong style="color:var(--text-primary)">Purchase scenario:</strong> $${fmt(purchaseTotal)} upfront for instruments. You buy reagents at market rate (~$10–18/test). Full control, no volume commitments.
       </div>
       <div style="font-size:12px;color:var(--text-secondary);line-height:1.7;margin-bottom:12px">
-        <strong style="color:var(--text-primary)">Comodato scenario:</strong> $0 for analyzers. Reagent markup ~30–50% above market ($14–25/test). Locked in 3–5 years. Min volume commitments.
+        <strong style="color:var(--text-primary)">Comodato scenario:</strong> $0 for instruments. Reagent markup ~30–50% above market ($14–25/test). Locked in 3–5 years. Min volume commitments.
       </div>
       <div class="calc-divider"></div>
       <div style="font-size:12px;color:var(--text-secondary);line-height:1.7">
-        <strong style="color:var(--text-primary)">Break-even analysis:</strong> At 300 tests/mo, the reagent premium costs ~$${fmt(300 * 6 * 12)}/yr extra. Analyzer savings of $${fmt(purchaseTotal)} pay off in <strong>${purchaseTotal > 0 ? (purchaseTotal / (300 * 6 * 12)).toFixed(1) : '—'} years</strong>. Below 200 tests/mo, comodato wins. Above 400, purchase wins.
+        <strong style="color:var(--text-primary)">Break-even analysis:</strong> At 300 tests/mo, the reagent premium costs ~$${fmt(300 * 6 * 12)}/yr extra. Instrument savings of $${fmt(purchaseTotal)} pay off in <strong>${purchaseTotal > 0 ? (purchaseTotal / (300 * 6 * 12)).toFixed(1) : '—'} years</strong>. Below 200 tests/mo, comodato wins. Above 400, purchase wins.
       </div>
     `;
+  }
+
+  function renderEqCompareChart() {
+    if (typeof Chart === 'undefined') return;
+    var ctx = document.getElementById('chart-eq-compare');
+    if (!ctx) return;
+
+    var catKeys = ['hematology','chemistry','immunoassay','coagulation'];
+    var catLabels = {hematology:'Hematología',chemistry:'Química',immunoassay:'Inmunoanálisis',coagulation:'Coagulación'};
+    var barColors = ['rgba(29,158,117,0.75)','rgba(24,95,165,0.7)','rgba(133,79,11,0.65)','rgba(83,74,183,0.65)','rgba(163,45,45,0.6)','rgba(122,45,107,0.6)','rgba(42,94,168,0.6)'];
+
+    // Find max number of options across categories
+    var maxOpts = 0;
+    catKeys.forEach(function(cat) { maxOpts = Math.max(maxOpts, eqData[cat].options.length); });
+
+    // Build datasets: one per instrument slot (option index)
+    var datasets = [];
+    for (var oi = 0; oi < maxOpts; oi++) {
+      datasets.push({
+        label: 'Option ' + (oi+1),
+        data: catKeys.map(function(cat) {
+          var opt = eqData[cat].options[oi];
+          if (!opt) return 0;
+          return parseInt((opt[2]||'').replace(/[$,]/g,'')) || 0;
+        }),
+        backgroundColor: barColors[oi % barColors.length],
+        borderRadius: 4,
+      });
+    }
+
+    // Set labels to include model names as tooltip
+    if (eqCompareChart) eqCompareChart.destroy();
+    eqCompareChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: catKeys.map(function(c) { return catLabels[c]; }),
+        datasets: datasets
+      },
+      options: {
+        responsive: true, maintainAspectRatio: true,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                var cat = catKeys[context.dataIndex];
+                var opt = eqData[cat].options[context.datasetIndex];
+                if (!opt) return '';
+                return ' ' + opt[0] + ': $' + fmt(context.raw) + ' MXN';
+              }
+            }
+          }
+        },
+        scales: {
+          y: { grid:{color:'rgba(0,0,0,0.05)'}, ticks:{callback:function(v){return '$'+fmt(v);},font:{size:10}} },
+          x: { grid:{display:false}, ticks:{font:{size:11,family:'DM Sans'}} }
+        }
+      }
+    });
   }
   renderEquipment();
 
@@ -9745,13 +9512,13 @@ Quedo a sus órdenes,
     if (!wrap) return;
 
     var phases = [
-      { label: 'Research & Planning',       start: 0,  end: 2,  color: '#185fa5' },
-      { label: 'Legal & Corporate',         start: 1,  end: 4,  color: '#f59e0b' },
-      { label: 'COFEPRIS & Permits',        start: 3,  end: 10, color: '#ef4444' },
-      { label: 'Infrastructure',            start: 5,  end: 10, color: '#8b5cf6' },
-      { label: 'Staffing & Training',       start: 7,  end: 11, color: '#22c55e' },
-      { label: 'Launch & Marketing',        start: 9,  end: 14, color: '#0ea5e9' },
-      { label: 'Operations',               start: 12, end: 18, color: '#1d9e75' },
+      { label: 'Research & Planning',       start: 0,  end: 2,  color: '#185fa5', phase: 1 },
+      { label: 'Legal & Corporate',         start: 1,  end: 4,  color: '#f59e0b', phase: 2 },
+      { label: 'COFEPRIS & Permits',        start: 3,  end: 10, color: '#ef4444', phase: 3 },
+      { label: 'Infrastructure',            start: 5,  end: 10, color: '#8b5cf6', phase: 4 },
+      { label: 'Staffing & Training',       start: 7,  end: 11, color: '#22c55e', phase: 5 },
+      { label: 'Launch & Marketing',        start: 9,  end: 14, color: '#0ea5e9', phase: 6 },
+      { label: 'Operations',               start: 12, end: 18, color: '#1d9e75', phase: 7 },
     ];
     var totalMonths = 18;
     var labelW = 150;
@@ -9764,15 +9531,15 @@ Quedo a sus órdenes,
     }
     moHdr += '</div>';
 
-    // Rows
+    // Rows — entire row is clickable
     var rows = '';
     phases.forEach(function(ph) {
       var leftPct = (ph.start / totalMonths * 100).toFixed(1);
       var widthPct = ((ph.end - ph.start) / totalMonths * 100).toFixed(1);
-      rows += '<div style="display:flex;align-items:center;padding:3px 0;min-height:24px">' +
+      rows += '<div class="mini-gantt-row" onclick="openPhase(' + ph.phase + ')" style="display:flex;align-items:center;padding:3px 0;min-height:24px;cursor:pointer;border-radius:4px;transition:background 0.12s;margin:0 -6px;padding-left:6px;padding-right:6px">' +
         '<div style="width:' + labelW + 'px;flex-shrink:0;font-size:11px;font-weight:500;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:10px">' + ph.label + '</div>' +
         '<div style="flex:1;position:relative;height:16px;background:var(--bg-secondary);border-radius:3px;overflow:hidden">' +
-          '<div style="position:absolute;left:' + leftPct + '%;width:' + widthPct + '%;height:100%;background:' + ph.color + ';border-radius:3px;opacity:0.85;display:flex;align-items:center;justify-content:center;font-size:7px;color:rgba(255,255,255,0.9);font-weight:500;letter-spacing:0.02em">' +
+          '<div style="position:absolute;left:' + leftPct + '%;width:' + widthPct + '%;height:100%;background:' + ph.color + ';border-radius:3px;opacity:0.85;display:flex;align-items:center;justify-content:center;font-size:7px;color:rgba(255,255,255,0.9);font-weight:500;letter-spacing:0.02em;transition:opacity 0.12s">' +
             'M' + (ph.start + 1) + '–' + ph.end +
           '</div>' +
         '</div>' +
@@ -9800,7 +9567,7 @@ Quedo a sus órdenes,
     var todayFraction = progressMonth / totalMonths;
 
     wrap.innerHTML =
-      '<div style="min-width:480px">' +
+      '<div>' +
         '<div style="display:flex;align-items:center;padding-bottom:5px;margin-bottom:3px;border-bottom:0.5px solid var(--border)">' + moHdr + '</div>' +
         '<div style="position:relative">' +
           rows +
@@ -9898,7 +9665,7 @@ Quedo a sus órdenes,
       renderFullPricingTable();
     }
     if (savedEqData) {
-      ['hematology','chemistry','coagulation','other'].forEach(cat => {
+      ['hematology','chemistry','immunoassay','coagulation','other'].forEach(cat => {
         if (savedEqData[cat]) { eqData[cat].options = savedEqData[cat].options; }
       });
       renderEquipment();
@@ -12271,6 +12038,161 @@ Quedo a sus órdenes,
   }
 
   // ══════════════════════════════════════════
+  // ── DATA FLOW MAP ──
+  // ══════════════════════════════════════════
+  function openDataFlowMap() {
+    var ov = document.getElementById('dataflow-overlay');
+    if (ov) ov.style.display = 'flex';
+    var c = document.getElementById('dataflow-chart');
+    if (!c || c.dataset.done) return;
+    c.dataset.done = '1';
+
+    // ── Clean tiered layout: 4 horizontal tiers flowing top to bottom ──
+    // Tier 1: Inputs (5 small boxes in a row)
+    // Tier 2: Engines (2 boxes centered)
+    // Tier 3: Outputs (5 small boxes in a row)
+    // Tier 4: Tracking (3 boxes) → Dashboard → Investor Summary
+    // Arrows go STRAIGHT DOWN between tiers only — no cross-column routing
+
+    var W = 620, pad = 10;
+
+    // Colors
+    var C = {
+      inp: {f:'#e6f1fb',s:'#B5D4F4',t:'#0C447C',u:'#5a8fc0',a:'#185fa5'},
+      eng: {f:'#e1f5ee',s:'#9FE1CB',t:'#085041',u:'#2a9872',a:'#1d9e75'},
+      out: {f:'#eeedfe',s:'#CECBF6',t:'#3C3489',u:'#7570c0',a:'#534ab7'},
+      trk: {f:'#faeeda',s:'#FAC775',t:'#633806',u:'#a07020',a:'#854f0b'},
+      hub: {f:'#1a1a18',s:'#555',   t:'#fff',   u:'#bbb',   a:'#1d9e75'},
+    };
+
+    // Helper: draw a row of boxes
+    function boxRow(boxes, y, bw, bh, color, tag, navs) {
+      var n = boxes.length;
+      var totalW = n * bw + (n-1) * 8;
+      var startX = (W - totalW) / 2;
+      var svg = '';
+      var positions = [];
+      for (var i = 0; i < n; i++) {
+        var x = startX + i * (bw + 8);
+        var nav = navs[i];
+        var onclick = nav ? "document.getElementById('dataflow-overlay').style.display='none';nav('"+nav+"',null)" : "document.getElementById('dataflow-overlay').style.display='none';openInvestorSummary()";
+        svg += '<g style="cursor:pointer" onclick="'+onclick+'">';
+        svg += '<rect x="'+x+'" y="'+y+'" width="'+bw+'" height="'+bh+'" rx="7" fill="'+color.f+'" stroke="'+color.s+'" stroke-width="0.6"/>';
+        svg += '<text x="'+(x+bw/2)+'" y="'+(y+bh/2-5)+'" text-anchor="middle" font-size="10" font-weight="500" fill="'+color.t+'">'+boxes[i][0]+'</text>';
+        svg += '<text x="'+(x+bw/2)+'" y="'+(y+bh/2+7)+'" text-anchor="middle" font-size="8" fill="'+color.u+'" opacity="0.7">'+boxes[i][1]+'</text>';
+        svg += '</g>';
+        positions.push({x:x, y:y, w:bw, h:bh, mx:x+bw/2, my:y+bh/2, b:y+bh, t:y});
+      }
+      return {svg:svg, pos:positions};
+    }
+
+    // ── Tier 1: Inputs ──
+    var t1y = 36;
+    var inp = boxRow(
+      [['Staffing Model','Roles & salaries'],['Cost Estimator','40+ line items'],['Reagent Modeler','Cost per test'],['Pricing Matrix','80+ test prices'],['Volume Projector','Channel ramps']],
+      t1y, 112, 40, C.inp, 'Input',
+      ['staffing','estimator','calculator','pricing','volume']
+    );
+
+    // ── Tier 2: Engines ──
+    var t2y = 130;
+    var eng = boxRow(
+      [['Financial Calculator','3-year P&L, break-even'],['Cash Flow Calendar','18-month runway']],
+      t2y, 200, 40, C.eng, 'Engine',
+      ['calculator','cashflow']
+    );
+
+    // ── Tier 3: Outputs ──
+    var t3y = 224;
+    var out = boxRow(
+      [['Sensitivity','Stress scenarios'],['Funding Model','Equity & debt'],['Budget Tracker','Budget vs actual'],['Working Capital','Cash gap'],['SAT / Tax','ISR, IVA, CFDI']],
+      t3y, 112, 40, C.out, 'Output',
+      ['sensitivity','funding','budget','working-capital','sat-compliance']
+    );
+
+    // ── Tier 4: Tracking ──
+    var t4y = 338;
+    var trk = boxRow(
+      [['Project Phases','7 phases, tasks'],['Regulatory Board','Permits Kanban'],['Physician CRM','Referral pipeline']],
+      t4y, 150, 40, C.trk, 'Tracking',
+      ['dashboard','regboard','physicians']
+    );
+
+    // ── Tier 5: Dashboard ──
+    var t5y = 422;
+    var dash = boxRow(
+      [['Dashboard','KPIs, progress, risks']],
+      t5y, 200, 40, C.hub, 'Hub',
+      ['dashboard']
+    );
+
+    // ── Tier 6: Investor ──
+    var t6y = 498;
+    var inv = boxRow(
+      [['Investor Summary','One-page PDF export']],
+      t6y, 200, 40, C.hub, 'Hub',
+      [null]
+    );
+
+    var H = t6y + 40 + 16;
+
+    // ── Build SVG ──
+    var s = '<svg width="100%" viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg" style="font-family:var(--font);display:block">';
+
+    // Arrow marker
+    s += '<defs><marker id="dfa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>';
+
+    // ── Tier labels ──
+    s += '<text x="'+pad+'" y="24" font-size="9" font-weight="600" letter-spacing="0.06em" fill="'+C.inp.a+'" opacity="0.5">DATA INPUTS</text>';
+    s += '<text x="'+pad+'" y="120" font-size="9" font-weight="600" letter-spacing="0.06em" fill="'+C.eng.a+'" opacity="0.5">CALCULATION ENGINES</text>';
+    s += '<text x="'+pad+'" y="214" font-size="9" font-weight="600" letter-spacing="0.06em" fill="'+C.out.a+'" opacity="0.5">OUTPUTS &amp; ANALYSIS</text>';
+
+    // Separator before tracking
+    var sepY = 310;
+    s += '<line x1="20" y1="'+sepY+'" x2="'+(W-20)+'" y2="'+sepY+'" stroke="#d8d7d2" stroke-width="0.5" stroke-dasharray="3 2"/>';
+    s += '<text x="'+(W/2)+'" y="'+(sepY-4)+'" text-anchor="middle" font-size="8" font-weight="600" letter-spacing="0.06em" fill="#b0afa8">EXECUTION &amp; TRACKING</text>';
+
+    // ── Arrows: Tier 1 → Tier 2 (all inputs fan into the two engines) ──
+    function arrow(x1,y1,x2,y2,col) {
+      s += '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="'+col+'" stroke-width="0.8" opacity="0.25" marker-end="url(#dfa)"/>';
+    }
+    function arrowC(x1,y1,x2,y2,col) {
+      var my = (y1+y2)/2;
+      s += '<path d="M'+x1+','+y1+' C'+x1+','+my+' '+x2+','+my+' '+x2+','+y2+'" fill="none" stroke="'+col+'" stroke-width="0.8" opacity="0.25" marker-end="url(#dfa)"/>';
+    }
+
+    // Inputs → Financial Calculator (all 5)
+    var calcMx = eng.pos[0].mx;
+    for (var i = 0; i < 5; i++) arrowC(inp.pos[i].mx, inp.pos[i].b, calcMx, eng.pos[0].t, '#185fa5');
+
+    // Volume → Cash Flow also
+    arrowC(inp.pos[4].mx, inp.pos[4].b, eng.pos[1].mx, eng.pos[1].t, '#185fa5');
+    // Staffing → Cash Flow also
+    arrowC(inp.pos[0].mx, inp.pos[0].b, eng.pos[1].mx, eng.pos[1].t, '#185fa5');
+
+    // Fin Calc → Cash Flow
+    arrow(eng.pos[0].mx + 40, eng.pos[0].b, eng.pos[1].mx - 40, eng.pos[1].t, '#1d9e75');
+
+    // Engines → Outputs (fan out from calculator to all 5)
+    for (var i = 0; i < 5; i++) arrowC(calcMx, eng.pos[0].b, out.pos[i].mx, out.pos[i].t, '#1d9e75');
+
+    // Tracking → Dashboard (3 arrows straight down)
+    for (var i = 0; i < 3; i++) arrowC(trk.pos[i].mx, trk.pos[i].b, dash.pos[0].mx, dash.pos[0].t, '#854f0b');
+
+    // Dashboard → Investor
+    arrow(dash.pos[0].mx, dash.pos[0].b, inv.pos[0].mx, inv.pos[0].t, '#1d9e75');
+
+    // Calculator → Investor (side arc)
+    s += '<path d="M'+(eng.pos[0].mx+100)+','+eng.pos[0].b+' C'+(W-40)+','+(eng.pos[0].b+60)+' '+(W-40)+','+(inv.pos[0].t-60)+' '+(inv.pos[0].mx+100)+','+inv.pos[0].t+'" fill="none" stroke="#1d9e75" stroke-width="0.8" opacity="0.2" marker-end="url(#dfa)" stroke-dasharray="3 2"/>';
+
+    // ── Render all tiers ──
+    s += inp.svg + eng.svg + out.svg + trk.svg + dash.svg + inv.svg;
+
+    s += '</svg>';
+    c.innerHTML = s;
+  }
+
+  // ══════════════════════════════════════════
   // ── INVESTOR SUMMARY ──
   // ══════════════════════════════════════════
   function openInvestorSummary() {
@@ -14509,6 +14431,439 @@ Each array must have exactly 4–5 concise, specific, actionable items in Englis
     }
 
     XLSX.writeFile(wb, 'LabQro_BusinessPlan_' + new Date().toISOString().split('T')[0] + '.xlsx');
+  }
+
+  // ══════════════════════════════════════════
+  // ── UNIT COST & PROFITABILITY HUB ──
+  // ══════════════════════════════════════════
+
+  let ucMarginChart = null;
+  let ucWeightedChart = null;
+  let ucOverrides = {};
+  let ucSelectedTests = null; // array of fullPricingData indices; null = use defaults
+
+  const UC_DEFAULT_CONSUMABLES = 5;
+  const UC_DEFAULT_LABOR = 17;
+  const UC_EQUIP_LIFE_MONTHS = 84;
+
+  // Map fullPricingData study names to reagentTestCatalog entries
+  function buildReagentMap() {
+    var map = {};
+    reagentTestCatalog.forEach(function(rt, i) { map[rt.name.toLowerCase()] = i; });
+    return map;
+  }
+  var _reagentNameMap = null;
+  function getReagentMatch(studyName) {
+    if (!_reagentNameMap) _reagentNameMap = buildReagentMap();
+    var sn = (studyName||'').toLowerCase();
+    // Direct substring match
+    for (var key in _reagentNameMap) {
+      if (sn.indexOf(key) >= 0 || key.indexOf(sn) >= 0) return _reagentNameMap[key];
+    }
+    // Keyword match
+    var kw = {
+      'biometr':0,'bhc':0,'reticulocit':1,'glucosa':2,'urea':3,'bun':3,
+      'creatinina':4,'acido urico':5,'ácido úrico':5,'colesterol total':6,
+      'triglicerido':7,'triglicérido':7,'hdl':8,'alt':9,'tgp':9,
+      'hba1c':10,'hemoglobina glucosilada':10,'glicohemoglobina':10,
+      'quimica sanguinea 6':11,'química sanguínea 6':11,
+      'quimica sanguinea 27':12,'química sanguínea 27':12,
+      'tsh':13,'tirotropina':13,'t4 libre':14,'t3 total':15,
+      'testosterona total':16,'prolactina':17,'fsh':18,'lh':18,
+      'beta-hcg':19,'hcg cuantitativa':19,
+      'pcr':20,'proteina c reactiva':20,'proteína c react':20,
+      'psa total':21,'antígeno prostático':21,'antigeno prostatico':21,
+      'ca-125':22,'ca 125':22,
+      'tp / inr':23,'tp/inr':23,'protrombina':23,
+      'ttpa':24,'tromboplastina':24,
+      'ego':25,'examen general de orina':25,'uronalisis':25,
+      'urocultivo':26
+    };
+    for (var k in kw) { if (sn.indexOf(k) >= 0) return kw[k]; }
+    return -1;
+  }
+
+  function getDefaultUCSelection() {
+    var selected = [];
+    fullPricingData.forEach(function(row, idx) {
+      if (!row.study) return;
+      if (getReagentMatch(row.study) >= 0) selected.push(idx);
+    });
+    return selected;
+  }
+
+  function switchUCTab(tab, el) {
+    document.getElementById('uc-view-equipment').style.display = tab === 'equipment' ? 'block' : 'none';
+    document.getElementById('uc-view-modeler').style.display   = tab === 'modeler'   ? 'block' : 'none';
+    document.querySelectorAll('#uc-tab-equipment,#uc-tab-modeler').forEach(function(b) { b.classList.remove('active'); });
+    if (el) el.classList.add('active');
+    if (tab === 'equipment') { renderEquipment(); setTimeout(renderTCO, 100); }
+    if (tab === 'modeler')   { renderUCModeler(); }
+  }
+
+  function renderUCPage() {
+    var eqVisible = document.getElementById('uc-view-equipment').style.display !== 'none';
+    if (eqVisible) { renderEquipment(); setTimeout(renderTCO, 100); }
+    else { renderUCModeler(); }
+  }
+
+  function getEquipPurchaseTotal() {
+    var total = 0;
+    ['hematology','chemistry','immunoassay','coagulation'].forEach(function(cat) {
+      var prices = eqData[cat].options.map(function(o) {
+        return parseInt((o[2]||'').replace(/[$,]/g,'')) || 0;
+      });
+      if (prices.length) total += Math.min.apply(null, prices);
+    });
+    return total;
+  }
+
+  function getEquipAmortPerTest() {
+    var allT = getUCSelectedTests();
+    var totalVol = allT.reduce(function(s, t) { return s + (t.vol||0); }, 0);
+    if (totalVol <= 0) return 5;
+    return Math.round(getEquipPurchaseTotal() / UC_EQUIP_LIFE_MONTHS / totalVol) || 5;
+  }
+
+  function ucGetCost(id, field) {
+    if (ucOverrides[id] && ucOverrides[id][field] !== undefined) return ucOverrides[id][field];
+    if (field === 'consumables') return UC_DEFAULT_CONSUMABLES;
+    if (field === 'labor') return UC_DEFAULT_LABOR;
+    if (field === 'equip') return getEquipAmortPerTest();
+    return 0;
+  }
+
+  function ucSetCost(id, field, val) {
+    if (!ucOverrides[id]) ucOverrides[id] = {};
+    ucOverrides[id][field] = val;
+    renderUCTable();
+    saveUCData();
+  }
+
+  function onUCComodatoChange() {
+    var el = document.querySelector('input[name="uc-comodato"]:checked');
+    var val = el ? el.value : '0';
+    document.querySelectorAll('input[name="rg-comodato"]').forEach(function(r) { r.checked = (r.value === val); });
+    renderUCTable();
+  }
+
+  function getUCComodatoPremium() {
+    var el = document.querySelector('input[name="uc-comodato"]:checked');
+    return el ? parseFloat(el.value) : 0;
+  }
+
+  // Avoid infinite recursion: getEquipAmortPerTest calls getUCSelectedTests which calls getEquipAmortPerTest
+  var _ucBuildingTests = false;
+  function getUCSelectedTests() {
+    var sel = ucSelectedTests || getDefaultUCSelection();
+    var comodato = getUCComodatoPremium();
+    // Use a fixed equip amort during build to avoid recursion
+    var equipAmort = _ucBuildingTests ? 5 : (function() { _ucBuildingTests = true; var v = getEquipAmortPerTest(); _ucBuildingTests = false; return v; })();
+
+    return sel.map(function(fpIdx) {
+      var fp = fullPricingData[fpIdx];
+      if (!fp || !fp.study) return null;
+      var id = 'fp_' + fpIdx;
+      var rtIdx = getReagentMatch(fp.study);
+      var hasModel = rtIdx >= 0;
+      var rt = hasModel ? reagentTestCatalog[rtIdx] : null;
+
+      var reagentCost;
+      if (hasModel) {
+        var mult = getAnalyzerMult(rt.analyzerKey);
+        reagentCost = rt.analyzerKey ? Math.round(rt.baseCost * mult * (1 + comodato)) : Math.round(rt.baseCost);
+      } else {
+        reagentCost = (ucOverrides[id] && ucOverrides[id].reagent !== undefined) ? ucOverrides[id].reagent : Math.round((fp.yours || 200) * 0.15);
+      }
+
+      var cat = fp.group || fp.cat || 'Otros';
+
+      return {
+        id: id, fpIdx: fpIdx, name: fp.study, cat: cat,
+        analyzerKey: rt ? rt.analyzerKey : null,
+        price: fp.yours || 0, reagent: reagentCost,
+        consumables: ucGetCost(id, 'consumables'),
+        labor: ucGetCost(id, 'labor'),
+        equip: (ucOverrides[id] && ucOverrides[id].equip !== undefined) ? ucOverrides[id].equip : equipAmort,
+        vol: (ucOverrides[id] && ucOverrides[id].vol !== undefined) ? ucOverrides[id].vol : (rt ? rt.vol : 10),
+        hasReagentModel: hasModel, rtIdx: rtIdx
+      };
+    }).filter(Boolean);
+  }
+
+  function renderUCAnalyzerSelectors() {
+    var wrap = document.getElementById('uc-analyzer-selectors');
+    if (!wrap) return;
+    wrap.innerHTML = Object.entries(analyzerCatalog).map(function(entry) {
+      var key = entry[0], cat = entry[1], sel = rgSelectedAnalyzer[key], opt = cat.options[sel];
+      return '<div style="background:var(--bg-secondary);border-radius:var(--radius-md);padding:12px">' +
+        '<div style="font-size:10px;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-tertiary);font-weight:500;margin-bottom:6px">' + cat.label + '</div>' +
+        '<select onchange="rgSelectedAnalyzer[\'' + key + '\']=+this.value;renderUCAnalyzerSelectors();renderUCTable()" style="width:100%;border:0.5px solid var(--border);border-radius:6px;padding:6px 8px;font-size:12px;font-family:var(--font);background:var(--bg-primary);color:var(--text-primary);outline:none">' +
+        cat.options.map(function(o,i){return '<option value="'+i+'"'+(i===sel?' selected':'')+'>'+o.vendor+' '+o.model+'</option>';}).join('') +
+        '</select>' + (function() {
+          var pct = Math.round(opt.costMult * 100);
+          var label, color;
+          if (pct === 100) { label = 'Baseline (reference)'; color = 'var(--text-secondary)'; }
+          else if (pct < 100) { label = (100 - pct) + '% cheaper'; color = 'var(--green-dark)'; }
+          else { label = '+' + (pct - 100) + '% premium'; color = 'var(--red)'; }
+          return '<div style="margin-top:6px;font-size:11px;color:var(--text-tertiary)">Reagent cost: <span style="font-weight:500;color:' + color + ';font-family:var(--font-mono)">' + label + '</span></div>';
+        })() + '</div>';
+    }).join('');
+  }
+
+  function renderUCModeler() {
+    renderUCAnalyzerSelectors();
+    if (window._dbReady && !ucOverrides._loaded) {
+      dbGet('ucData').then(function(saved) {
+        if (saved) {
+          if (saved.overrides) ucOverrides = saved.overrides;
+          if (saved.selected) ucSelectedTests = saved.selected;
+          ucOverrides._loaded = true;
+        }
+        renderUCTable();
+      });
+    } else { renderUCTable(); }
+  }
+
+  function renderUCTable() {
+    var tbody = document.getElementById('uc-tbody');
+    if (!tbody) return;
+    var allTests = getUCSelectedTests();
+    var totalVol = allTests.reduce(function(s, t) { return s + t.vol; }, 0);
+
+    var catOrder = ['Hematología','Química','Hormonas','Inmunología','Oncología','Microbiología','Coagulación','Uronálisis','Otros'];
+    var catColors = {
+      'Hematología':{dot:'#993556',bg:'#fbeaf0'},'Química':{dot:'#185FA5',bg:'#e6f1fb'},
+      'Hormonas':{dot:'#534AB7',bg:'#EEEDFE'},'Inmunología':{dot:'#0F6E56',bg:'#e1f5ee'},
+      'Oncología':{dot:'#a32d2d',bg:'#fcebeb'},'Microbiología':{dot:'#993C1D',bg:'#FAECE7'},
+      'Coagulación':{dot:'#854F0B',bg:'#faeeda'},'Uronálisis':{dot:'#3B6D11',bg:'#EAF3DE'},
+      'Otros':{dot:'#5f5e5a',bg:'#f1efe8'}
+    };
+    allTests.sort(function(a,b) {
+      var ai=catOrder.indexOf(a.cat),bi=catOrder.indexOf(b.cat);
+      if(ai<0)ai=99;if(bi<0)bi=99;return ai-bi;
+    });
+    var catCounts = {};
+    allTests.forEach(function(t){catCounts[t.cat]=(catCounts[t.cat]||0)+1;});
+
+    var html = '', lastCat = '';
+    allTests.forEach(function(t) {
+      var totalCost = t.reagent+t.consumables+t.labor+t.equip;
+      var marginAbs = t.price-totalCost;
+      var marginPct = t.price>0?Math.round(marginAbs/t.price*100):0;
+      var dailyProfit = Math.round(marginAbs*t.vol/26);
+      var mClass = marginPct>=65?'ue-margin-hi':marginPct>=40?'ue-margin-mid':'ue-margin-lo';
+      var cc = catColors[t.cat]||catColors['Otros'];
+      var isFirst = (t.cat !== lastCat);
+
+      // Reagent cell
+      var reagentCell;
+      if (t.hasReagentModel) {
+        reagentCell = '<span style="font-family:var(--font-mono);color:var(--red)">$'+fmt(t.reagent)+'</span>';
+      } else {
+        reagentCell = '<span style="position:relative;display:inline-flex;align-items:center"><input class="ue-cell-input" type="number" value="'+t.reagent+'" style="color:var(--red);padding-right:14px" onchange="ucSetCost(\''+t.id+'\',\'reagent\',+this.value||0)"><span title="Manual estimate" style="position:absolute;right:3px;font-size:9px;color:var(--amber);cursor:help">✎</span></span>';
+      }
+
+      html += '<tr>';
+      if (isFirst) {
+        var rs = catCounts[t.cat]||1;
+        html += '<td rowspan="'+rs+'" style="padding:8px 10px;vertical-align:top;border-right:1.5px solid var(--border-strong);border-bottom:1.5px solid var(--border-strong);background:'+cc.bg+';white-space:normal;min-width:85px">'+
+          '<div style="display:flex;align-items:center;gap:6px;margin-bottom:2px">'+
+            '<span style="width:8px;height:8px;border-radius:50%;background:'+cc.dot+';flex-shrink:0"></span>'+
+            '<span style="font-size:11px;font-weight:600;color:'+cc.dot+'">'+t.cat+'</span>'+
+          '</div>'+
+          '<div style="font-size:10px;color:var(--text-tertiary)">'+rs+' test'+(rs!==1?'s':'')+'</div>'+
+        '</td>';
+        lastCat = t.cat;
+      }
+
+      html +=
+        '<td style="padding-left:10px"><div style="font-size:12px;font-weight:500;color:var(--text-primary)">'+t.name+'</div></td>'+
+        '<td class="est-money" style="font-family:var(--font-mono);font-weight:500;color:var(--green-dark)">$'+fmt(t.price)+'</td>'+
+        '<td class="est-money">'+reagentCell+'</td>'+
+        '<td class="est-money"><input class="ue-cell-input" type="number" value="'+t.consumables+'" onchange="ucSetCost(\''+t.id+'\',\'consumables\',+this.value||0)"></td>'+
+        '<td class="est-money"><input class="ue-cell-input" type="number" value="'+t.labor+'" onchange="ucSetCost(\''+t.id+'\',\'labor\',+this.value||0)"></td>'+
+        '<td class="est-money"><input class="ue-cell-input" type="number" value="'+t.equip+'" onchange="ucSetCost(\''+t.id+'\',\'equip\',+this.value||0)"></td>'+
+        '<td class="est-money" style="border-left:1.5px solid var(--border-strong);font-family:var(--font-mono);font-weight:500">$'+fmt(totalCost)+'</td>'+
+        '<td class="est-money" style="font-family:var(--font-mono);font-weight:500;color:var(--green-dark)">$'+fmt(marginAbs)+'</td>'+
+        '<td class="est-money '+mClass+'" style="font-family:var(--font-mono)">'+marginPct+'%</td>'+
+        '<td class="est-money"><input class="ue-cell-input" type="number" value="'+t.vol+'" onchange="ucSetCost(\''+t.id+'\',\'vol\',+this.value||0)"></td>'+
+        '<td class="est-money" style="border-left:1.5px solid var(--border-strong);font-family:var(--font-mono);font-weight:500;color:'+(dailyProfit>=0?'var(--green-dark)':'var(--red)')+'">$'+fmt(dailyProfit)+'</td>'+
+        '<td></td></tr>';
+    });
+    tbody.innerHTML = html;
+    updateUCKPIs(allTests, totalVol);
+    renderUCCharts(allTests, totalVol);
+    renderUCInsights(allTests, totalVol);
+  }
+
+  function updateUCKPIs(allTests, totalVol) {
+    var setKpi = function(id,val){var e=document.getElementById(id);if(e)e.textContent=val;};
+    var wm=0,tc2=0,smp=0;
+    allTests.forEach(function(t){
+      var c=t.reagent+t.consumables+t.labor+t.equip,ma=t.price-c;
+      var mp=t.price>0?(ma/t.price*100):0;
+      wm+=(totalVol>0?t.vol/totalVol:0)*mp; tc2+=ma*t.vol; smp+=mp;
+    });
+    wm=Math.round(wm*10)/10;
+    setKpi('uc-kpi-count',allTests.length);
+    setKpi('uc-kpi-avg-margin',allTests.length>0?Math.round(smp/allTests.length)+'%':'—');
+    setKpi('uc-kpi-weighted',wm+'%');
+    setKpi('uc-kpi-daily-profit','$'+fmt(Math.round(tc2/26)));
+    setKpi('uc-kpi-monthly','$'+fmt(tc2));
+    var wEl=document.getElementById('uc-kpi-weighted');
+    if(wEl) wEl.style.color=wm>=65?'var(--green-dark)':wm>=40?'var(--amber)':'var(--red)';
+
+    var tR=0,tCn=0,tLb=0,tEq=0,tCo=0,tMg=0,tVl=0,tPr=0;
+    allTests.forEach(function(t){
+      var c=t.reagent+t.consumables+t.labor+t.equip;
+      tPr+=t.price*t.vol;tR+=t.reagent*t.vol;tCn+=t.consumables*t.vol;
+      tLb+=t.labor*t.vol;tEq+=t.equip*t.vol;tCo+=c*t.vol;
+      tMg+=(t.price-c)*t.vol;tVl+=t.vol;
+    });
+    setKpi('uc-tot-price',tVl>0?'$'+fmt(Math.round(tPr/tVl))+' avg':'—');
+    setKpi('uc-tot-reagent','$'+fmt(tR));
+    setKpi('uc-tot-consumables','$'+fmt(tCn));
+    setKpi('uc-tot-labor','$'+fmt(tLb));
+    setKpi('uc-tot-equip','$'+fmt(tEq));
+    setKpi('uc-tot-cost','$'+fmt(tCo));
+    setKpi('uc-tot-margin','$'+fmt(tMg));
+    setKpi('uc-tot-margin-pct',tPr>0?Math.round(tMg/tPr*100)+'%':'—');
+    setKpi('uc-tot-vol',fmt(tVl));
+    setKpi('uc-tot-daily','$'+fmt(Math.round(tMg/26)));
+  }
+
+  function renderUCCharts(allTests, totalVol) {
+    if (typeof Chart === 'undefined') return;
+    var sorted = allTests.slice().sort(function(a,b){
+      var mA=a.price>0?(a.price-a.reagent-a.consumables-a.labor-a.equip)/a.price*100:0;
+      var mB=b.price>0?(b.price-b.reagent-b.consumables-b.labor-b.equip)/b.price*100:0;return mB-mA;
+    });
+    var top15 = sorted.slice(0,15);
+    var ctx1 = document.getElementById('chart-uc-margins');
+    if (ctx1) {
+      if (ucMarginChart) ucMarginChart.destroy();
+      ucMarginChart = new Chart(ctx1,{type:'bar',data:{labels:top15.map(function(t){return t.name.length>25?t.name.substring(0,23)+'…':t.name;}),datasets:[{label:'Margin %',data:top15.map(function(t){var c=t.reagent+t.consumables+t.labor+t.equip;return t.price>0?Math.round((t.price-c)/t.price*100):0;}),backgroundColor:top15.map(function(t){var c=t.reagent+t.consumables+t.labor+t.equip;var m=t.price>0?Math.round((t.price-c)/t.price*100):0;return m>=65?'rgba(29,158,117,0.7)':m>=40?'rgba(133,79,11,0.6)':'rgba(163,45,45,0.6)';}),borderRadius:4,barThickness:18}]},options:{responsive:true,indexAxis:'y',maintainAspectRatio:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(ctx){return ' '+ctx.raw+'% margin';}}}},scales:{x:{max:100,grid:{color:'rgba(0,0,0,0.05)'},ticks:{callback:function(v){return v+'%';},font:{size:10}}},y:{grid:{display:false},ticks:{font:{size:10,family:'DM Sans'}}}}}});
+    }
+    var byCat={};
+    allTests.forEach(function(t){var c=t.reagent+t.consumables+t.labor+t.equip;var mp=t.price>0?(t.price-c)/t.price*100:0;if(!byCat[t.cat])byCat[t.cat]={weighted:0,contribution:0};byCat[t.cat].weighted+=(totalVol>0?t.vol/totalVol:0)*mp;byCat[t.cat].contribution+=(t.price-c)*t.vol;});
+    var cats=Object.keys(byCat).sort(function(a,b){return byCat[b].weighted-byCat[a].weighted;});
+    var cc2=['rgba(29,158,117,0.75)','rgba(24,95,165,0.75)','rgba(133,79,11,0.7)','rgba(83,74,183,0.7)','rgba(163,45,45,0.6)','rgba(122,45,107,0.6)','rgba(42,94,168,0.6)','rgba(59,109,17,0.65)'];
+    var ctx2=document.getElementById('chart-uc-weighted');
+    if(ctx2){
+      if(ucWeightedChart)ucWeightedChart.destroy();
+      ucWeightedChart=new Chart(ctx2,{type:'bar',data:{labels:cats,datasets:[{label:'Weighted margin',data:cats.map(function(c){return Math.round(byCat[c].weighted*10)/10;}),backgroundColor:cats.map(function(c,i){return cc2[i%cc2.length];}),borderRadius:4,barThickness:28}]},options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(ctx){var cat=cats[ctx.dataIndex];return ' '+ctx.raw+'% weighted · $'+fmt(byCat[cat].contribution)+'/mo';}}}},scales:{y:{grid:{color:'rgba(0,0,0,0.05)'},ticks:{callback:function(v){return v+'%';},font:{size:10}}},x:{grid:{display:false},ticks:{font:{size:10,family:'DM Sans'}}}}}});
+    }
+  }
+
+  function renderUCInsights(allTests, totalVol) {
+    var el=document.getElementById('uc-insights');if(!el)return;
+    var ins=[];
+    var sorted=allTests.slice().sort(function(a,b){var mA=a.price>0?(a.price-a.reagent-a.consumables-a.labor-a.equip)/a.price*100:0;var mB=b.price>0?(b.price-b.reagent-b.consumables-b.labor-b.equip)/b.price*100:0;return mB-mA;});
+    if(sorted.length>=2){
+      var best=sorted[0],worst=sorted[sorted.length-1];
+      var bm=best.price>0?Math.round((best.price-best.reagent-best.consumables-best.labor-best.equip)/best.price*100):0;
+      var wm2=worst.price>0?Math.round((worst.price-worst.reagent-worst.consumables-worst.labor-worst.equip)/worst.price*100):0;
+      ins.push('🏆 <strong>Highest margin:</strong> '+best.name+' at '+bm+'%. Protect its volume.');
+      if(wm2<40) ins.push('⚠️ <strong>Lowest margin:</strong> '+worst.name+' at '+wm2+'%. Consider raising price or negotiating reagent costs.');
+    }
+    var mc=allTests.filter(function(t){return !t.hasReagentModel;}).length;
+    if(mc>0) ins.push('✎ <strong>'+mc+' test'+(mc>1?'s':'')+' with manual reagent estimates</strong> — edit reagent costs directly for accuracy.');
+    var wm=0,tc2=0;
+    allTests.forEach(function(t){var c=t.reagent+t.consumables+t.labor+t.equip;var mp=t.price>0?(t.price-c)/t.price*100:0;wm+=(totalVol>0?t.vol/totalVol:0)*mp;tc2+=(t.price-c)*t.vol;});
+    wm=Math.round(wm*10)/10;
+    if(wm>=65)ins.push('✅ <strong>Weighted margin is strong</strong> at '+wm+'%.');
+    else if(wm>=50)ins.push('📊 <strong>Weighted margin is healthy</strong> at '+wm+'%. Shift volume to higher-margin tests.');
+    else ins.push('🔴 <strong>Weighted margin below target</strong> at '+wm+'%. Reduce costs or raise prices on high-volume tests.');
+    ins.push('💰 <strong>Daily contribution:</strong> $'+fmt(Math.round(tc2/26))+' MXN. Monthly: $'+fmt(tc2)+' MXN before fixed costs.');
+    el.innerHTML=ins.map(function(i){return '<div style="padding:6px 0;border-bottom:0.5px solid var(--border)">'+i+'</div>';}).join('');
+  }
+
+  // ── Test Selector Panel ──
+  var _ucSelTemp = [];
+
+  function openUCTestSelector() {
+    _ucSelTemp = (ucSelectedTests || getDefaultUCSelection()).slice();
+    renderUCSelBody();
+    document.getElementById('uc-sel-overlay').style.opacity = '1';
+    document.getElementById('uc-sel-overlay').style.pointerEvents = 'all';
+    document.getElementById('uc-sel-panel').style.transform = 'translateX(0)';
+  }
+
+  function closeUCTestSelector() {
+    document.getElementById('uc-sel-overlay').style.opacity = '0';
+    document.getElementById('uc-sel-overlay').style.pointerEvents = 'none';
+    document.getElementById('uc-sel-panel').style.transform = 'translateX(100%)';
+  }
+
+  function renderUCSelBody() {
+    var body = document.getElementById('uc-sel-body'); if(!body) return;
+    var search = (document.getElementById('uc-sel-search')||{}).value || '';
+    var sl = search.toLowerCase();
+    var html = '', lastCat = '';
+    fullPricingData.forEach(function(row, idx) {
+      if (row.cat && !row.study) {
+        lastCat = row.cat;
+        html += '<div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-tertiary);padding:14px 0 6px;border-bottom:0.5px solid var(--border);margin-top:'+(html?'8':'0')+'px">'+row.cat+'</div>';
+        return;
+      }
+      if (!row.study) return;
+      if (sl && row.study.toLowerCase().indexOf(sl) < 0) return;
+      var checked = _ucSelTemp.indexOf(idx) >= 0;
+      var hasModel = getReagentMatch(row.study) >= 0;
+      html += '<label style="display:flex;align-items:center;gap:10px;padding:8px 4px;cursor:pointer;border-bottom:0.5px solid var(--border);transition:background 0.1s" onmouseover="this.style.background=\'var(--bg-secondary)\'" onmouseout="this.style.background=\'\'">' +
+        '<input type="checkbox" '+(checked?'checked':'')+' onchange="ucSelToggle('+idx+',this.checked)" style="accent-color:var(--green);flex-shrink:0;width:16px;height:16px">' +
+        '<div style="flex:1;min-width:0">' +
+          '<div style="font-size:12px;font-weight:500;color:var(--text-primary)">'+row.study+'</div>' +
+          '<div style="font-size:10px;color:var(--text-tertiary);margin-top:1px">' +
+            (hasModel?'<span style="color:var(--green-dark)">● Analyzer-modeled</span>':'<span style="color:var(--amber)">✎ Manual estimate</span>') +
+            ' · LabQro: $'+fmt(row.yours||0) +
+          '</div>' +
+        '</div></label>';
+    });
+    body.innerHTML = html;
+    var c = document.getElementById('uc-sel-count'); if(c) c.textContent = _ucSelTemp.length;
+  }
+
+  function filterUCSelector() { renderUCSelBody(); }
+
+  function ucSelToggle(idx, checked) {
+    if (checked && _ucSelTemp.indexOf(idx)<0) _ucSelTemp.push(idx);
+    if (!checked) _ucSelTemp = _ucSelTemp.filter(function(i){return i!==idx;});
+    var c = document.getElementById('uc-sel-count'); if(c) c.textContent = _ucSelTemp.length;
+  }
+
+  function ucSelAll(state) {
+    _ucSelTemp = [];
+    if (state) { fullPricingData.forEach(function(r,i){if(r.study)_ucSelTemp.push(i);}); }
+    renderUCSelBody();
+  }
+
+  function applyUCTestSelection() {
+    ucSelectedTests = _ucSelTemp.slice();
+    closeUCTestSelector();
+    renderUCTable();
+    saveUCData();
+  }
+
+  function saveUCData() {
+    dbSet('ucData', { overrides: ucOverrides, selected: ucSelectedTests });
+  }
+
+  function exportUnitCostXlsx() {
+    if (typeof XLSX === 'undefined') { alert('SheetJS not loaded.'); return; }
+    var wb = XLSX.utils.book_new();
+    var allTests = getUCSelectedTests();
+    var rows = [['LabQro — Unit Cost & Profitability','','','','','','','','','','','',''],['','','','','','','','','','','','',''],
+      ['Test','Category','Price','Reagent','Source','Consum.','Labor','Eq.Amort.','Total Cost','Margin $','Margin %','Vol/mo','Daily Profit']];
+    allTests.forEach(function(t){
+      var c=t.reagent+t.consumables+t.labor+t.equip;var ma=t.price-c;
+      rows.push([t.name,t.cat,t.price,t.reagent,t.hasReagentModel?'Analyzer':'Manual',t.consumables,t.labor,t.equip,c,ma,t.price>0?Math.round(ma/t.price*100)+'%':'0%',t.vol,Math.round(ma*t.vol/26)]);
+    });
+    var ws = XLSX.utils.aoa_to_sheet(rows);
+    ws['!cols']=[{wch:36},{wch:14},{wch:10},{wch:10},{wch:12},{wch:10},{wch:10},{wch:10},{wch:12},{wch:10},{wch:10},{wch:8},{wch:12}];
+    XLSX.utils.book_append_sheet(wb,ws,'Unit Cost & Profitability');
+    XLSX.writeFile(wb,'LabQro_UnitCost_'+new Date().toISOString().split('T')[0]+'.xlsx');
   }
 </script>
 </body>
