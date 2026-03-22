@@ -2125,7 +2125,7 @@
       <div class="sb-icon" style="background:#faeeda;color:#854f0b">📅</div> Cash Flow Calendar
     </button>
     <button class="sb-item" onclick="nav('sensitivity',this)">
-      <div class="sb-icon" style="background:#fcebeb;color:#a32d2d">⊞</div> Sensitivity Analysis
+      <div class="sb-icon" style="background:#fcebeb;color:#a32d2d">⊞</div> Scenario Engine
     </button>
     <button class="sb-item" onclick="nav('pricing',this)">
       <div class="sb-icon" style="background:#f5e6f0;color:#7a2d6b">≡</div> Pricing Matrix
@@ -2719,15 +2719,10 @@
     <div class="page-title">Financial calculator</div>
     <div class="page-sub">Model scenarios — adjust inputs and see real-time P&L impact</div>
 
-    <!-- Top bar: scenario tabs + save -->
+    <!-- Scenario save -->
     <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:14px">
-      <div class="scenario-tabs" style="margin-bottom:0">
-        <div class="scenario-tab active" onclick="setScenario('conservative',this)">Conservative</div>
-        <div class="scenario-tab" onclick="setScenario('base',this)">Base case</div>
-        <div class="scenario-tab" onclick="setScenario('optimistic',this)">Optimistic</div>
-      </div>
+      <span style="font-size:11px;color:var(--text-tertiary);padding:4px 10px;background:var(--bg-secondary);border-radius:20px;border:0.5px solid var(--border)">Payroll: accurate ~48% burden (QRO)</span>
       <div style="display:flex;gap:8px;align-items:center">
-        <span style="font-size:11px;color:var(--text-tertiary);padding:4px 10px;background:var(--bg-secondary);border-radius:20px;border:0.5px solid var(--border)">Payroll: accurate ~48% burden (QRO)</span>
         <input id="scenario-save-name" placeholder="Scenario name…" style="font-size:12px;padding:5px 10px;border:0.5px solid var(--border-strong);border-radius:var(--radius-md);background:var(--bg-primary);color:var(--text-primary);font-family:var(--font);outline:none;width:150px">
         <button class="btn btn-primary" style="font-size:12px;padding:5px 14px" onclick="saveCurrentScenario()">Save</button>
       </div>
@@ -2760,22 +2755,119 @@
             </div>
           </div>
           <div class="card">
-            <div class="card-title">Cost inputs</div>
-            <div class="slider-group">
-              <div class="slider-label"><span>Monthly rent (MXN)</span><span class="slider-val" id="v-rent">25,000</span></div>
-              <input type="range" min="12000" max="50000" step="1000" value="25000" id="s-rent" oninput="calcUpdate()">
+            <div class="card-title" style="margin-bottom:4px">Operating costs</div>
+            <div style="font-size:10px;color:var(--text-tertiary);margin-bottom:14px">Every line in the P&L — click any section to expand and edit individual items</div>
+
+            <!-- Hidden inputs that hold computed totals for all consumers -->
+            <input type="hidden" id="s-rent" value="25000">
+            <input type="hidden" id="s-util" value="5000">
+            <input type="hidden" id="s-staff" value="4">
+            <input type="hidden" id="s-reagent" value="35">
+            <input type="hidden" id="s-misc" value="15000">
+
+            <!-- ══ 1. PAYROLL SECTION ══ -->
+            <div class="cost-section" id="cs-payroll" style="border-bottom:0.5px solid var(--border);padding-bottom:10px;margin-bottom:10px">
+              <div onclick="toggleCostSection('payroll')" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;padding:4px 0;user-select:none" class="cost-section-header">
+                <div style="display:flex;align-items:center;gap:8px">
+                  <span class="cost-chevron" id="chev-payroll" style="font-size:9px;color:var(--text-tertiary);transition:transform 0.15s;transform:rotate(0deg)">▶</span>
+                  <span style="font-size:12px;font-weight:500;color:var(--text-primary)">Payroll</span>
+                  <span style="font-size:10px;padding:1px 7px;border-radius:10px;background:#e6f1fb;color:#185fa5;font-weight:500" id="cs-payroll-count">— roles</span>
+                </div>
+                <span style="font-size:13px;font-weight:500;font-family:var(--font-mono);color:var(--red)" id="cs-payroll-total">—</span>
+              </div>
+              <div id="cs-payroll-body" style="display:none;margin-top:8px">
+                <div style="font-size:10px;color:var(--text-tertiary);margin-bottom:6px;display:flex;align-items:center;gap:6px">
+                  <span style="color:var(--green-dark)">●</span> Pulled from <strong>Staffing Model</strong> — active roles only · includes ~48% IMSS burden
+                </div>
+                <div id="cs-payroll-list"></div>
+              </div>
             </div>
-            <div class="slider-group">
-              <div class="slider-label"><span>Staff count</span><span class="slider-val" id="v-staff">4</span></div>
-              <input type="range" min="2" max="10" value="4" id="s-staff" oninput="calcUpdate()">
+
+            <!-- ══ 2. REAGENTS SECTION ══ -->
+            <div class="cost-section" id="cs-reagents" style="border-bottom:0.5px solid var(--border);padding-bottom:10px;margin-bottom:10px">
+              <div onclick="toggleCostSection('reagents')" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;padding:4px 0;user-select:none" class="cost-section-header">
+                <div style="display:flex;align-items:center;gap:8px">
+                  <span class="cost-chevron" id="chev-reagents" style="font-size:9px;color:var(--text-tertiary);transition:transform 0.15s;transform:rotate(0deg)">▶</span>
+                  <span style="font-size:12px;font-weight:500;color:var(--text-primary)">Reagents &amp; consumables</span>
+                  <span style="font-size:10px;padding:1px 7px;border-radius:10px;font-weight:500" id="cs-reagent-source" style="background:#eaf3de;color:var(--green-dark)">—</span>
+                </div>
+                <span style="font-size:13px;font-weight:500;font-family:var(--font-mono);color:var(--red)" id="cs-reagent-total">—</span>
+              </div>
+              <div id="cs-reagents-body" style="display:none;margin-top:8px">
+                <div style="font-size:10px;color:var(--text-tertiary);margin-bottom:6px" id="cs-reagent-hint">—</div>
+                <div id="cs-reagent-list"></div>
+                <!-- Fallback: flat % override when modeler isn't active -->
+                <div id="cs-reagent-pct-row" style="display:none;margin-top:8px;padding:8px 10px;background:var(--bg-secondary);border-radius:6px">
+                  <div style="display:flex;align-items:center;justify-content:space-between">
+                    <span style="font-size:11px;color:var(--text-secondary)">Flat % of revenue</span>
+                    <div style="display:flex;align-items:center;gap:6px">
+                      <input type="number" id="cs-reagent-pct-input" value="35" min="0" max="80" step="1"
+                        style="width:52px;text-align:right;border:0.5px solid var(--border);border-radius:4px;padding:3px 6px;font-size:12px;font-family:var(--font-mono);color:var(--text-primary);background:var(--bg-primary);outline:none"
+                        oninput="document.getElementById('s-reagent').value=this.value;calcUpdate()"
+                        onfocus="this.style.borderColor='var(--green)'" onblur="this.style.borderColor='var(--border)'">
+                      <span style="font-size:11px;color:var(--text-tertiary)">%</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="slider-group">
-              <div class="slider-label"><span>Reagent cost (% of revenue)</span><span class="slider-val" id="v-reagent">35%</span></div>
-              <input type="range" min="20" max="50" value="35" id="s-reagent" oninput="calcUpdate()">
+
+            <!-- ══ 3. RENT SECTION ══ -->
+            <div class="cost-section" id="cs-rent" style="border-bottom:0.5px solid var(--border);padding-bottom:10px;margin-bottom:10px">
+              <div onclick="toggleCostSection('rent')" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;padding:4px 0;user-select:none" class="cost-section-header">
+                <div style="display:flex;align-items:center;gap:8px">
+                  <span class="cost-chevron" id="chev-rent" style="font-size:9px;color:var(--text-tertiary);transition:transform 0.15s;transform:rotate(0deg)">▶</span>
+                  <span style="font-size:12px;font-weight:500;color:var(--text-primary)">Rent</span>
+                </div>
+                <span style="font-size:13px;font-weight:500;font-family:var(--font-mono);color:var(--red)" id="cs-rent-total">—</span>
+              </div>
+              <div id="cs-rent-body" style="display:none;margin-top:8px">
+                <div style="display:flex;align-items:center;gap:8px">
+                  <input type="number" id="cs-rent-input" value="25000" min="0" step="500"
+                    style="flex:1;border:0.5px solid var(--border);border-radius:4px;padding:5px 8px;font-size:12px;font-family:var(--font-mono);color:var(--text-primary);background:var(--bg-primary);outline:none"
+                    oninput="document.getElementById('s-rent').value=this.value;calcUpdate()"
+                    onfocus="this.style.borderColor='var(--green)'" onblur="this.style.borderColor='var(--border)'">
+                  <span style="font-size:11px;color:var(--text-tertiary)">MXN / mo</span>
+                </div>
+              </div>
             </div>
-            <div class="slider-group">
-              <div class="slider-label"><span>Equipment model</span><span class="slider-val" id="v-eqmodel">Purchase</span></div>
-              <input type="range" min="0" max="1" value="0" id="s-eqmodel" oninput="calcUpdate()">
+
+            <!-- ══ 4. UTILITIES SECTION ══ -->
+            <div class="cost-section" id="cs-utilities" style="border-bottom:0.5px solid var(--border);padding-bottom:10px;margin-bottom:10px">
+              <div onclick="toggleCostSection('utilities')" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;padding:4px 0;user-select:none" class="cost-section-header">
+                <div style="display:flex;align-items:center;gap:8px">
+                  <span class="cost-chevron" id="chev-utilities" style="font-size:9px;color:var(--text-tertiary);transition:transform 0.15s;transform:rotate(0deg)">▶</span>
+                  <span style="font-size:12px;font-weight:500;color:var(--text-primary)">Utilities</span>
+                  <span style="font-size:10px;padding:1px 7px;border-radius:10px;background:var(--bg-secondary);color:var(--text-tertiary);font-weight:500" id="cs-util-count">— items</span>
+                </div>
+                <span style="font-size:13px;font-weight:500;font-family:var(--font-mono);color:var(--red)" id="cs-util-total">—</span>
+              </div>
+              <div id="cs-utilities-body" style="display:none;margin-top:8px">
+                <div id="cs-util-list"></div>
+                <button onclick="addUtilityItem()" style="margin-top:6px;font-size:10px;padding:3px 10px;border:0.5px dashed var(--border-strong);border-radius:4px;background:none;color:var(--text-secondary);cursor:pointer;font-family:var(--font)">+ Add item</button>
+              </div>
+            </div>
+
+            <!-- ══ 5. ADMIN / MISC SECTION ══ -->
+            <div class="cost-section" id="cs-admin">
+              <div onclick="toggleCostSection('admin')" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;padding:4px 0;user-select:none" class="cost-section-header">
+                <div style="display:flex;align-items:center;gap:8px">
+                  <span class="cost-chevron" id="chev-admin" style="font-size:9px;color:var(--text-tertiary);transition:transform 0.15s;transform:rotate(0deg)">▶</span>
+                  <span style="font-size:12px;font-weight:500;color:var(--text-primary)">Admin &amp; overhead</span>
+                  <span style="font-size:10px;padding:1px 7px;border-radius:10px;background:var(--bg-secondary);color:var(--text-tertiary);font-weight:500" id="cs-admin-count">— items</span>
+                </div>
+                <span style="font-size:13px;font-weight:500;font-family:var(--font-mono);color:var(--red)" id="cs-admin-total">—</span>
+              </div>
+              <div id="cs-admin-body" style="display:none;margin-top:8px">
+                <div id="cs-admin-list"></div>
+                <button onclick="addAdminItem()" style="margin-top:6px;font-size:10px;padding:3px 10px;border:0.5px dashed var(--border-strong);border-radius:4px;background:none;color:var(--text-secondary);cursor:pointer;font-family:var(--font)">+ Add item</button>
+              </div>
+            </div>
+
+            <!-- Total bar -->
+            <div style="margin-top:14px;padding:10px 12px;background:var(--bg-secondary);border-radius:var(--radius-md);display:flex;justify-content:space-between;align-items:center">
+              <span style="font-size:12px;font-weight:500;color:var(--text-primary)">Total monthly costs</span>
+              <span style="font-size:15px;font-weight:500;font-family:var(--font-mono);color:var(--red)" id="cs-grand-total">—</span>
             </div>
           </div>
         </div>
@@ -2793,9 +2885,10 @@
             <div class="calc-divider"></div>
             <div class="calc-row"><div class="calc-row-label" id="cr-payroll-label">Payroll (incl. burden)</div><div class="calc-row-val" id="cr-payroll">-$67,000</div></div>
             <div id="cr-payroll-breakdown" style="display:none"></div>
-            <div class="calc-row"><div class="calc-row-label">Reagents</div><div class="calc-row-val" id="cr-reagent">-$52,500</div></div>
-            <div class="calc-row"><div class="calc-row-label">Rent + utilities</div><div class="calc-row-val" id="cr-rent">-$30,000</div></div>
-            <div class="calc-row"><div class="calc-row-label">Admin, waste, misc</div><div class="calc-row-val" id="cr-misc">-$15,000</div></div>
+            <div class="calc-row"><div class="calc-row-label">Reagents &amp; consumables</div><div class="calc-row-val" id="cr-reagent">-$52,500</div></div>
+            <div class="calc-row"><div class="calc-row-label">Rent</div><div class="calc-row-val" id="cr-rent">-$25,000</div></div>
+            <div class="calc-row"><div class="calc-row-label">Utilities (CFE, agua, internet)</div><div class="calc-row-val" id="cr-util">-$5,000</div></div>
+            <div class="calc-row"><div class="calc-row-label">Admin, insurance, LIS, waste, misc</div><div class="calc-row-val" id="cr-misc">-$15,000</div></div>
             <div class="calc-divider"></div>
             <div class="calc-row" style="font-weight:500"><div class="calc-row-label" style="color:var(--text-primary)">EBITDA margin</div><div class="calc-row-val" id="cr-margin" style="color:var(--blue)">20%</div></div>
           </div>
@@ -2808,7 +2901,7 @@
             </div>
             <div style="margin-top:10px">
               <div class="slider-label"><span>Startup investment (MXN)</span><span class="slider-val" id="v-startup">1,800,000</span></div>
-              <input type="range" min="800000" max="3000000" step="50000" value="1800000" id="s-startup" oninput="calcUpdate()">
+              <input type="range" min="0" max="5000000" step="50000" value="1800000" id="s-startup" oninput="calcUpdate()">
             </div>
             <div style="margin-top:12px">
               <div style="font-size:11px;color:var(--text-secondary);margin-bottom:6px">Capacity utilization</div>
@@ -4282,15 +4375,105 @@ Quedo a sus órdenes,
   </section>
 
 
-  <!-- ── SENSITIVITY ANALYSIS ── -->
+  <!-- ── SENSITIVITY ANALYSIS — SCENARIO ENGINE ── -->
+  <!-- NEW: Complete Scenario Engine replacing old sensitivity tables -->
   <section id="page-sensitivity" class="page">
-    <div class="page-title">Sensitivity Analysis</div>
-    <div class="page-sub">Break-even under stress — how resilient is the model to variable changes?</div>
+    <div class="page-title">Scenario Engine</div>
+    <div class="page-sub">Decision-grade stress testing — adjust price, volume, and cost drivers in real time</div>
 
     <div class="info-box amber" style="margin-bottom:14px">
-      <strong>For investors and banks:</strong> This table shows break-even volume and months-to-profitability across pessimistic, base, and optimistic scenarios for 3 key variables simultaneously. Uses live data from the Financial Calculator.
+      <strong>For investors and decision-makers:</strong> This engine connects directly to the Financial Calculator model. Drag any slider to see instant impact on EBITDA, break-even, and cash runway. Color-coded outputs flag risk zones. Use it to answer: <em>"What happens if prices drop 10% and reagent costs rise 15%?"</em>
     </div>
 
+    <!-- ── SCENARIO DRIVER SLIDERS ── -->
+    <div class="card" style="margin-bottom:14px">
+      <div class="card-title">Scenario drivers</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px">
+
+        <!-- Price Adjustment -->
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
+            <div style="font-size:12px;font-weight:500;color:var(--text-primary)">Price adjustment</div>
+            <div id="se-price-val" style="font-size:16px;font-weight:500;font-family:var(--font-mono);color:var(--text-primary);min-width:50px;text-align:right">0%</div>
+          </div>
+          <input type="range" min="-20" max="10" value="0" step="1" id="se-price" oninput="scenarioEngineUpdate()" style="width:100%">
+          <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--text-tertiary);margin-top:3px"><span>−20%</span><span>0%</span><span>+10%</span></div>
+          <div style="font-size:10px;color:var(--text-secondary);margin-top:6px">Affects: all revenue (avg ticket × adjustment)</div>
+        </div>
+
+        <!-- Volume Adjustment -->
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
+            <div style="font-size:12px;font-weight:500;color:var(--text-primary)">Volume adjustment</div>
+            <div id="se-volume-val" style="font-size:16px;font-weight:500;font-family:var(--font-mono);color:var(--text-primary);min-width:50px;text-align:right">0%</div>
+          </div>
+          <input type="range" min="-30" max="50" value="0" step="1" id="se-volume" oninput="scenarioEngineUpdate()" style="width:100%">
+          <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--text-tertiary);margin-top:3px"><span>−30%</span><span>0%</span><span>+50%</span></div>
+          <div style="font-size:10px;color:var(--text-secondary);margin-top:6px">Affects: studies/month → revenue + variable costs</div>
+        </div>
+
+        <!-- Cost Increase -->
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
+            <div style="font-size:12px;font-weight:500;color:var(--text-primary)">Variable cost increase</div>
+            <div id="se-cost-val" style="font-size:16px;font-weight:500;font-family:var(--font-mono);color:var(--text-primary);min-width:50px;text-align:right">0%</div>
+          </div>
+          <input type="range" min="0" max="25" value="0" step="1" id="se-cost" oninput="scenarioEngineUpdate()" style="width:100%">
+          <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--text-tertiary);margin-top:3px"><span>0%</span><span>+12%</span><span>+25%</span></div>
+          <div style="font-size:10px;color:var(--text-secondary);margin-top:6px">Affects: reagents &amp; consumables only (fixed costs unchanged)</div>
+        </div>
+      </div>
+      <div style="margin-top:14px;text-align:right">
+        <button class="btn" style="font-size:11px;padding:4px 14px" onclick="document.getElementById('se-price').value=0;document.getElementById('se-volume').value=0;document.getElementById('se-cost').value=0;scenarioEngineUpdate()">↺ Reset to base case</button>
+      </div>
+    </div>
+
+    <!-- ── INTELLIGENCE ALERTS ── -->
+    <div id="se-alerts" style="margin-bottom:14px"></div>
+
+    <!-- ── OUTPUT KPI STRIP ── -->
+    <div class="metrics" style="margin-bottom:14px;grid-template-columns:repeat(4,minmax(0,1fr))">
+      <div class="metric">
+        <div class="metric-label">Scenario EBITDA</div>
+        <div class="metric-val" id="se-ebitda" style="font-size:20px">—</div>
+        <div style="font-size:10px;color:var(--text-tertiary);margin-top:3px" id="se-ebitda-pct">—</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Break-even volume</div>
+        <div class="metric-val" id="se-breakeven" style="font-size:20px">—</div>
+        <div style="font-size:10px;color:var(--text-tertiary);margin-top:3px">studies / month</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Cash runway</div>
+        <div class="metric-val" id="se-runway" style="font-size:20px">—</div>
+        <div style="font-size:10px;color:var(--text-tertiary);margin-top:3px">months at scenario burn</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Break-even month</div>
+        <div class="metric-val" id="se-be-month" style="font-size:20px">—</div>
+        <div style="font-size:10px;color:var(--text-tertiary);margin-top:3px">post-launch</div>
+      </div>
+    </div>
+
+    <!-- ── COMPARISON TABLE: Base vs Scenario ── -->
+    <div class="card" style="margin-bottom:14px">
+      <div class="card-title">Base case vs. scenario comparison</div>
+      <div style="overflow-x:auto">
+        <table class="pricing-tbl" style="min-width:500px" id="se-compare-table">
+          <thead>
+            <tr>
+              <th style="text-align:left;padding:8px 12px;font-size:11px;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-tertiary);font-weight:500">Metric</th>
+              <th style="text-align:right;padding:8px 12px;font-size:11px;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-tertiary);font-weight:500">Base case</th>
+              <th style="text-align:right;padding:8px 12px;font-size:11px;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-tertiary);font-weight:500">Scenario</th>
+              <th style="text-align:right;padding:8px 12px;font-size:11px;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-tertiary);font-weight:500">Δ Change</th>
+            </tr>
+          </thead>
+          <tbody id="se-compare-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── ORIGINAL SENSITIVITY MATRICES (preserved) ── -->
     <div class="card" style="margin-bottom:14px">
       <div class="card-title">Scenario matrix — Break-even studies/month</div>
       <div style="overflow-x:auto">
@@ -4305,7 +4488,7 @@ Quedo a sus órdenes,
       </div>
     </div>
 
-    <div class="card">
+    <div class="card" style="margin-bottom:14px">
       <div class="card-title">Key risk thresholds</div>
       <div id="sensitivity-risks"></div>
     </div>
@@ -4313,16 +4496,13 @@ Quedo a sus órdenes,
     <!-- Break-even chart (#26) -->
     <div class="card" style="margin-top:14px">
       <div class="card-title">Break-even chart</div>
-      <div style="font-size:11px;color:var(--text-tertiary);margin-bottom:12px">Revenue vs. total costs as volume increases — the intersection is your break-even point</div>
+      <div style="font-size:11px;color:var(--text-tertiary);margin-bottom:12px">Revenue vs. total costs as volume increases — base case <span style="opacity:0.5">(dashed)</span> vs. scenario <span style="opacity:1">(solid)</span></div>
       <canvas id="chart-breakeven" height="280"></canvas>
 
       <div style="margin-top:16px;padding:14px 16px;background:var(--bg-secondary);border-radius:var(--radius-md);border:0.5px solid var(--border)">
         <div style="font-size:12px;font-weight:500;color:var(--text-primary);margin-bottom:8px">How to read this chart</div>
         <div style="font-size:12px;color:var(--text-secondary);line-height:1.7">
-          The <span style="color:#1d9e75;font-weight:500">green line</span> shows monthly revenue as your study volume grows. The <span style="color:#a32d2d;font-weight:500">red line</span> shows total costs — which is your fixed costs (rent, payroll, utilities, insurance) plus variable costs (reagents, which scale with volume). The point where these two lines cross is your <strong style="color:var(--text-primary)">break-even volume</strong> — the minimum number of studies per month where revenue covers all costs. Below that crossing point, you're operating at a loss; above it, every additional study contributes to profit.
-        </div>
-        <div style="font-size:12px;color:var(--text-secondary);line-height:1.7;margin-top:8px">
-          The <span style="color:#185fa5;font-weight:500">dashed blue line</span> shows profit (or loss) directly — it's the gap between revenue and costs at each volume level. When the blue line crosses zero, that's the same break-even point. Notice the red line doesn't start at zero — that's your fixed costs, which you pay regardless of volume. The gap between the slopes of the green and red lines represents your <strong style="color:var(--text-primary)">contribution margin</strong>: the fraction of each additional study's revenue that goes toward covering fixed costs and eventually profit.
+          The <span style="color:#1d9e75;font-weight:500">green line</span> shows monthly revenue as your study volume grows. The <span style="color:#a32d2d;font-weight:500">red line</span> shows total costs — fixed costs (rent, payroll, utilities, insurance) plus variable costs (reagents, scaling with volume). Where they cross is your <strong style="color:var(--text-primary)">break-even volume</strong>. Below that: a loss; above: profit. The <span style="color:#185fa5;font-weight:500">dashed blue line</span> shows profit directly. When scenario adjustments are active, solid lines show the adjusted model while dashed lines show the base case for comparison.
         </div>
       </div>
     </div>
@@ -4801,6 +4981,7 @@ Quedo a sus órdenes,
   var _p1Ready = false;            // Phase 1 workspace data
   var _staffingReady = false;      // Staffing model data
   var _reagentBridgeReady = false; // Reagent modeler data
+  var savedScenarios = [];         // User-saved calculator scenarios
 
   // PIN access — PINs are now verified server-side via config/pins (SHA-256 hashes).
   // ACCESS_PINS removed — no plaintext secrets in client code.
@@ -7542,12 +7723,13 @@ Quedo a sus órdenes,
   // ── FINANCIAL CALCULATOR ──
   // ══════════════════════════════════════════
   const scenarios = {
-    conservative: { studies:150, ticket:500, corp:10, rent:20000, staff:3, reagent:38, startup:1800000 },
-    base:         { studies:300, ticket:600, corp:20, rent:25000, staff:4, reagent:35, startup:1800000 },
-    optimistic:   { studies:500, ticket:700, corp:30, rent:30000, staff:6, reagent:32, startup:2000000 },
+    conservative: { studies:150, ticket:500, corp:10, rent:20000, staff:3, reagent:38, startup:1800000, utilities:4000, misc:12000 },
+    base:         { studies:300, ticket:600, corp:20, rent:25000, staff:4, reagent:35, startup:1800000, utilities:5000, misc:15000 },
+    optimistic:   { studies:500, ticket:700, corp:30, rent:30000, staff:6, reagent:32, startup:2000000, utilities:6000, misc:18000 },
   };
   function setScenario(key, el) {
-    const s = scenarios[key];
+    var s = scenarios[key];
+    if (!s) return;
     document.getElementById('s-studies').value = s.studies;
     document.getElementById('s-ticket').value = s.ticket;
     document.getElementById('s-corp').value = s.corp;
@@ -7555,8 +7737,19 @@ Quedo a sus órdenes,
     document.getElementById('s-staff').value = s.staff;
     document.getElementById('s-reagent').value = s.reagent;
     document.getElementById('s-startup').value = s.startup;
-    document.querySelectorAll('.scenario-tab').forEach(t=>t.classList.remove('active'));
-    el.classList.add('active');
+    var utilEl = document.getElementById('s-util'); if (utilEl) utilEl.value = s.utilities || 5000;
+    var miscEl = document.getElementById('s-misc'); if (miscEl) miscEl.value = s.misc || 15000;
+    var rentIn = document.getElementById('cs-rent-input'); if (rentIn) rentIn.value = s.rent;
+    var reagIn = document.getElementById('cs-reagent-pct-input'); if (reagIn) reagIn.value = s.reagent;
+
+    // Update display labels directly
+    var el1 = document.getElementById('v-studies'); if (el1) el1.textContent = s.studies;
+    var el2 = document.getElementById('v-ticket');  if (el2) el2.textContent = fmt(s.ticket);
+    var el3 = document.getElementById('v-corp');    if (el3) el3.textContent = s.corp + '%';
+    var el4 = document.getElementById('v-startup'); if (el4) el4.textContent = fmt(s.startup);
+
+    document.querySelectorAll('.scenario-tab').forEach(function(t) { t.classList.remove('active'); });
+    if (el) el.classList.add('active');
     calcUpdate();
   }
   // ── Calculator tab switcher ──
@@ -7726,24 +7919,14 @@ Quedo a sus órdenes,
   }
 
   // ── Reagent modeler → Calculator bridge ──
-  // Returns total monthly reagent cost based on per-test costs from the modeler,
-  // scaled proportionally to the calculator's study volume. Returns null if modeler
-  // data isn't available yet (it's declared later in the file).
+  // Reagent + consumables cost: uses flat % of revenue.
+  // The UC Unit Economics Modeler is a separate per-test profitability tool
+  // for pricing decisions — it does NOT feed into the P&L until real
+  // per-test volume data is available (post-launch).
   // _reagentBridgeReady declared at top of script
   function getReagentModeledCost(targetStudies) {
-    if (!_reagentBridgeReady) return null;
-    const comodato = typeof getComodatoPremium === 'function' ? getComodatoPremium() : 0;
-    let totalCost = 0, totalVol = 0;
-    reagentData.forEach(t => {
-      const mult = typeof getAnalyzerMult === 'function' ? getAnalyzerMult(t.analyzerKey) : 1;
-      const costPerTest = t.analyzerKey ? Math.round(t.baseCost * mult * (1 + comodato)) : Math.round(t.baseCost);
-      totalCost += costPerTest * t.vol;
-      totalVol += t.vol;
-    });
-    if (totalVol <= 0) return null;
-    // Scale: modeler volumes represent a reference mix; scale cost proportionally to target
-    const scaleFactor = targetStudies / totalVol;
-    return Math.round(totalCost * scaleFactor);
+    // Always return null — flat % is the active model for the P&L
+    return null;
   }
 
   function calcUpdate() {
@@ -7753,7 +7936,9 @@ Quedo a sus órdenes,
     const rent       = +document.getElementById('s-rent').value;
     const staff      = +document.getElementById('s-staff').value;
     const reagentPct = +document.getElementById('s-reagent').value;
-    const eqModel    = +document.getElementById('s-eqmodel').value;
+    // UPDATED: utilities and misc are now user-controlled, not hardcoded
+    const utilities  = +(document.getElementById('s-util') || {value:'5000'}).value;
+    const misc       = +(document.getElementById('s-misc') || {value:'15000'}).value;
     const startup    = +document.getElementById('s-startup').value;
 
     // Helper: set value on either span (.textContent) or input (.value)
@@ -7766,10 +7951,6 @@ Quedo a sus órdenes,
     setSliderDisplay('v-studies', studies);
     setSliderDisplay('v-ticket', fmt(ticket));
     setSliderDisplay('v-corp', corpPct + '%');
-    setSliderDisplay('v-rent', fmt(rent));
-    setSliderDisplay('v-staff', staff);
-    setSliderDisplay('v-reagent', reagentPct + '%');
-    setSliderDisplay('v-eqmodel', eqModel === 0 ? 'Purchase' : 'Comodato');
     setSliderDisplay('v-startup', fmt(startup));
 
     const revenue        = studies * ticket;
@@ -7784,29 +7965,30 @@ Quedo a sus órdenes,
     const reagentCost    = useModeler ? reagentModelCost : Math.round(revenue * reagentPct / 100);
     const effectiveReagentPct = revenue > 0 ? Math.round(reagentCost / revenue * 100) : 0;
 
-    // Update the reagent display to show source
-    const reagentLabel = document.getElementById('v-reagent');
-    if (reagentLabel) {
-      var rVal = useModeler ? effectiveReagentPct + '% (modeled)' : reagentPct + '%';
-      if (reagentLabel.tagName === 'INPUT') reagentLabel.value = rVal; else reagentLabel.textContent = rVal;
-    }
+    // Reagent display label update handled by updateCostSectionDisplays → renderReagentSection
 
-    const rentUtil       = rent + 5000;
-    const misc           = 15000;
+    // UPDATED: rent and utilities are separate user-controlled values
+    const rentUtil       = rent + utilities;
     const totalCost      = payroll + reagentCost + rentUtil + misc;
     const ebitda         = revenue - totalCost;
     const margin         = revenue > 0 ? Math.round(ebitda / revenue * 100) : 0;
-    const fixedCosts     = payroll + rentUtil + misc;
-    const varMargin      = useModeler
-      ? (revenue > 0 ? (revenue - reagentCost) / studies : ticket * (1 - reagentPct / 100))
-      : ticket * (1 - reagentPct / 100);
+
+    // UPDATED: Break-even uses fixed/variable tags from line items
+    // Variable overhead = items tagged as "variable" in utility + admin sections
+    const varOverhead    = (window._variableUtilTotal || 0) + (window._variableAdminTotal || 0);
+    // Fixed costs = total costs minus reagents minus variable overhead
+    const fixedCosts     = totalCost - reagentCost - varOverhead;
+    // Variable cost per study = reagent per study + variable overhead per study
+    const reagentPerStudy = studies > 0 ? reagentCost / studies : ticket * reagentPct / 100;
+    const varOverheadPerStudy = studies > 0 ? varOverhead / studies : 0;
+    const varMargin      = ticket - reagentPerStudy - varOverheadPerStudy;
     const breakeven      = varMargin > 0 ? Math.ceil(fixedCosts / varMargin) : 999;
     const annualEbitda   = ebitda * 12;
     const payback        = annualEbitda > 0 ? (startup / annualEbitda).toFixed(1) : '\u221e';
     const utilPct        = Math.round(studies / 800 * 100);
 
     document.getElementById('co-revenue').innerHTML  = '$' + fmt(revenue) + ftip('Revenue', studies + ' studies × $' + fmt(ticket) + ' ticket', '= $' + fmt(revenue) + ' MXN/mo');
-    document.getElementById('co-costs').innerHTML    = '-$' + fmt(totalCost) + ftip('Total costs', '$' + fmt(payroll) + ' payroll + $' + fmt(reagentCost) + ' reagents + $' + fmt(rentUtil) + ' rent/util + $' + fmt(misc) + ' misc', '= $' + fmt(totalCost) + ' MXN/mo');
+    document.getElementById('co-costs').innerHTML    = '-$' + fmt(totalCost) + ftip('Total costs', '$' + fmt(payroll) + ' payroll + $' + fmt(reagentCost) + ' reagents + $' + fmt(rent) + ' rent + $' + fmt(utilities) + ' util + $' + fmt(misc) + ' misc', '= $' + fmt(totalCost) + ' MXN/mo');
     document.getElementById('co-ebitda').innerHTML   = (ebitda >= 0 ? '$' : '-$') + fmt(Math.abs(ebitda)) + ftip('EBITDA', '$' + fmt(revenue) + ' revenue − $' + fmt(totalCost) + ' costs', '= ' + (ebitda>=0?'$':'-$') + fmt(Math.abs(ebitda)) + ' (' + margin + '% margin)');
     document.getElementById('co-ebitda').style.color   = ebitda >= 0 ? 'var(--blue)' : 'var(--red)';
     document.getElementById('cr-patient').innerHTML  = '$' + fmt(patientRevenue) + ftip('Walk-in revenue', '$' + fmt(revenue) + ' total × ' + (100-corpPct) + '% non-corporate', '= $' + fmt(patientRevenue));
@@ -7831,22 +8013,239 @@ Quedo a sus órdenes,
       ).join('');
     }
 
-    document.getElementById('cr-reagent').innerHTML  = '-$' + fmt(reagentCost) + ftip('Reagent cost', useModeler ? 'Per-test model: sum of (cost/test × volume) across ' + reagentData.length + ' tests' : '$' + fmt(revenue) + ' revenue × ' + reagentPct + '%', '= $' + fmt(reagentCost) + ' (' + effectiveReagentPct + '% of revenue)', useModeler ? 'Using Reagent Modeler data — edit in Revenue Mix page' : 'Flat % estimate — configure Reagent Modeler for per-test accuracy');
-    document.getElementById('cr-rent').innerHTML     = '-$' + fmt(rentUtil) + ftip('Rent + utilities', '$' + fmt(rent) + ' rent + $5,000 utilities', '= $' + fmt(rentUtil) + ' MXN/mo');
-    document.getElementById('cr-misc').innerHTML     = '-$' + fmt(misc) + ftip('Miscellaneous', 'Insurance, LIS subscription, supplies, maintenance', 'Fixed at $15,000 MXN/mo');
+    document.getElementById('cr-reagent').innerHTML  = '-$' + fmt(reagentCost) + ftip('Reagents &amp; consumables', '$' + fmt(revenue) + ' revenue × ' + reagentPct + '%', '= $' + fmt(reagentCost) + ' (' + effectiveReagentPct + '% of revenue)', 'Flat % estimate — typical range for clinical labs: 30–40%');
+    // UPDATED: rent and utilities shown as separate P&L lines
+    document.getElementById('cr-rent').innerHTML     = '-$' + fmt(rent) + ftip('Monthly rent', 'User input', '= $' + fmt(rent) + ' MXN/mo');
+    document.getElementById('cr-util').innerHTML     = '-$' + fmt(utilities) + ftip('Utilities', 'CFE, agua, gas, internet', '= $' + fmt(utilities) + ' MXN/mo');
+    document.getElementById('cr-misc').innerHTML     = '-$' + fmt(misc) + ftip('Admin &amp; misc', 'Insurance, LIS subscription, RPBI waste, supplies, maintenance', '= $' + fmt(misc) + ' MXN/mo');
     document.getElementById('cr-margin').innerHTML   = margin + '%' + ftip('EBITDA margin', (ebitda>=0?'$':'-$') + fmt(Math.abs(ebitda)) + ' EBITDA ÷ $' + fmt(revenue) + ' revenue × 100', '= ' + margin + '%', margin >= 20 ? 'Healthy margin for a clinical lab' : margin >= 0 ? 'Thin margin — review costs' : 'Negative — not yet viable at this volume');
     document.getElementById('cr-margin').style.color   = margin >= 20 ? 'var(--green-dark)' : margin >= 0 ? 'var(--amber)' : 'var(--red)';
-    document.getElementById('co-breakeven').innerHTML = breakeven + ftip('Break-even', '$' + fmt(fixedCosts) + ' fixed costs ÷ $' + fmt(Math.round(varMargin)) + ' contribution margin/study', '= ' + breakeven + ' studies/mo', 'Contribution margin = ticket − variable cost per study');
+    document.getElementById('co-breakeven').innerHTML = breakeven + ftip('Break-even', '$' + fmt(fixedCosts) + ' fixed costs ÷ $' + fmt(Math.round(varMargin)) + ' contribution margin/study', '= ' + breakeven + ' studies/mo', 'Contribution margin = $' + fmt(Math.round(ticket)) + ' ticket − $' + fmt(Math.round(reagentPerStudy)) + ' reagent/study' + (varOverheadPerStudy > 0 ? ' − $' + fmt(Math.round(varOverheadPerStudy)) + ' variable overhead/study' : '') + ' = $' + fmt(Math.round(varMargin)) + '/study');
     document.getElementById('co-payback').innerHTML  = (payback === '\u221e' ? '\u221e' : payback + ' yr') + ftip('Payback period', '$' + fmt(startup) + ' startup ÷ ($' + fmt(Math.abs(ebitda)) + ' × 12 months)', '= ' + (payback === '\u221e' ? 'Infinite (negative EBITDA)' : payback + ' years'), 'Simple payback — does not account for ramp or time value of money');
     document.getElementById('cb-util').style.width     = Math.min(utilPct, 100) + '%';
     document.getElementById('cb-util').style.background = utilPct > 80 ? 'var(--amber)' : 'var(--green)';
     document.getElementById('cb-util-text').textContent = utilPct + '% of 800/mo capacity';
 
     if (document.getElementById('calc-view-3yr') && document.getElementById('calc-view-3yr').style.display !== 'none') render3YrChart();
+
+    // NEW: Update expandable cost section displays
+    if (typeof updateCostSectionDisplays === 'function' && window._costSectionsReady) updateCostSectionDisplays();
   }
   calcUpdate();
 
-  // Helper: get equipment section total from Cost Estimator (for depreciation)
+  // ══════════════════════════════════════════════════════════
+  // NEW: COST SECTION LINE-ITEM ENGINE
+  // Expandable, editable line items for every P&L cost category
+  // ══════════════════════════════════════════════════════════
+
+  // ── Utility line items (editable, add/remove, fixed/variable) ──
+  let utilityItems = [
+    { label: 'CFE (electricity)',    amount: 2500, type: 'fixed' },
+    { label: 'Agua potable',         amount: 800,  type: 'fixed' },
+    { label: 'Gas natural',          amount: 400,  type: 'fixed' },
+    { label: 'Internet / telefonía', amount: 1300, type: 'fixed' },
+  ];
+
+  // ── Admin / overhead line items (editable, add/remove, fixed/variable) ──
+  let adminItems = [
+    { label: 'Seguro de RC profesional',    amount: 2500, type: 'fixed' },
+    { label: 'LIS software subscription',   amount: 3500, type: 'fixed' },
+    { label: 'RPBI waste collection',       amount: 2000, type: 'variable' },
+    { label: 'Office supplies & toner',     amount: 1500, type: 'fixed' },
+    { label: 'Cleaning supplies',           amount: 1000, type: 'variable' },
+    { label: 'Maintenance reserve',         amount: 2000, type: 'fixed' },
+    { label: 'Accounting / fiscal',         amount: 2500, type: 'fixed' },
+  ];
+
+  function toggleCostSection(key) {
+    var body = document.getElementById('cs-' + key + '-body');
+    var chev = document.getElementById('chev-' + key);
+    if (!body) return;
+    var open = body.style.display !== 'none';
+    body.style.display = open ? 'none' : 'block';
+    if (chev) chev.style.transform = open ? 'rotate(0deg)' : 'rotate(90deg)';
+  }
+
+  // ── Render utility items ──
+  function renderUtilityItems() {
+    var list = document.getElementById('cs-util-list');
+    if (!list) return;
+    list.innerHTML = utilityItems.map(function(item, i) {
+      var isVar = item.type === 'variable';
+      return '<div style="display:flex;align-items:center;gap:6px;padding:4px 0;border-bottom:0.5px solid var(--border)">' +
+        '<div onclick="utilityItems[' + i + '].type=utilityItems[' + i + '].type===\'variable\'?\'fixed\':\'variable\';renderUtilityItems();syncCostSections()" ' +
+          'style="font-size:9px;padding:1px 6px;border-radius:8px;cursor:pointer;user-select:none;flex-shrink:0;font-weight:500;border:0.5px solid;' +
+          (isVar ? 'background:#faeeda;color:var(--amber);border-color:rgba(133,79,11,0.25)' : 'background:var(--bg-secondary);color:var(--text-tertiary);border-color:var(--border)') +
+          '" title="Click to toggle">' + (isVar ? 'Var' : 'Fixed') + '</div>' +
+        '<input type="text" value="' + item.label + '" style="flex:1;border:none;background:none;font-size:11px;color:var(--text-secondary);font-family:var(--font);outline:none;min-width:0" ' +
+          'oninput="utilityItems[' + i + '].label=this.value">' +
+        '<span style="font-size:10px;color:var(--text-tertiary)">$</span>' +
+        '<input type="number" value="' + item.amount + '" min="0" step="100" style="width:70px;text-align:right;border:0.5px solid var(--border);border-radius:4px;padding:3px 6px;font-size:11px;font-family:var(--font-mono);color:var(--text-primary);background:var(--bg-primary);outline:none" ' +
+          'oninput="utilityItems[' + i + '].amount=+this.value||0;syncCostSections()" ' +
+          'onfocus="this.style.borderColor=\'var(--green)\'" onblur="this.style.borderColor=\'var(--border)\'">' +
+        '<button onclick="utilityItems.splice(' + i + ',1);renderUtilityItems();syncCostSections()" style="border:none;background:none;color:var(--text-tertiary);cursor:pointer;font-size:13px;padding:0 2px;line-height:1" title="Remove">×</button>' +
+      '</div>';
+    }).join('');
+    syncCostSections();
+  }
+
+  function addUtilityItem() {
+    utilityItems.push({ label: 'New item', amount: 0, type: 'fixed' });
+    renderUtilityItems();
+    var list = document.getElementById('cs-util-list');
+    if (list) { var inputs = list.querySelectorAll('input[type=text]'); if (inputs.length) inputs[inputs.length-1].focus(); }
+  }
+
+  // ── Render admin items ──
+  function renderAdminItems() {
+    var list = document.getElementById('cs-admin-list');
+    if (!list) return;
+    list.innerHTML = adminItems.map(function(item, i) {
+      var isVar = item.type === 'variable';
+      return '<div style="display:flex;align-items:center;gap:6px;padding:4px 0;border-bottom:0.5px solid var(--border)">' +
+        '<div onclick="adminItems[' + i + '].type=adminItems[' + i + '].type===\'variable\'?\'fixed\':\'variable\';renderAdminItems();syncCostSections()" ' +
+          'style="font-size:9px;padding:1px 6px;border-radius:8px;cursor:pointer;user-select:none;flex-shrink:0;font-weight:500;border:0.5px solid;' +
+          (isVar ? 'background:#faeeda;color:var(--amber);border-color:rgba(133,79,11,0.25)' : 'background:var(--bg-secondary);color:var(--text-tertiary);border-color:var(--border)') +
+          '" title="Click to toggle">' + (isVar ? 'Var' : 'Fixed') + '</div>' +
+        '<input type="text" value="' + item.label + '" style="flex:1;border:none;background:none;font-size:11px;color:var(--text-secondary);font-family:var(--font);outline:none;min-width:0" ' +
+          'oninput="adminItems[' + i + '].label=this.value">' +
+        '<span style="font-size:10px;color:var(--text-tertiary)">$</span>' +
+        '<input type="number" value="' + item.amount + '" min="0" step="100" style="width:70px;text-align:right;border:0.5px solid var(--border);border-radius:4px;padding:3px 6px;font-size:11px;font-family:var(--font-mono);color:var(--text-primary);background:var(--bg-primary);outline:none" ' +
+          'oninput="adminItems[' + i + '].amount=+this.value||0;syncCostSections()" ' +
+          'onfocus="this.style.borderColor=\'var(--green)\'" onblur="this.style.borderColor=\'var(--border)\'">' +
+        '<button onclick="adminItems.splice(' + i + ',1);renderAdminItems();syncCostSections()" style="border:none;background:none;color:var(--text-tertiary);cursor:pointer;font-size:13px;padding:0 2px;line-height:1" title="Remove">×</button>' +
+      '</div>';
+    }).join('');
+    syncCostSections();
+  }
+
+  function addAdminItem() {
+    adminItems.push({ label: 'New item', amount: 0, type: 'fixed' });
+    renderAdminItems();
+    var list = document.getElementById('cs-admin-list');
+    if (list) { var inputs = list.querySelectorAll('input[type=text]'); if (inputs.length) inputs[inputs.length-1].focus(); }
+  }
+
+  // ── Render payroll (read-only, pulled from Staffing Model) ──
+  function renderPayrollSection() {
+    var list = document.getElementById('cs-payroll-list');
+    if (!list) return;
+    var activeRoles = (_staffingReady && staffRoles.length) ? staffRoles.filter(function(r){ return r.active; }) : [];
+    var countEl = document.getElementById('cs-payroll-count');
+    if (countEl) countEl.textContent = activeRoles.length + ' role' + (activeRoles.length !== 1 ? 's' : '');
+
+    if (!activeRoles.length) {
+      list.innerHTML = '<div style="font-size:11px;color:var(--text-tertiary);padding:6px 0">No active roles in Staffing Model. Using fallback: staff slider × avg salary.</div>';
+      return;
+    }
+    list.innerHTML = activeRoles.map(function(r) {
+      var burdened = Math.round(r.baseSalary * BURDEN_MULTIPLIER);
+      return '<div style="display:flex;align-items:center;justify-content:space-between;padding:4px 0;border-bottom:0.5px solid var(--border)">' +
+        '<div style="font-size:11px;color:var(--text-secondary)">' + r.title + '</div>' +
+        '<div style="display:flex;align-items:center;gap:8px">' +
+          '<span style="font-size:10px;color:var(--text-tertiary)">$' + fmt(r.baseSalary) + ' base →</span>' +
+          '<span style="font-size:11px;font-family:var(--font-mono);font-weight:500;color:var(--text-primary)">$' + fmt(burdened) + '</span>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+  }
+
+  // ── Render reagent section (read from modeler or show flat %) ──
+  function renderReagentSection() {
+    var list = document.getElementById('cs-reagent-list');
+    var pctRow = document.getElementById('cs-reagent-pct-row');
+    var sourceEl = document.getElementById('cs-reagent-source');
+    var hintEl = document.getElementById('cs-reagent-hint');
+    if (!list) return;
+
+    var studies = +(document.getElementById('s-studies') || {value:'300'}).value;
+    var ticket  = +(document.getElementById('s-ticket')  || {value:'600'}).value;
+    var reagPct = +(document.getElementById('s-reagent') || {value:'35'}).value;
+    var revenue = studies * ticket;
+    var reagentCost = Math.round(revenue * reagPct / 100);
+
+    if (sourceEl) { sourceEl.textContent = reagPct + '% of revenue'; sourceEl.style.background = '#faeeda'; sourceEl.style.color = 'var(--amber)'; }
+    if (hintEl) hintEl.textContent = studies + ' studies \u00d7 $' + fmt(ticket) + ' avg ticket \u00d7 ' + reagPct + '% = $' + fmt(reagentCost) + '/mo. Adjust % below.';
+    if (pctRow) pctRow.style.display = 'block';
+    list.innerHTML = '';
+    var pctInput = document.getElementById('cs-reagent-pct-input');
+    var reagSlider = document.getElementById('s-reagent');
+    if (pctInput && reagSlider) pctInput.value = reagSlider.value;
+  }
+
+  // ── Master sync: compute totals from line items → hidden inputs → calcUpdate ──
+  // Also computes variable cost totals for break-even calculation
+  function syncCostSections() {
+    var utilTotal = utilityItems.reduce(function(s, i) { return s + (i.amount || 0); }, 0);
+    var utilEl = document.getElementById('s-util');
+    if (utilEl) utilEl.value = utilTotal;
+
+    var adminTotal = adminItems.reduce(function(s, i) { return s + (i.amount || 0); }, 0);
+    var miscEl = document.getElementById('s-misc');
+    if (miscEl) miscEl.value = adminTotal;
+
+    // Compute variable portions for break-even
+    window._variableUtilTotal = utilityItems.reduce(function(s, i) { return s + (i.type === 'variable' ? (i.amount || 0) : 0); }, 0);
+    window._variableAdminTotal = adminItems.reduce(function(s, i) { return s + (i.type === 'variable' ? (i.amount || 0) : 0); }, 0);
+
+    // Skip during initial render phase to avoid redundant updates
+    if (typeof _costInitPhase !== 'undefined' && _costInitPhase) return;
+    calcUpdate();
+  }
+
+  // ── Update all cost section displays (called from calcUpdate) ──
+  function updateCostSectionDisplays() {
+    var pd = typeof getStaffingTotalCost === 'function' ? getStaffingTotalCost() : null;
+    var payrollTotal = pd ? pd.totalBurdened : calcPayroll(+(document.getElementById('s-staff')||{value:'4'}).value).total;
+    var csPayTotal = document.getElementById('cs-payroll-total');
+    if (csPayTotal) csPayTotal.textContent = '-$' + fmt(payrollTotal);
+    renderPayrollSection();
+
+    var studies = +(document.getElementById('s-studies') || {value:'300'}).value;
+    var ticket = +(document.getElementById('s-ticket') || {value:'600'}).value;
+    var reagentPct = +(document.getElementById('s-reagent') || {value:'35'}).value;
+    var modelerCost = typeof getReagentModeledCost === 'function' ? getReagentModeledCost(studies) : null;
+    var reagentTotal = modelerCost !== null ? modelerCost : Math.round(studies * ticket * reagentPct / 100);
+    var csReagTotal = document.getElementById('cs-reagent-total');
+    if (csReagTotal) csReagTotal.textContent = '-$' + fmt(reagentTotal);
+    renderReagentSection();
+
+    var rent = +(document.getElementById('s-rent') || {value:'25000'}).value;
+    var csRentTotal = document.getElementById('cs-rent-total');
+    if (csRentTotal) csRentTotal.textContent = '-$' + fmt(rent);
+    var csRentInput = document.getElementById('cs-rent-input');
+    if (csRentInput && document.activeElement !== csRentInput) csRentInput.value = rent;
+
+    var utilTotal = utilityItems.reduce(function(s, i) { return s + (i.amount || 0); }, 0);
+    var csUtilTotal = document.getElementById('cs-util-total');
+    if (csUtilTotal) csUtilTotal.textContent = '-$' + fmt(utilTotal);
+    var csUtilCount = document.getElementById('cs-util-count');
+    if (csUtilCount) csUtilCount.textContent = utilityItems.length + ' item' + (utilityItems.length !== 1 ? 's' : '');
+
+    var adminTotal = adminItems.reduce(function(s, i) { return s + (i.amount || 0); }, 0);
+    var csAdminTotal = document.getElementById('cs-admin-total');
+    if (csAdminTotal) csAdminTotal.textContent = '-$' + fmt(adminTotal);
+    var csAdminCount = document.getElementById('cs-admin-count');
+    if (csAdminCount) csAdminCount.textContent = adminItems.length + ' item' + (adminItems.length !== 1 ? 's' : '');
+
+    var grandTotal = payrollTotal + reagentTotal + rent + utilTotal + adminTotal;
+    var csGrand = document.getElementById('cs-grand-total');
+    if (csGrand) csGrand.textContent = '-$' + fmt(grandTotal);
+  }
+
+  // Initial render of all cost sections
+  // Set flag first so updateCostSectionDisplays runs during the final calcUpdate
+  window._costSectionsReady = true;
+
+  // Render lists — but temporarily block syncCostSections from calling calcUpdate
+  // to avoid multiple redundant updates during init
+  var _costInitPhase = true;
+  renderUtilityItems();
+  renderAdminItems();
+  _costInitPhase = false;
+
+  // Single calcUpdate populates everything correctly
+  calcUpdate();
   function getEstimatorEquipmentTotal() {
     if (typeof estValues === 'undefined' || typeof estSections === 'undefined') return 800000;
     try {
@@ -7868,6 +8267,9 @@ Quedo a sus órdenes,
       studies:    +document.getElementById('s-studies').value,
       ticket:     +document.getElementById('s-ticket').value,
       rent:       +document.getElementById('s-rent').value,
+      // UPDATED: read actual utility and misc values from sliders
+      utilities:  +(document.getElementById('s-util') || {value:'5000'}).value,
+      misc:       +(document.getElementById('s-misc') || {value:'15000'}).value,
       staff:      +document.getElementById('s-staff').value,
       reagentPct: +document.getElementById('s-reagent').value,
       startup:    +document.getElementById('s-startup').value,
@@ -7894,8 +8296,9 @@ Quedo a sus órdenes,
     const staffCostsCalc = typeof getStaffingTotalCost === 'function' ? getStaffingTotalCost() : null;
     const payroll  = staffCostsCalc ? staffCostsCalc.totalBurdened : calcPayroll(p.staff).total;
     const reagent  = Math.round(revenue * p.reagentPct / 100);
-    const rentUtil = p.rent + Math.round(p.rent * 0.20); // rent + ~20% utilities
-    const misc     = 15000;
+    // UPDATED: use user-controlled utility and misc values
+    const rentUtil = p.rent + (p.utilities !== undefined ? p.utilities : Math.round(p.rent * 0.20));
+    const misc     = p.misc !== undefined ? p.misc : 15000;
 
     // Equipment depreciation (25%/yr per LISR Art. 34 for lab equipment, straight-line)
     // This reduces ISR taxable base but is non-cash
@@ -8053,6 +8456,12 @@ Quedo a sus órdenes,
 
   let reagentData = reagentTestCatalog.map(t => Object.assign({}, t));
   _reagentBridgeReady = true; // Now safe for getReagentModeledCost to access reagentData
+
+  // Reagent data is now available — refresh cost section displays so reagent
+  // section switches from "flat %" to per-test modeled view
+  if (window._costSectionsReady && typeof updateCostSectionDisplays === 'function') {
+    updateCostSectionDisplays();
+  }
 
   function getAnalyzerMult(key) {
     if (!key) return 1;
@@ -8298,14 +8707,18 @@ Quedo a sus órdenes,
       { label: 'Reagent cost %', key: 'reagent', fmt: v => v + '%' },
       { label: 'Startup capital', key: 'startup', fmt: v => '$' + fmt(v) },
     ];
+    // UPDATED: Helper to get current utility/misc values from sliders
+    function _getUtil() { return +(document.getElementById('s-util') || {value:'5000'}).value; }
+    function _getMisc() { return +(document.getElementById('s-misc') || {value:'15000'}).value; }
+
     // Computed metrics
     const computed = [
       { label: 'Monthly revenue', fn: s => s.studies * s.ticket, fmt: v => '$' + fmt(v), color: 'var(--green-dark)' },
       { label: 'Monthly payroll (est.)', fn: s => { try { return calcPayroll(s.staff).total; } catch(e) { return s.staff * 22000; } }, fmt: v => '$' + fmt(v), color: 'var(--red)' },
-      { label: 'Monthly EBITDA', fn: s => { const rev = s.studies * s.ticket; const pay = (typeof calcPayroll === 'function') ? calcPayroll(s.staff).total : s.staff * 22000; return rev - pay - Math.round(rev * s.reagent / 100) - s.rent - Math.round(s.rent*0.2) - 15000; }, fmt: v => (v >= 0 ? '$' : '-$') + fmt(Math.abs(v)), color: v => v >= 0 ? 'var(--blue)' : 'var(--red)' },
-      { label: 'EBITDA margin', fn: s => { const rev = s.studies * s.ticket; const pay = (typeof calcPayroll === 'function') ? calcPayroll(s.staff).total : s.staff * 22000; const ebitda = rev - pay - Math.round(rev * s.reagent / 100) - s.rent - Math.round(s.rent*0.2) - 15000; return rev > 0 ? Math.round(ebitda / rev * 100) : 0; }, fmt: v => v + '%', color: v => v >= 20 ? 'var(--green-dark)' : v >= 0 ? 'var(--amber)' : 'var(--red)' },
-      { label: 'Break-even (studies)', fn: s => { const pay = (typeof calcPayroll === 'function') ? calcPayroll(s.staff).total : s.staff * 22000; const fixed = pay + s.rent + Math.round(s.rent*0.2) + 15000; const vm = s.ticket * (1 - s.reagent/100); return vm > 0 ? Math.ceil(fixed / vm) : 999; }, fmt: v => v + ' studies', color: v => v <= 200 ? 'var(--green-dark)' : v <= 350 ? 'var(--blue)' : 'var(--amber)' },
-      { label: 'Payback (simple)', fn: s => { const rev = s.studies * s.ticket; const pay = (typeof calcPayroll === 'function') ? calcPayroll(s.staff).total : s.staff * 22000; const ebitda = rev - pay - Math.round(rev * s.reagent / 100) - s.rent - Math.round(s.rent*0.2) - 15000; return ebitda > 0 ? (s.startup / (ebitda * 12)).toFixed(1) : '∞'; }, fmt: v => v + ' years', color: v => v !== '∞' && +v <= 2 ? 'var(--green-dark)' : v !== '∞' && +v <= 3.5 ? 'var(--blue)' : 'var(--amber)' },
+      { label: 'Monthly EBITDA', fn: s => { const rev = s.studies * s.ticket; const pay = (typeof calcPayroll === 'function') ? calcPayroll(s.staff).total : s.staff * 22000; return rev - pay - Math.round(rev * s.reagent / 100) - s.rent - _getUtil() - _getMisc(); }, fmt: v => (v >= 0 ? '$' : '-$') + fmt(Math.abs(v)), color: v => v >= 0 ? 'var(--blue)' : 'var(--red)' },
+      { label: 'EBITDA margin', fn: s => { const rev = s.studies * s.ticket; const pay = (typeof calcPayroll === 'function') ? calcPayroll(s.staff).total : s.staff * 22000; const ebitda = rev - pay - Math.round(rev * s.reagent / 100) - s.rent - _getUtil() - _getMisc(); return rev > 0 ? Math.round(ebitda / rev * 100) : 0; }, fmt: v => v + '%', color: v => v >= 20 ? 'var(--green-dark)' : v >= 0 ? 'var(--amber)' : 'var(--red)' },
+      { label: 'Break-even (studies)', fn: s => { const pay = (typeof calcPayroll === 'function') ? calcPayroll(s.staff).total : s.staff * 22000; const fixed = pay + s.rent + _getUtil() + _getMisc(); const vm = s.ticket * (1 - s.reagent/100); return vm > 0 ? Math.ceil(fixed / vm) : 999; }, fmt: v => v + ' studies', color: v => v <= 200 ? 'var(--green-dark)' : v <= 350 ? 'var(--blue)' : 'var(--amber)' },
+      { label: 'Payback (simple)', fn: s => { const rev = s.studies * s.ticket; const pay = (typeof calcPayroll === 'function') ? calcPayroll(s.staff).total : s.staff * 22000; const ebitda = rev - pay - Math.round(rev * s.reagent / 100) - s.rent - _getUtil() - _getMisc(); return ebitda > 0 ? (s.startup / (ebitda * 12)).toFixed(1) : '∞'; }, fmt: v => v + ' years', color: v => v !== '∞' && +v <= 2 ? 'var(--green-dark)' : v !== '∞' && +v <= 3.5 ? 'var(--blue)' : 'var(--amber)' },
     ];
 
     // Input metrics
@@ -8348,7 +8761,7 @@ Quedo a sus órdenes,
       const revs = savedScenarios.map(s => s.studies * s.ticket);
       const costs = savedScenarios.map(s => {
         const pay = (typeof calcPayroll === 'function') ? calcPayroll(s.staff).total : s.staff * 22000;
-        return pay + Math.round(s.studies * s.ticket * s.reagent / 100) + s.rent + Math.round(s.rent*0.2) + 15000;
+        return pay + Math.round(s.studies * s.ticket * s.reagent / 100) + s.rent + _getUtil() + _getMisc();
       });
       const ebitdas = revs.map((r, i) => r - costs[i]);
       new Chart(ctx, {
@@ -9387,11 +9800,14 @@ Quedo a sus órdenes,
     const pd      = typeof calcPayroll === 'function' ? calcPayroll(staffN) : { total: staffN * 22000 };
     const payroll = pd.total || pd;
     const reagent = Math.round(revenue * reagPct / 100);
-    const costs   = payroll + reagent + rent + Math.round(rent * 0.2) + 15000;
+    // UPDATED: read utility and misc from sliders instead of hardcoding
+    const _invUtil = +(document.getElementById('s-util') || {value:'5000'}).value;
+    const _invMisc = +(document.getElementById('s-misc') || {value:'15000'}).value;
+    const costs   = payroll + reagent + rent + _invUtil + _invMisc;
     const ebitda  = revenue - costs;
     const margin  = revenue > 0 ? Math.round(ebitda / revenue * 100) : 0;
     const varM    = ticket * (1 - reagPct / 100);
-    const fixed   = payroll + rent + Math.round(rent * 0.2) + 15000;
+    const fixed   = payroll + rent + _invUtil + _invMisc;
     const be      = varM > 0 ? Math.ceil(fixed / varM) : 999;
     const pb      = ebitda > 0 ? (startup / (ebitda * 12)).toFixed(1) : '—';
 
@@ -10033,8 +10449,10 @@ Quedo a sus órdenes,
     const rent       = +(document.getElementById('s-rent')    || {value:'25000'}).value || 25000;
 
     const payroll    = staffCosts ? staffCosts.totalBurdened : calcPayroll(staff).total;
-    const rentUtil   = rent + Math.round(rent * 0.20); // rent + ~20% utilities
-    const misc       = 15000;
+    // UPDATED: read utility and misc from user inputs instead of hardcoding
+    const utilities  = +(document.getElementById('s-util') || {value:'5000'}).value;
+    const misc       = +(document.getElementById('s-misc') || {value:'15000'}).value;
+    const rentUtil   = rent + utilities;
     const fixedCost  = payroll + rentUtil + misc;
 
     // IVA cash flow modeling:
@@ -11777,7 +12195,7 @@ Quedo a sus órdenes,
 
     const payroll = typeof calcPayroll === 'function' ? calcPayroll(staff).total : staff * 15000 * 1.48;
     const revenue = studies * ticket;
-    const totalCost = payroll + Math.round(revenue * reagentPct/100) + rent + 5000 + 15000;
+    const totalCost = payroll + Math.round(revenue * reagentPct/100) + rent + (+(document.getElementById('s-util')||{value:'5000'}).value) + (+(document.getElementById('s-misc')||{value:'15000'}).value);
     const ebitda  = revenue - totalCost;
 
     return 'You are the AI business advisor for LabQro, a clinical laboratory being launched in Queretaro, Mexico in 2025. ' +
@@ -12213,7 +12631,9 @@ Quedo a sus órdenes,
     const reagentPct = document.getElementById('s-reagent') ? +document.getElementById('s-reagent').value : 35;
     const payroll    = typeof calcPayroll === 'function' ? calcPayroll(staff).total : staff * 15000 * 1.48;
     const revenue    = studies * ticket;
-    const totalCost  = payroll + Math.round(revenue * reagentPct/100) + rent + 5000 + 15000;
+    const _isUtil    = +(document.getElementById('s-util') || {value:'5000'}).value;
+    const _isMisc    = +(document.getElementById('s-misc') || {value:'15000'}).value;
+    const totalCost  = payroll + Math.round(revenue * reagentPct/100) + rent + _isUtil + _isMisc;
     const ebitda     = revenue - totalCost;
     const margin     = revenue > 0 ? Math.round(ebitda/revenue*100) : 0;
     const payback    = ebitda > 0 ? (startup / (ebitda * 12)).toFixed(1) : '—';
@@ -12247,7 +12667,7 @@ Quedo a sus órdenes,
         row('Startup investment required', '$' + startup.toLocaleString() + ' MXN (~$' + Math.round(startup/20000).toLocaleString() + 'K USD)') +
         row('Monthly revenue at target volume (' + studies + ' studies)', '$' + fmt(revenue) + ' MXN') +
         row('Monthly EBITDA at target', '$' + fmt(ebitda) + ' MXN (' + margin + '% margin)', margin >= 15 ? '#1d9e75' : '#854f0b') +
-        row('Break-even volume', Math.ceil((payroll + rent + 5000 + 15000) / (ticket * (1 - reagentPct/100))) + ' studies/mo') +
+        row('Break-even volume', Math.ceil((payroll + rent + _isUtil + _isMisc) / (ticket * (1 - reagentPct/100))) + ' studies/mo') +
         row('Estimated payback period', payback + ' years') +
         row('Payroll model', (_staffingReady ? staffRoles.filter(r => r.active).length + ' named roles, ' : '') + 'accurate ~48% burden (IMSS + INFONAVIT + ISN QRO)')
       ) +
@@ -13003,47 +13423,268 @@ Quedo a sus órdenes,
   // ══════════════════════════════════════════
   // ── SENSITIVITY ANALYSIS (#2) ──
   // ══════════════════════════════════════════
-  function renderSensitivity() {
-    const base = {
-      studies: +(document.getElementById('s-studies') || {value:'300'}).value,
-      ticket:  +(document.getElementById('s-ticket')  || {value:'600'}).value,
-      rent:    +(document.getElementById('s-rent')    || {value:'25000'}).value,
-      staff:   +(document.getElementById('s-staff')   || {value:'4'}).value,
-      reagPct: +(document.getElementById('s-reagent') || {value:'35'}).value,
-      startup: +(document.getElementById('s-startup') || {value:'1800000'}).value,
-    };
+  // ══════════════════════════════════════════════════════════
+  // NEW: SCENARIO ENGINE — Decision-grade multi-variable model
+  // ══════════════════════════════════════════════════════════
 
-    const ticketScenarios = [
+  // ── scenarioEngineGetBase: extract base-case numbers from calculator ──
+  function scenarioEngineGetBase() {
+    const studies  = +(document.getElementById('s-studies') || {value:'300'}).value;
+    const ticket   = +(document.getElementById('s-ticket')  || {value:'600'}).value;
+    const rent     = +(document.getElementById('s-rent')    || {value:'25000'}).value;
+    const staff    = +(document.getElementById('s-staff')   || {value:'4'}).value;
+    const reagPct  = +(document.getElementById('s-reagent') || {value:'35'}).value;
+    const startup  = +(document.getElementById('s-startup') || {value:'1800000'}).value;
+
+    const staffCostsObj = typeof getStaffingTotalCost === 'function' ? getStaffingTotalCost() : null;
+    const payroll   = staffCostsObj ? staffCostsObj.totalBurdened : calcPayroll(staff).total;
+    const utilities = +(document.getElementById('s-util') || {value:'5000'}).value;
+    const misc      = +(document.getElementById('s-misc') || {value:'15000'}).value;
+    const rentUtil  = rent + utilities;
+
+    // Variable overhead from tagged line items
+    const varOverhead = (window._variableUtilTotal || 0) + (window._variableAdminTotal || 0);
+    // Total costs = everything
+    const totalAllCosts = payroll + rentUtil + misc;
+    // Fixed costs = total minus variable overhead (for break-even)
+    const fixedCosts = totalAllCosts - varOverhead;
+
+    // Reagent cost
+    const reagentModelCost = typeof getReagentModeledCost === 'function' ? getReagentModeledCost(studies) : null;
+    const useModeler  = reagentModelCost !== null;
+    const totalReagent = useModeler ? reagentModelCost : Math.round(studies * ticket * reagPct / 100);
+    const reagentPerStudy = studies > 0 ? totalReagent / studies : ticket * reagPct / 100;
+    const varOverheadPerStudy = studies > 0 ? varOverhead / studies : 0;
+    const varCostPerStudy = reagentPerStudy + varOverheadPerStudy;
+
+    const revenue   = studies * ticket;
+    const totalCost = totalAllCosts + totalReagent;
+    const ebitda    = revenue - totalCost;
+    const margin    = revenue > 0 ? Math.round(ebitda / revenue * 100) : 0;
+    const contribMargin = ticket - varCostPerStudy;
+    const breakeven = contribMargin > 0 ? Math.ceil(fixedCosts / contribMargin) : 999;
+
+    const openingCash = +(document.getElementById('cf-opening') || {value: String(startup)}).value || startup;
+    const launchMonth = Math.max(1, Math.min(18, +(document.getElementById('cf-launch-month') || {value:'10'}).value || 10));
+    const preLaunchBurn = +(document.getElementById('cf-burn') || {value:'120000'}).value || 120000;
+
+    return {
+      studies, ticket, rent, staff, reagPct, startup, payroll, rentUtil, misc,
+      fixedCosts, totalReagent, varCostPerStudy, revenue, totalCost, ebitda,
+      margin, contribMargin, breakeven, useModeler, openingCash, launchMonth, preLaunchBurn
+    };
+  }
+
+  // ── scenarioEngineCalc: apply adjustments to base case ──
+  function scenarioEngineCalc(base, priceAdj, volumeAdj, costAdj) {
+    // MANDATORY: Adjusted Revenue = baseRevenue * (1 + priceAdj) * (1 + volumeAdj)
+    const adjTicket   = base.ticket * (1 + priceAdj / 100);
+    const adjStudies  = Math.round(base.studies * (1 + volumeAdj / 100));
+    const adjRevenue  = Math.round(adjStudies * adjTicket);
+
+    // MANDATORY: Adjusted Costs = fixedCosts + (variableCosts * (1 + costIncrease) * (1 + volumeAdj))
+    const adjVarCostPerStudy = base.varCostPerStudy * (1 + costAdj / 100);
+    const adjTotalReagent    = Math.round(adjVarCostPerStudy * adjStudies);
+    const adjTotalCost       = base.fixedCosts + adjTotalReagent;
+
+    // MANDATORY: EBITDA = adjustedRevenue - adjustedCosts
+    const adjEbitda = adjRevenue - adjTotalCost;
+    const adjMargin = adjRevenue > 0 ? Math.round(adjEbitda / adjRevenue * 100) : 0;
+
+    // MANDATORY: breakEvenVolume = fixedCosts / contributionMarginPerUnit
+    const adjContribMargin = adjTicket - adjVarCostPerStudy;
+    const adjBreakeven     = adjContribMargin > 0 ? Math.ceil(base.fixedCosts / adjContribMargin) : 999;
+
+    // Cash runway: simulate 36-month post-launch cash flow with ramp
+    let adjRunwayMonths = 99;
+    let adjBreakevenMonth = null;
+    let simBalance = base.openingCash;
+
+    for (let m = 1; m <= 36; m++) {
+      if (m < base.launchMonth) {
+        // Pre-launch: burn only
+        simBalance -= base.preLaunchBurn;
+      } else {
+        // Post-launch with ramp
+        const postLaunch = m - base.launchMonth + 1;
+        const rampFactor = Math.min(1, 0.30 + 0.70 * Math.min(postLaunch / 6, 1));
+        const mStudies = Math.round(adjStudies * rampFactor);
+        const mRev     = Math.round(mStudies * adjTicket);
+        const mVar     = Math.round(adjVarCostPerStudy * mStudies);
+        const mCost    = base.fixedCosts + mVar;
+        const mNet     = mRev - mCost;
+        simBalance += mNet;
+        if (adjBreakevenMonth === null && mNet > 0) adjBreakevenMonth = postLaunch;
+      }
+      if (simBalance <= 0 && adjRunwayMonths === 99) {
+        adjRunwayMonths = m;
+      }
+    }
+    // If balance never hit zero, runway stays 99 (effectively infinite within horizon)
+
+    return {
+      adjTicket, adjStudies, adjRevenue, adjTotalReagent, adjTotalCost,
+      adjEbitda, adjMargin, adjContribMargin, adjBreakeven,
+      adjRunwayMonths, adjBreakevenMonth
+    };
+  }
+
+  // ── scenarioEngineUpdate: main render/update when sliders move ──
+  function scenarioEngineUpdate() {
+    const priceAdj  = +(document.getElementById('se-price')  || {value:'0'}).value;
+    const volumeAdj = +(document.getElementById('se-volume') || {value:'0'}).value;
+    const costAdj   = +(document.getElementById('se-cost')   || {value:'0'}).value;
+
+    // Update slider value displays
+    const signStr = v => (v > 0 ? '+' : '') + v + '%';
+    var pvEl = document.getElementById('se-price-val');
+    if (pvEl) { pvEl.textContent = signStr(priceAdj); pvEl.style.color = priceAdj < 0 ? 'var(--red)' : priceAdj > 0 ? 'var(--green-dark)' : 'var(--text-primary)'; }
+    var vvEl = document.getElementById('se-volume-val');
+    if (vvEl) { vvEl.textContent = signStr(volumeAdj); vvEl.style.color = volumeAdj < 0 ? 'var(--red)' : volumeAdj > 0 ? 'var(--green-dark)' : 'var(--text-primary)'; }
+    var cvEl = document.getElementById('se-cost-val');
+    if (cvEl) { cvEl.textContent = '+' + costAdj + '%'; cvEl.style.color = costAdj > 10 ? 'var(--red)' : costAdj > 0 ? 'var(--amber)' : 'var(--text-primary)'; }
+
+    const base = scenarioEngineGetBase();
+    const sc   = scenarioEngineCalc(base, priceAdj, volumeAdj, costAdj);
+
+    // ── KPI strip ──
+    var elEbitda = document.getElementById('se-ebitda');
+    if (elEbitda) {
+      elEbitda.textContent = (sc.adjEbitda >= 0 ? '$' : '-$') + fmt(Math.abs(sc.adjEbitda)) + ' MXN';
+      elEbitda.style.color = sc.adjEbitda >= 0 ? 'var(--green-dark)' : 'var(--red)';
+    }
+    var elEbitdaPct = document.getElementById('se-ebitda-pct');
+    if (elEbitdaPct) {
+      elEbitdaPct.textContent = sc.adjMargin + '% margin · ' + (sc.adjEbitda >= 0 ? '+' : '') + '$' + fmt(sc.adjEbitda - base.ebitda) + ' vs base';
+    }
+
+    var elBe = document.getElementById('se-breakeven');
+    if (elBe) {
+      elBe.textContent = sc.adjBreakeven >= 999 ? '∞' : sc.adjBreakeven;
+      elBe.style.color = sc.adjBreakeven <= base.studies ? 'var(--green-dark)' : sc.adjBreakeven <= base.studies * 1.3 ? 'var(--amber)' : 'var(--red)';
+    }
+
+    var elRun = document.getElementById('se-runway');
+    if (elRun) {
+      elRun.textContent = sc.adjRunwayMonths >= 99 ? '36+ mo' : sc.adjRunwayMonths + ' mo';
+      elRun.style.color = sc.adjRunwayMonths >= 18 ? 'var(--green-dark)' : sc.adjRunwayMonths >= 6 ? 'var(--amber)' : 'var(--red)';
+    }
+
+    var elBeMo = document.getElementById('se-be-month');
+    if (elBeMo) {
+      elBeMo.textContent = sc.adjBreakevenMonth ? 'Month ' + sc.adjBreakevenMonth : 'Never';
+      elBeMo.style.color = sc.adjBreakevenMonth && sc.adjBreakevenMonth <= 6 ? 'var(--green-dark)' : sc.adjBreakevenMonth ? 'var(--amber)' : 'var(--red)';
+    }
+
+    // ── Intelligence alerts ──
+    var alertsEl = document.getElementById('se-alerts');
+    if (alertsEl) {
+      var alerts = [];
+      if (sc.adjEbitda < 0) {
+        alerts.push({ level: 'danger', icon: '⚠️', text: '<strong>This scenario is not profitable.</strong> Monthly EBITDA: -$' + fmt(Math.abs(sc.adjEbitda)) + ' MXN. Review pricing or cost structure before proceeding.' });
+      }
+      if (sc.adjRunwayMonths < 6 && sc.adjRunwayMonths < 99) {
+        alerts.push({ level: 'danger', icon: '🚨', text: '<strong>High risk: cash depletion in ~' + sc.adjRunwayMonths + ' months.</strong> Increase opening capital, reduce burn, or find faster revenue ramp.' });
+      } else if (sc.adjRunwayMonths < 12 && sc.adjRunwayMonths < 99) {
+        alerts.push({ level: 'warning', icon: '⚠️', text: '<strong>Moderate risk: cash runway is ' + sc.adjRunwayMonths + ' months.</strong> Consider a buffer of at least 12–18 months.' });
+      }
+      if (sc.adjMargin < 10 && sc.adjEbitda >= 0) {
+        alerts.push({ level: 'warning', icon: '⚠️', text: '<strong>Thin margin (' + sc.adjMargin + '%).</strong> Pricing or cost structure may be unsustainable at scale. Target ≥15% EBITDA margin.' });
+      }
+      if (base.margin - sc.adjMargin > 15) {
+        alerts.push({ level: 'warning', icon: '📉', text: '<strong>Margin dropped ' + (base.margin - sc.adjMargin) + ' pts</strong> from base case (' + base.margin + '% → ' + sc.adjMargin + '%). This scenario significantly degrades profitability.' });
+      }
+      if (sc.adjBreakeven > base.studies * 1.5) {
+        alerts.push({ level: 'danger', icon: '🔴', text: '<strong>Break-even (' + sc.adjBreakeven + ' studies) exceeds 1.5× your target volume (' + base.studies + ').</strong> This scenario requires unrealistic patient acquisition.' });
+      }
+      if (sc.adjContribMargin <= 0) {
+        alerts.push({ level: 'danger', icon: '🛑', text: '<strong>Negative contribution margin.</strong> Each additional study <em>increases</em> your loss. Variable costs exceed the adjusted ticket price.' });
+      }
+      if (alerts.length === 0 && sc.adjEbitda > 0) {
+        alerts.push({ level: 'success', icon: '✅', text: '<strong>Scenario is viable.</strong> EBITDA positive at $' + fmt(sc.adjEbitda) + ' MXN/mo (' + sc.adjMargin + '% margin). Break-even at ' + sc.adjBreakeven + ' studies vs. ' + base.studies + ' target.' });
+      }
+      alertsEl.innerHTML = alerts.map(function(a) {
+        var bg = a.level === 'danger' ? 'var(--bg-danger)' : a.level === 'warning' ? 'var(--bg-warning)' : 'var(--bg-success)';
+        var border = a.level === 'danger' ? 'rgba(163,45,45,0.25)' : a.level === 'warning' ? 'rgba(133,79,11,0.25)' : 'rgba(59,109,17,0.25)';
+        return '<div style="background:' + bg + ';border:0.5px solid ' + border + ';border-radius:var(--radius-md);padding:10px 14px;margin-bottom:8px;font-size:12px;line-height:1.5;color:var(--text-primary)">' + a.icon + ' ' + a.text + '</div>';
+      }).join('');
+    }
+
+    // ── Comparison table ──
+    var compBody = document.getElementById('se-compare-body');
+    if (compBody) {
+      var rows = [
+        { label: 'Monthly studies', base: base.studies, scenario: sc.adjStudies, fmt: 'int', unit: '' },
+        { label: 'Avg ticket (MXN)', base: base.ticket, scenario: Math.round(sc.adjTicket), fmt: 'money', unit: '' },
+        { label: 'Revenue', base: base.revenue, scenario: sc.adjRevenue, fmt: 'money', unit: ' MXN' },
+        { label: 'Variable costs (reagents)', base: base.totalReagent, scenario: sc.adjTotalReagent, fmt: 'money', unit: ' MXN' },
+        { label: 'Fixed costs', base: base.fixedCosts, scenario: base.fixedCosts, fmt: 'money', unit: ' MXN' },
+        { label: 'Total costs', base: base.totalCost, scenario: sc.adjTotalCost, fmt: 'money', unit: ' MXN' },
+        { label: 'EBITDA', base: base.ebitda, scenario: sc.adjEbitda, fmt: 'money', unit: ' MXN', highlight: true },
+        { label: 'EBITDA margin', base: base.margin, scenario: sc.adjMargin, fmt: 'pct', unit: '%' },
+        { label: 'Break-even (studies/mo)', base: base.breakeven, scenario: sc.adjBreakeven, fmt: 'int', unit: '' },
+        { label: 'Contrib. margin / study', base: Math.round(base.contribMargin), scenario: Math.round(sc.adjContribMargin), fmt: 'money', unit: ' MXN' },
+      ];
+      compBody.innerHTML = rows.map(function(r) {
+        var delta = r.scenario - r.base;
+        var deltaStr = '';
+        if (r.fmt === 'money') deltaStr = (delta >= 0 ? '+$' : '-$') + fmt(Math.abs(delta)) + r.unit;
+        else if (r.fmt === 'pct') deltaStr = (delta >= 0 ? '+' : '') + delta + ' pts';
+        else deltaStr = (delta >= 0 ? '+' : '') + fmt(delta);
+
+        // Color logic: for costs, increase = bad (red); for revenue/EBITDA, increase = good (green)
+        var isCost = r.label.indexOf('cost') >= 0 || r.label === 'Break-even (studies/mo)';
+        var deltaColor = delta === 0 ? 'var(--text-tertiary)' : (isCost ? (delta > 0 ? 'var(--red)' : 'var(--green-dark)') : (delta > 0 ? 'var(--green-dark)' : 'var(--red)'));
+
+        var baseStr = r.fmt === 'money' ? '$' + fmt(r.base) + r.unit : r.fmt === 'pct' ? r.base + r.unit : fmt(r.base);
+        var scStr   = r.fmt === 'money' ? ((r.scenario < 0 ? '-' : '') + '$' + fmt(Math.abs(r.scenario)) + r.unit) : r.fmt === 'pct' ? r.scenario + r.unit : (r.scenario >= 999 ? '∞' : fmt(r.scenario));
+
+        var rowBg = r.highlight ? 'background:var(--bg-secondary);' : '';
+        var rowWeight = r.highlight ? 'font-weight:500;' : '';
+        return '<tr style="border-bottom:0.5px solid var(--border);' + rowBg + '">' +
+          '<td style="padding:8px 12px;font-size:12px;color:var(--text-secondary);' + rowWeight + '">' + r.label + '</td>' +
+          '<td style="padding:8px 12px;text-align:right;font-family:var(--font-mono);font-size:12px;color:var(--text-primary)">' + baseStr + '</td>' +
+          '<td style="padding:8px 12px;text-align:right;font-family:var(--font-mono);font-size:12px;' + rowWeight + 'color:var(--text-primary)">' + scStr + '</td>' +
+          '<td style="padding:8px 12px;text-align:right;font-family:var(--font-mono);font-size:12px;font-weight:500;color:' + deltaColor + '">' + deltaStr + '</td>' +
+        '</tr>';
+      }).join('');
+    }
+
+    // ── Render original sensitivity matrices (preserved from v1) ──
+    renderSensitivityMatrices(base);
+
+    // ── Break-even chart with scenario overlay ──
+    renderScenarioBreakevenChart(base, sc, priceAdj, volumeAdj, costAdj);
+  }
+
+  // ── PRESERVED: Original sensitivity matrix logic (refactored into helper) ──
+  function renderSensitivityMatrices(base) {
+    var ticketScenarios = [
       { label: 'Ticket -15%', val: Math.round(base.ticket * 0.85) },
       { label: 'Base ($' + fmt(base.ticket) + ')', val: base.ticket },
       { label: 'Ticket +15%', val: Math.round(base.ticket * 1.15) },
     ];
-
-    const qfbCosts = [
+    var qfbCosts = [
       { label: 'QFB $18K/mo', extra: 0 },
       { label: 'QFB $28K/mo (base)', extra: 0 },
       { label: 'QFB $35K/mo', extra: 7000 },
     ];
 
-    // Break-even table
-    const tbl = document.getElementById('sensitivity-table');
-    if (!tbl) return;
-    // Use staffing model if available, else calculator
-    const staffCostsForSens = typeof getStaffingTotalCost === 'function' ? getStaffingTotalCost() : null;
-    const payroll = staffCostsForSens ? staffCostsForSens.totalBurdened : calcPayroll(base.staff).total;
-    // Pull utilities from rent slider (rent + ~20% for utilities) and misc from working capital assumptions
-    const utilities = Math.round(base.rent * 0.20); // ~20% of rent for CFE, agua, gas, internet
-    const misc = 15000; // Insurance, supplies, LIS subscription
-    const fixed = payroll + base.rent + utilities + misc;
+    // Variable overhead per study (from tagged line items)
+    var varOverhead = (window._variableUtilTotal || 0) + (window._variableAdminTotal || 0);
+    var varOverheadPerStudy = base.studies > 0 ? varOverhead / base.studies : 0;
 
-    let html = '<thead><tr><th></th>' + ticketScenarios.map(t => '<th style="text-align:center">' + t.label + '</th>').join('') + '</tr></thead><tbody>';
-    qfbCosts.forEach(q => {
+    var tbl = document.getElementById('sensitivity-table');
+    if (!tbl) return;
+
+    var html = '<thead><tr><th></th>' + ticketScenarios.map(function(t) { return '<th style="text-align:center">' + t.label + '</th>'; }).join('') + '</tr></thead><tbody>';
+    qfbCosts.forEach(function(q) {
       html += '<tr><td style="font-weight:500">' + q.label + '</td>';
-      ticketScenarios.forEach(t => {
-        const adjFixed = fixed + q.extra;
-        const varMargin = t.val * (1 - base.reagPct / 100);
-        const be = varMargin > 0 ? Math.ceil(adjFixed / varMargin) : 999;
-        const color = be <= 200 ? 'var(--green-dark)' : be <= 350 ? 'var(--blue)' : be <= 500 ? 'var(--amber)' : 'var(--red)';
+      ticketScenarios.forEach(function(t) {
+        var adjFixed = base.fixedCosts + q.extra;
+        var varMargin = t.val * (1 - base.reagPct / 100) - varOverheadPerStudy;
+        var be = varMargin > 0 ? Math.ceil(adjFixed / varMargin) : 999;
+        var color = be <= 200 ? 'var(--green-dark)' : be <= 350 ? 'var(--blue)' : be <= 500 ? 'var(--amber)' : 'var(--red)';
         html += '<td style="text-align:center;font-family:var(--font-mono);font-weight:500;color:' + color + '">' + be + '</td>';
       });
       html += '</tr>';
@@ -13051,39 +13692,36 @@ Quedo a sus órdenes,
     tbl.innerHTML = html + '</tbody>';
 
     // Payback table
-    const ptbl = document.getElementById('sensitivity-payback');
+    var ptbl = document.getElementById('sensitivity-payback');
     if (ptbl) {
-      let phtml = '<thead><tr><th></th>' + ticketScenarios.map(t => '<th style="text-align:center">' + t.label + '</th>').join('') + '</tr></thead><tbody>';
-      const rampDelays = [
+      var phtml = '<thead><tr><th></th>' + ticketScenarios.map(function(t) { return '<th style="text-align:center">' + t.label + '</th>'; }).join('') + '</tr></thead><tbody>';
+      var rampDelays = [
         { label: 'Fast ramp (8 mo)', launch: 8 },
         { label: 'Base (10 mo)', launch: 10 },
         { label: 'Slow ramp (14 mo)', launch: 14 },
       ];
-      rampDelays.forEach(r => {
+      rampDelays.forEach(function(r) {
         phtml += '<tr><td style="font-weight:500">' + r.label + '</td>';
-        ticketScenarios.forEach(t => {
-          // Calculate payback by simulating 36 months of cash flow with ramp
-          const rev = base.studies * t.val;
-          const opCosts = payroll + Math.round(rev * base.reagPct / 100) + base.rent + 5000 + 15000;
-          const steadyEbitda = rev - opCosts;
-          let cumCash = -base.startup;
-          let paybackMonth = null;
-          for (let m = 1; m <= 36; m++) {
+        ticketScenarios.forEach(function(t) {
+          var rev = base.studies * t.val;
+          var opCosts = base.payroll + Math.round(rev * base.reagPct / 100) + base.rentUtil + base.misc;
+          var steadyEbitda = rev - opCosts;
+          var cumCash = -base.startup;
+          var paybackMonth = null;
+          for (var m = 1; m <= 36; m++) {
             if (m < r.launch) {
-              // Pre-launch: burn only (rent + partial payroll + setup costs)
-              cumCash -= (base.rent + payroll * 0.5 + 20000);
+              cumCash -= (base.rent + base.payroll * 0.5 + 20000);
             } else {
-              // Post-launch: ramp from 30% to 100% over 6 months
-              const postLaunch = m - r.launch + 1;
-              const rampFactor = Math.min(1, 0.3 + 0.7 * Math.min(postLaunch / 6, 1));
-              const mRev = Math.round(rev * rampFactor);
-              const mCost = payroll + Math.round(mRev * base.reagPct / 100) + base.rent + 5000 + 15000;
+              var postLaunch = m - r.launch + 1;
+              var rampFactor = Math.min(1, 0.3 + 0.7 * Math.min(postLaunch / 6, 1));
+              var mRev = Math.round(rev * rampFactor);
+              var mCost = base.payroll + Math.round(mRev * base.reagPct / 100) + base.rentUtil + base.misc;
               cumCash += (mRev - mCost);
             }
             if (cumCash >= 0 && paybackMonth === null) paybackMonth = m;
           }
-          const pb = paybackMonth ? (paybackMonth / 12).toFixed(1) : (steadyEbitda > 0 ? '>' + (36/12).toFixed(0) : '∞');
-          const color = paybackMonth && paybackMonth <= 24 ? 'var(--green-dark)' : paybackMonth && paybackMonth <= 36 ? 'var(--blue)' : 'var(--amber)';
+          var pb = paybackMonth ? (paybackMonth / 12).toFixed(1) : (steadyEbitda > 0 ? '>' + (36/12).toFixed(0) : '\u221e');
+          var color = paybackMonth && paybackMonth <= 24 ? 'var(--green-dark)' : paybackMonth && paybackMonth <= 36 ? 'var(--blue)' : 'var(--amber)';
           phtml += '<td style="text-align:center;font-family:var(--font-mono);font-weight:500;color:' + color + '">' + pb + ' yr</td>';
         });
         phtml += '</tr>';
@@ -13092,58 +13730,90 @@ Quedo a sus órdenes,
     }
 
     // Risk thresholds
-    const risks = document.getElementById('sensitivity-risks');
+    var risks = document.getElementById('sensitivity-risks');
     if (risks) {
-      const varMargin = base.ticket * (1 - base.reagPct / 100);
-      const minVolForRent = varMargin > 0 ? Math.ceil(base.rent / varMargin) : 999;
-      const minVolPayroll = varMargin > 0 ? Math.ceil(payroll / varMargin) : 999;
+      var contribMargin = base.ticket * (1 - base.reagPct / 100) - varOverheadPerStudy;
+      var minVolForRent = contribMargin > 0 ? Math.ceil(base.rent / contribMargin) : 999;
+      var minVolPayroll = contribMargin > 0 ? Math.ceil(base.payroll / contribMargin) : 999;
       risks.innerHTML =
         '<div class="fin-row"><div class="fin-label">Minimum volume to cover rent alone</div><div class="fin-val">' + minVolForRent + ' studies/mo</div></div>' +
         '<div class="fin-row"><div class="fin-label">Minimum volume to cover payroll alone</div><div class="fin-val">' + minVolPayroll + ' studies/mo</div></div>' +
-        '<div class="fin-row"><div class="fin-label">Cash runway if zero revenue</div><div class="fin-val red">~' + Math.round(base.startup / (payroll + base.rent + 20000)) + ' months</div></div>' +
+        '<div class="fin-row"><div class="fin-label">Cash runway if zero revenue</div><div class="fin-val red">~' + Math.round(base.startup / (base.payroll + base.rent + 20000)) + ' months</div></div>' +
         '<div class="fin-row"><div class="fin-label">If avg ticket drops 25%, break-even at</div><div class="fin-val amber">' +
-          (base.ticket * 0.75 * (1 - base.reagPct/100) > 0 ? Math.ceil(fixed / (base.ticket * 0.75 * (1 - base.reagPct/100))) : '∞') + ' studies/mo</div></div>';
+          (base.ticket * 0.75 * (1 - base.reagPct/100) - varOverheadPerStudy > 0 ? Math.ceil(base.fixedCosts / (base.ticket * 0.75 * (1 - base.reagPct/100) - varOverheadPerStudy)) : '\u221e') + ' studies/mo</div></div>';
+    }
+  }
+
+  // ── UPDATED: Break-even chart with base vs. scenario overlay ──
+  function renderScenarioBreakevenChart(base, sc, priceAdj, volumeAdj, costAdj) {
+    var beCtx = document.getElementById('chart-breakeven');
+    if (!beCtx || typeof Chart === 'undefined') return;
+    if (typeof window._beChart !== 'undefined' && window._beChart) window._beChart.destroy();
+
+    var hasScenario = (priceAdj !== 0 || volumeAdj !== 0 || costAdj !== 0);
+    var volumeSteps = [];
+    // Base-case data
+    var baseRevData = [], baseCostData = [], baseProfitData = [];
+    // Scenario data
+    var scRevData = [], scCostData = [], scProfitData = [];
+
+    var adjTicket = base.ticket * (1 + priceAdj / 100);
+    var adjVarCostPerStudy = base.varCostPerStudy * (1 + costAdj / 100);
+
+    for (var v = 0; v <= 600; v += 25) {
+      volumeSteps.push(v);
+      // Base
+      var bRev = v * base.ticket;
+      var bReag = Math.round(base.varCostPerStudy * v);
+      var bTotal = base.fixedCosts + bReag;
+      baseRevData.push(bRev);
+      baseCostData.push(bTotal);
+      baseProfitData.push(bRev - bTotal);
+      // Scenario
+      var sRev = Math.round(v * adjTicket);
+      var sReag = Math.round(adjVarCostPerStudy * v);
+      var sTotal = base.fixedCosts + sReag;
+      scRevData.push(sRev);
+      scCostData.push(sTotal);
+      scProfitData.push(sRev - sTotal);
     }
 
-    // ── Break-even chart (#26) ──
-    const beCtx = document.getElementById('chart-breakeven');
-    if (beCtx) {
-      if (typeof window._beChart !== 'undefined' && window._beChart) window._beChart.destroy();
-      const volumeSteps = [];
-      const revenueData = [], costData = [], profitData = [];
-      for (let v = 0; v <= 600; v += 25) {
-        volumeSteps.push(v);
-        const rev = v * base.ticket;
-        const reagCost = Math.round(rev * base.reagPct / 100);
-        const totalCost = fixed + reagCost;
-        revenueData.push(rev);
-        costData.push(totalCost);
-        profitData.push(rev - totalCost);
-      }
-      window._beChart = new Chart(beCtx, {
-        type: 'line',
-        data: {
-          labels: volumeSteps,
-          datasets: [
-            { label: 'Revenue', data: revenueData, borderColor: '#1d9e75', backgroundColor: 'rgba(29,158,117,0.08)', tension: 0, pointRadius: 0, borderWidth: 2.5, fill: true },
-            { label: 'Total Costs', data: costData, borderColor: '#a32d2d', backgroundColor: 'rgba(163,45,45,0.06)', tension: 0, pointRadius: 0, borderWidth: 2.5, fill: true },
-            { label: 'Profit / Loss', data: profitData, borderColor: '#185fa5', backgroundColor: 'rgba(24,95,165,0.05)', tension: 0, pointRadius: 0, borderWidth: 1.5, borderDash: [4,4], fill: true },
-          ]
-        },
-        options: {
-          responsive: true, maintainAspectRatio: true,
-          plugins: {
-            legend: { labels: { font: { size: 11 }, boxWidth: 12 } },
-            tooltip: { callbacks: { title: items => items[0].label + ' studies/mo', label: c => ' $' + fmt(c.raw) + ' MXN' } },
-            annotation: {} // placeholder
-          },
-          scales: {
-            x: { title: { display: true, text: 'Studies / month', font: { size: 11 } }, grid: { display: false }, ticks: { font: { size: 9 } } },
-            y: { title: { display: true, text: 'MXN / month', font: { size: 11 } }, ticks: { font: { size: 10 }, callback: v => '$' + (v/1000).toFixed(0) + 'K' }, grid: { color: 'rgba(0,0,0,0.05)' } }
-          }
-        }
-      });
+    var datasets = [];
+    if (hasScenario) {
+      // Dashed base lines
+      datasets.push({ label: 'Base Revenue', data: baseRevData, borderColor: 'rgba(29,158,117,0.35)', tension: 0, pointRadius: 0, borderWidth: 1.5, borderDash: [5,4], fill: false });
+      datasets.push({ label: 'Base Costs', data: baseCostData, borderColor: 'rgba(163,45,45,0.35)', tension: 0, pointRadius: 0, borderWidth: 1.5, borderDash: [5,4], fill: false });
+      // Solid scenario lines
+      datasets.push({ label: 'Scenario Revenue', data: scRevData, borderColor: '#1d9e75', backgroundColor: 'rgba(29,158,117,0.08)', tension: 0, pointRadius: 0, borderWidth: 2.5, fill: true });
+      datasets.push({ label: 'Scenario Costs', data: scCostData, borderColor: '#a32d2d', backgroundColor: 'rgba(163,45,45,0.06)', tension: 0, pointRadius: 0, borderWidth: 2.5, fill: true });
+      datasets.push({ label: 'Scenario Profit', data: scProfitData, borderColor: '#185fa5', backgroundColor: 'rgba(24,95,165,0.05)', tension: 0, pointRadius: 0, borderWidth: 1.5, borderDash: [4,4], fill: true });
+    } else {
+      datasets.push({ label: 'Revenue', data: baseRevData, borderColor: '#1d9e75', backgroundColor: 'rgba(29,158,117,0.08)', tension: 0, pointRadius: 0, borderWidth: 2.5, fill: true });
+      datasets.push({ label: 'Total Costs', data: baseCostData, borderColor: '#a32d2d', backgroundColor: 'rgba(163,45,45,0.06)', tension: 0, pointRadius: 0, borderWidth: 2.5, fill: true });
+      datasets.push({ label: 'Profit / Loss', data: baseProfitData, borderColor: '#185fa5', backgroundColor: 'rgba(24,95,165,0.05)', tension: 0, pointRadius: 0, borderWidth: 1.5, borderDash: [4,4], fill: true });
     }
+
+    window._beChart = new Chart(beCtx, {
+      type: 'line',
+      data: { labels: volumeSteps, datasets: datasets },
+      options: {
+        responsive: true, maintainAspectRatio: true,
+        plugins: {
+          legend: { labels: { font: { size: 11 }, boxWidth: 12 } },
+          tooltip: { callbacks: { title: function(items) { return items[0].label + ' studies/mo'; }, label: function(c) { return ' $' + fmt(c.raw) + ' MXN'; } } },
+          annotation: {}
+        },
+        scales: {
+          x: { title: { display: true, text: 'Studies / month', font: { size: 11 } }, grid: { display: false }, ticks: { font: { size: 9 } } },
+          y: { title: { display: true, text: 'MXN / month', font: { size: 11 } }, ticks: { font: { size: 10 }, callback: function(v) { return '$' + (v/1000).toFixed(0) + 'K'; } }, grid: { color: 'rgba(0,0,0,0.05)' } }
+        }
+      }
+    });
+  }
+
+  // ── renderSensitivity: wrapper that triggers full scenario engine render ──
+  function renderSensitivity() {
+    scenarioEngineUpdate();
   }
 
   // ══════════════════════════════════════════
@@ -13647,10 +14317,12 @@ Quedo a sus órdenes,
     const revenue   = studies * ticket;
     const pd        = calcPayroll(staff);
     const reagCost  = Math.round(revenue * reagPct / 100);
-    const totalCost = pd.total + reagCost + rent + 5000 + 15000;
+    const _pdfUtil  = +(document.getElementById('s-util') || {value:'5000'}).value;
+    const _pdfMisc  = +(document.getElementById('s-misc') || {value:'15000'}).value;
+    const totalCost = pd.total + reagCost + rent + _pdfUtil + _pdfMisc;
     const ebitda    = revenue - totalCost;
     const margin    = revenue > 0 ? Math.round(ebitda / revenue * 100) : 0;
-    const be        = (ticket * (1 - reagPct/100)) > 0 ? Math.ceil((pd.total + rent + 20000) / (ticket * (1 - reagPct/100))) : 999;
+    const be        = (ticket * (1 - reagPct/100)) > 0 ? Math.ceil((pd.total + rent + _pdfUtil + _pdfMisc) / (ticket * (1 - reagPct/100))) : 999;
     const payback   = ebitda > 0 ? (startup / (ebitda * 12)).toFixed(1) : '-';
 
     // ── Helper functions ──
@@ -14864,6 +15536,13 @@ Each array must have exactly 4–5 concise, specific, actionable items in Englis
     ws['!cols']=[{wch:36},{wch:14},{wch:10},{wch:10},{wch:12},{wch:10},{wch:10},{wch:10},{wch:12},{wch:10},{wch:10},{wch:8},{wch:12}];
     XLSX.utils.book_append_sheet(wb,ws,'Unit Cost & Profitability');
     XLSX.writeFile(wb,'LabQro_UnitCost_'+new Date().toISOString().split('T')[0]+'.xlsx');
+  }
+
+  // ── Final refresh: now that fullPricingData, getUCSelectedTests, and all
+  // data sources are declared, re-run calcUpdate so the P&L output line
+  // picks up UC reagent+consumables data (not the flat % fallback) ──
+  if (window._costSectionsReady) {
+    calcUpdate();
   }
 </script>
 </body>
