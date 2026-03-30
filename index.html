@@ -5015,8 +5015,8 @@ Quedo a sus órdenes,
   <div class="rp-body" id="wp-body" style="padding:18px 22px"></div>
 
   <div id="wp-footer" style="padding:12px 22px;border-top:0.5px solid var(--border);display:flex;gap:8px;flex-shrink:0">
-    <button class="btn" style="flex:1;font-size:12px" onclick="closeWorkPanel()">Close</button>
-    <button class="btn btn-primary" style="flex:1;font-size:12px" id="wp-done-btn" onclick="toggleWorkPanelDone()">Mark complete</button>
+    <button class="btn" style="flex:1;font-size:12px" onclick="closeWorkPanel()" data-i18n="wp.close">Cerrar</button>
+    <button class="btn btn-primary" style="flex:1;font-size:12px" id="wp-done-btn" onclick="toggleWorkPanelDone()" data-i18n="wp.markcomplete">Marcar completo</button>
   </div>
   <input type="file" id="wp-file-input" style="display:none" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx,.xls,.xlsx,.csv,.txt" onchange="handleWpFileUpload(this)">
 </div>
@@ -5664,6 +5664,56 @@ Quedo a sus órdenes,
     'inv.payroll.model':    { en:'Payroll model', es:'Modelo de nómina' },
     'inv.studies.mo':       { en:'studies/mo', es:'estudios/mes' },
     'inv.years':            { en:'years', es:'años' },
+    'inv.opp.desc':         { en:'LabQro is a clinical laboratory targeting the mid-market healthcare gap in Querétaro, Mexico — one of the country\'s fastest-growing cities (+2.8%/yr). IMSS labs operate at chronic overcapacity, and the dominant private chains (Salud Digna, Chopo) sacrifice quality for volume. LabQro differentiates on 4-hour turnaround, WhatsApp result delivery, and a physician-first referral model.', es:'LabQro es un laboratorio clínico enfocado en el segmento medio del mercado de salud en Querétaro, México — una de las ciudades de mayor crecimiento del país (+2.8%/año). Los laboratorios del IMSS operan con sobrecapacidad crónica, y las cadenas privadas dominantes (Salud Digna, Chopo) sacrifican calidad por volumen. LabQro se diferencia con entrega en 4 horas, resultados por WhatsApp, y un modelo de referencia centrado en el médico.' },
+    'inv.qro.pop':          { en:'QRO metro population (2024)', es:'Población metro QRO (2024)' },
+    'inv.mkt.private':      { en:'Estimated private lab market (annual)', es:'Mercado estimado de laboratorios privados (anual)' },
+    'inv.mkt.tam':          { en:'Target addressable market (Year 1–2)', es:'Mercado objetivo alcanzable (Año 1–2)' },
+    'inv.mkt.be.share':     { en:'Break-even market share required', es:'Participación de mercado para equilibrio' },
+    'inv.mkt.driver':       { en:'Key demand driver', es:'Principal impulsor de demanda' },
+    'inv.mkt.driver.val':   { en:'IMSS chronic overcapacity', es:'Sobrecapacidad crónica del IMSS' },
+    'inv.reg.permit':       { en:'Key permit', es:'Permiso clave' },
+    'inv.reg.permit.val':   { en:'Licencia Sanitaria COFEPRIS (3–9 months)', es:'Licencia Sanitaria COFEPRIS (3–9 meses)' },
+    'inv.reg.hire':         { en:'Required hire', es:'Contratación requerida' },
+    'inv.reg.hire.val':     { en:'Director Técnico — QFB with cédula profesional', es:'Director Técnico — QFB con cédula profesional' },
+    'inv.reg.months':       { en:'Estimated months to launch', es:'Meses estimados al lanzamiento' },
+    'inv.reg.months.val':   { en:'10–12 months from entity formation', es:'10–12 meses desde constitución' },
+    'inv.reg.compliance':   { en:'Compliance standards', es:'Estándares de cumplimiento' },
+    'inv.reg.structure':    { en:'Business structure', es:'Estructura empresarial' },
+    'inv.competitive':      { en:'Competitive Advantages', es:'Ventajas Competitivas' },
+    'inv.adv.speed':        { en:'<strong>Speed:</strong> 4-hour turnaround for common panels vs. 24–48h for Salud Digna', es:'<strong>Velocidad:</strong> Resultado en 4 horas para paneles comunes vs. 24–48h de Salud Digna' },
+    'inv.adv.digital':      { en:'<strong>Digital delivery:</strong> PDF via WhatsApp to patient + physician copy — standard expectation, poorly executed by incumbents', es:'<strong>Entrega digital:</strong> PDF vía WhatsApp al paciente + copia al médico — expectativa estándar, mal ejecutada por competidores' },
+    'inv.adv.physicians':   { en:'<strong>Physician relationships:</strong> Commission-free referral model builds trust and loyalty', es:'<strong>Relación con médicos:</strong> Modelo de referencia sin comisiones que genera confianza y lealtad' },
+    'inv.adv.b2b':          { en:'<strong>Corporate B2B:</strong> QRO\'s 300+ maquiladoras require NOM-mandated annual screenings — untapped channel', es:'<strong>B2B corporativo:</strong> Las 300+ maquiladoras de QRO requieren exámenes anuales por NOM — canal sin explotar' },
+    'inv.adv.location':     { en:'<strong>Location:</strong> Juriquilla/Zibatá zone — high-income, underserved, growing fast', es:'<strong>Ubicación:</strong> Zona Juriquilla/Zibatá — alto ingreso, desatendida, crecimiento rápido' },
+    'inv.bmc':              { en:'Business Model (Canvas Summary)', es:'Modelo de Negocio (Resumen Canvas)' },
+    'inv.swot':             { en:'SWOT Summary', es:'Resumen FODA' },
+    'inv.usefunds':         { en:'Use of Funds', es:'Uso de Fondos' },
+    'inv.eq.infra':         { en:'Equipment & Infrastructure', es:'Equipo e Infraestructura' },
+    'inv.legal.admin':      { en:'Permits, Legal & Admin', es:'Permisos, Legal y Admin' },
+    'inv.ops.wc':           { en:'Operations & Working Capital', es:'Operaciones y Capital de Trabajo' },
+    'inv.total.budget':     { en:'Total startup budget', es:'Presupuesto total de arranque' },
+    'inv.src.live':         { en:'Source: Startup Cost Estimator (live data)', es:'Fuente: Estimador de Costos de Arranque (datos en vivo)' },
+    'inv.src.default':      { en:'Source: Default estimates — update via Cost Estimator', es:'Fuente: Estimaciones predeterminadas — actualiza vía Estimador de Costos' },
+    'inv.capital':          { en:'Capital Requirements', es:'Requerimientos de Capital' },
+    'inv.cap.opening':      { en:'Opening capital', es:'Capital inicial' },
+    'inv.cap.min':          { en:'Minimum capital required', es:'Capital mínimo requerido' },
+    'inv.cap.rec':          { en:'Recommended capital (with buffer)', es:'Capital recomendado (con colchón)' },
+    'inv.cap.runway':       { en:'Cash runway', es:'Pista de efectivo' },
+    'inv.cap.lowest':       { en:'Lowest cash balance', es:'Saldo mínimo de efectivo' },
+    'inv.cap.buffer':       { en:'Minimum cash buffer', es:'Colchón mínimo de efectivo' },
+    'inv.cap.negative':     { en:'Cash is projected to turn negative. The business needs at least', es:'Se proyecta que el efectivo será negativo. El negocio necesita al menos' },
+    'inv.cap.moreThan':     { en:'more than the current opening capital to avoid running out of cash.', es:'más que el capital inicial actual para evitar quedarse sin efectivo.' },
+    'inv.cap.positive':     { en:'Cash position remains positive throughout the', es:'La posición de efectivo se mantiene positiva durante el horizonte de' },
+    'inv.cap.horizon':      { en:'-month projection horizon.', es:' meses de proyección.' },
+    'inv.footer.conf':      { en:'Confidential — for investor use only', es:'Confidencial — solo para uso del inversionista' },
+    'inv.payroll.total':    { en:'Total monthly payroll (burdened)', es:'Nómina mensual total (con cargas)' },
+    'inv.payroll.employees':{ en:'employees', es:'empleados' },
+
+    // ── Data flow map ──
+    'df.inputs':            { en:'DATA INPUTS', es:'DATOS DE ENTRADA' },
+    'df.engines':           { en:'CALCULATION ENGINES', es:'MOTORES DE CÁLCULO' },
+    'df.outputs':           { en:'OUTPUTS &amp; ANALYSIS', es:'RESULTADOS Y ANÁLISIS' },
+    'df.tracking':          { en:'EXECUTION &amp; TRACKING', es:'EJECUCIÓN Y SEGUIMIENTO' },
 
     // ── 3-yr chart axis labels ──
     'proj.chart.revenue':   { en:'Revenue', es:'Ingresos' },
@@ -5678,7 +5728,11 @@ Quedo a sus órdenes,
     'confirm.delete.equipment': { en:'Delete this equipment row?', es:'¿Eliminar este equipo?' },
     'confirm.remove.burden':    { en:'Remove this burden component?', es:'¿Eliminar este componente de carga?' },
     'confirm.remove.location':  { en:'Remove this location?', es:'¿Eliminar esta ubicación?' },
-    'confirm.remove.physician': { en:'Remove physician?', es:'¿Eliminar médico?' }
+    'confirm.remove.physician': { en:'Remove physician?', es:'¿Eliminar médico?' },
+
+    // ── Work panel ──
+    'wp.close':             { en:'Close', es:'Cerrar' },
+    'wp.markcomplete':      { en:'Mark complete', es:'Marcar completo' }
   };
 
   // ── Translation function ──
@@ -7288,7 +7342,7 @@ Quedo a sus órdenes,
           html += '<textarea class="wp-notes-area" id="wp-sc-' + key + '" style="min-height:60px" onchange="saveWpScorecard()">' + val + '</textarea>';
         } else if (f.type === 'select' && f.options) {
           html += '<select class="wp-add-input" id="wp-sc-' + key + '" style="width:100%;padding:8px 10px" onchange="saveWpScorecard()">';
-          html += '<option value="">Select...</option>';
+          html += '<option value="">'+(_lang==='en'?'Select...':'Seleccionar...')+'</option>';
           f.options.forEach(function(o) { html += '<option value="' + o + '"' + (val === o ? ' selected' : '') + '>' + o + '</option>'; });
           html += '</select>';
         } else {
@@ -8451,29 +8505,29 @@ Quedo a sus órdenes,
           else { html += '<div>'+esc(entry)+'</div>'; }
           html += '</div><button class="wp-entry-del" onclick="removePhaseWpEntry('+num+','+ei+')">✕</button></div>';
         });
-      } else { html += '<div style="font-size:12px;color:var(--text-tertiary);padding:16px;text-align:center;background:var(--bg-secondary);border-radius:8px">No items yet</div>'; }
-      html += '<div style="margin-top:10px;padding:12px;background:var(--bg-secondary);border-radius:8px"><div style="font-size:10px;font-weight:500;color:var(--text-tertiary);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.06em">Add new item</div>';
+      } else { html += '<div style="font-size:12px;color:var(--text-tertiary);padding:16px;text-align:center;background:var(--bg-secondary);border-radius:8px">'+(_lang==='en'?'No items yet':'Sin elementos aún')+'</div>'; }
+      html += '<div style="margin-top:10px;padding:12px;background:var(--bg-secondary);border-radius:8px"><div style="font-size:10px;font-weight:500;color:var(--text-tertiary);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.06em">'+(_lang==='en'?'Add new item':'Agregar elemento')+'</div>';
       panelFields.forEach(function(f) { html += '<div style="margin-bottom:6px"><label style="font-size:10px;color:var(--text-secondary);display:block;margin-bottom:2px">'+f+'</label><input class="wp-add-input" id="wp-field-'+f.replace(/[^a-zA-Z0-9]/g,'') +'" style="width:100%;margin:0" placeholder="'+f+'..."></div>'; });
-      html += '<button class="btn btn-primary" style="width:100%;font-size:12px;margin-top:6px" onclick="addPhaseWpListEntry('+num+')">+ Add item</button></div></div>';
+      html += '<button class="btn btn-primary" style="width:100%;font-size:12px;margin-top:6px" onclick="addPhaseWpListEntry('+num+')">+ '+(_lang==='en'?'Add item':'Agregar')+'</button></div></div>';
     } else if (panelType==='scorecard') {
-      html += '<div style="margin-bottom:16px"><div style="font-size:10px;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-tertiary);font-weight:500;margin-bottom:10px">Details</div>';
+      html += '<div style="margin-bottom:16px"><div style="font-size:10px;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-tertiary);font-weight:500;margin-bottom:10px">'+(_lang==='en'?'Details':'Detalles')+'</div>';
       panelFields.forEach(function(f) {
         var key=f.label.replace(/[^a-zA-Z0-9]/g,''), val=subState.formData[key]||'';
         html += '<div style="margin-bottom:10px"><label style="font-size:11px;color:var(--text-secondary);display:block;margin-bottom:3px">'+f.label+'</label>';
         if (f.type==='textarea') html += '<textarea class="wp-notes-area" id="wp-sc-'+key+'" style="min-height:60px" onchange="savePhaseWpScorecard('+num+')">'+esc(val)+'</textarea>';
-        else if (f.type==='select'&&f.options) { html += '<select class="wp-add-input" id="wp-sc-'+key+'" style="width:100%;padding:8px 10px" onchange="savePhaseWpScorecard('+num+')"><option value="">Select...</option>'; f.options.forEach(function(o){html+='<option value="'+escAttr(o)+'"'+(val===o?' selected':'')+'>'+esc(o)+'</option>';}); html += '</select>'; }
+        else if (f.type==='select'&&f.options) { html += '<select class="wp-add-input" id="wp-sc-'+key+'" style="width:100%;padding:8px 10px" onchange="savePhaseWpScorecard('+num+')"><option value="">'+(_lang==='en'?'Select...':'Seleccionar...')+'</option>'; f.options.forEach(function(o){html+='<option value="'+escAttr(o)+'"'+(val===o?' selected':'')+'>'+esc(o)+'</option>';}); html += '</select>'; }
         else html += '<input class="wp-add-input" id="wp-sc-'+key+'" type="'+(f.type||'text')+'" value="'+escAttr(val)+'" style="width:100%" onchange="savePhaseWpScorecard('+num+')">';
         html += '</div>';
       });
       html += '</div>';
     } else if (panelType==='action') {
       html += '<div style="margin-bottom:16px">';
-      if (panelNav) html += '<div onclick="closeWorkPanel();setTimeout(function(){nav(\''+panelNav+'\',null)},300)" style="padding:14px 18px;background:var(--green-l,#e1f5ee);border:1.5px solid var(--green);border-radius:10px;cursor:pointer;display:flex;align-items:center;gap:12px;margin-bottom:12px"><div style="font-size:20px">📎</div><div><div style="font-size:13px;font-weight:500;color:var(--green-d)">Open this tool in LabQro</div><div style="font-size:11px;color:var(--text-secondary)">Navigate to the relevant page</div></div></div>';
-      html += '<div style="font-size:10px;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-tertiary);font-weight:500;margin-bottom:8px">Confirmation notes</div>';
-      html += '<textarea class="wp-notes-area" id="wp-action-notes" style="min-height:60px" placeholder="Record what you did...">'+esc(subState.notes||'')+'</textarea></div>';
+      if (panelNav) html += '<div onclick="closeWorkPanel();setTimeout(function(){nav(\''+panelNav+'\',null)},300)" style="padding:14px 18px;background:var(--green-l,#e1f5ee);border:1.5px solid var(--green);border-radius:10px;cursor:pointer;display:flex;align-items:center;gap:12px;margin-bottom:12px"><div style="font-size:20px">📎</div><div><div style="font-size:13px;font-weight:500;color:var(--green-d)">'+(_lang==='en'?'Open this tool in LabQro':'Abrir herramienta en LabQro')+'</div><div style="font-size:11px;color:var(--text-secondary)">'+(_lang==='en'?'Navigate to the relevant page':'Navegar a la página correspondiente')+'</div></div></div>';
+      html += '<div style="font-size:10px;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-tertiary);font-weight:500;margin-bottom:8px">'+(_lang==='en'?'Confirmation notes':'Notas de confirmación')+'</div>';
+      html += '<textarea class="wp-notes-area" id="wp-action-notes" style="min-height:60px" placeholder="'+(_lang==='en'?'Record what you did...':'Registra lo que hiciste...')+'">'+esc(subState.notes||'')+'</textarea></div>';
     } else {
-      html += '<div style="margin-bottom:16px"><div style="font-size:10px;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-tertiary);font-weight:500;margin-bottom:8px">Your findings</div>';
-      html += '<textarea class="wp-notes-area" id="wp-notes" style="min-height:160px" placeholder="Write your findings...">'+esc(subState.notes||'')+'</textarea></div>';
+      html += '<div style="margin-bottom:16px"><div style="font-size:10px;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-tertiary);font-weight:500;margin-bottom:8px">'+(_lang==='en'?'Your findings':'Tus hallazgos')+'</div>';
+      html += '<textarea class="wp-notes-area" id="wp-notes" style="min-height:160px" placeholder="'+(_lang==='en'?'Write your findings...':'Escribe tus hallazgos...')+'">'+esc(subState.notes||'')+'</textarea></div>';
     }
 
     // File attachments
@@ -9892,9 +9946,9 @@ Quedo a sus órdenes,
     const postLaunchInYr1 = Math.max(0, 12 - launchMo + 1);
     const preLaunchInYr1 = 12 - postLaunchInYr1;
     const years = [
-      {label:'Year 1 (' + preLaunchInYr1 + ' mo pre-launch + ' + postLaunchInYr1 + ' mo operations)', months:[0,11]},
-      {label:'Year 2',                       months:[12,23]},
-      {label:'Year 3',                       months:[24,35]},
+      {label:_lang==='en' ? 'Year 1 (' + preLaunchInYr1 + ' mo pre-launch + ' + postLaunchInYr1 + ' mo operations)' : 'Año 1 (' + preLaunchInYr1 + ' meses pre-lanzamiento + ' + postLaunchInYr1 + ' meses operación)', months:[0,11]},
+      {label:_lang==='en'?'Year 2':'Año 2', months:[12,23]},
+      {label:_lang==='en'?'Year 3':'Año 3', months:[24,35]},
     ];
     let cumCash = -p.startup;
     tbody.innerHTML = '';
@@ -9928,12 +9982,19 @@ Quedo a sus órdenes,
     var _fnInflation = +(document.getElementById('proj-inflation') || {value:'5'}).value;
     var _fnFx = +(document.getElementById('proj-fx') || {value:'3'}).value;
     tbody.innerHTML += '<tr><td colspan="8" style="padding:10px;font-size:10px;color:var(--text-tertiary);line-height:1.6;border-top:1.5px solid var(--border-strong)">' +
-      '<strong>Notes:</strong> Launch month: M' + launchMo + '. Months 1–' + (launchMo - 1) + ' show pre-launch burn with zero revenue. ' +
-      'Fixed costs escalate at ' + _fnInflation + '%/yr (payroll, rent, utilities, admin). ' +
-      'Reagent costs escalate at ' + _fnFx + '%/yr (FX sensitivity for USD-priced consumables). ' +
-      'Depreciation per LISR: lab equipment 25%/yr (Art. 34), leasehold improvements 5%/yr (Art. 33), furniture 10%/yr (Art. 34) — legal fees and working capital are not depreciated. ' +
-      'ISR at 30% flat rate (Personas Morales, Régimen General). ' +
-      'PTU (10% of fiscal profit) not modeled — applicable from Year 2 if profitable.' +
+      (_lang==='en'
+        ? '<strong>Notes:</strong> Launch month: M' + launchMo + '. Months 1–' + (launchMo - 1) + ' show pre-launch burn with zero revenue. ' +
+          'Fixed costs escalate at ' + _fnInflation + '%/yr (payroll, rent, utilities, admin). ' +
+          'Reagent costs escalate at ' + _fnFx + '%/yr (FX sensitivity for USD-priced consumables). ' +
+          'Depreciation per LISR: lab equipment 25%/yr (Art. 34), leasehold improvements 5%/yr (Art. 33), furniture 10%/yr (Art. 34) — legal fees and working capital are not depreciated. ' +
+          'ISR at 30% flat rate (Personas Morales, Régimen General). ' +
+          'PTU (10% of fiscal profit) not modeled — applicable from Year 2 if profitable.'
+        : '<strong>Notas:</strong> Mes de lanzamiento: M' + launchMo + '. Meses 1–' + (launchMo - 1) + ' muestran quema pre-lanzamiento sin ingresos. ' +
+          'Costos fijos escalan al ' + _fnInflation + '%/año (nómina, renta, servicios, admin). ' +
+          'Costos de reactivos escalan al ' + _fnFx + '%/año (sensibilidad FX para consumibles en USD). ' +
+          'Depreciación según LISR: equipo de laboratorio 25%/año (Art. 34), mejoras al local 5%/año (Art. 33), mobiliario 10%/año (Art. 34) — gastos legales y capital de trabajo no se deprecian. ' +
+          'ISR al 30% tasa fija (Personas Morales, Régimen General). ' +
+          'PTU (10% de utilidad fiscal) no modelado — aplicable a partir del Año 2 si hay utilidades.') +
     '</td></tr>';
   }
 
@@ -10487,7 +10548,7 @@ Quedo a sus órdenes,
     if (!badge) return;
 
     const fmt = (iso) => {
-      if (!iso) return 'Never';
+      if (!iso) return _lang==='en'?'Never':'Nunca';
       const d = new Date(iso);
       return d.toLocaleDateString('es-MX', { day:'numeric', month:'short', year:'numeric' });
     };
@@ -10503,7 +10564,7 @@ Quedo a sus órdenes,
     const oldest = Math.max(ageDays(competitorVerifiedDates.sd), ageDays(competitorVerifiedDates.chopo), ageDays(competitorVerifiedDates.hosp));
     if (oldest === Infinity) {
       badge.style.cssText = 'font-size:10px;padding:2px 8px;border-radius:20px;background:#fcebeb;color:#a32d2d;border:0.5px solid #f0b8b8';
-      badge.textContent = '⚠ Never verified — prices are defaults';
+      badge.textContent = _lang==='en'?'⚠ Never verified — prices are defaults':'⚠ Nunca verificado — los precios son predeterminados';
     } else if (oldest > 90) {
       badge.style.cssText = 'font-size:10px;padding:2px 8px;border-radius:20px;background:#faeeda;color:#854f0b;border:0.5px solid #f0d5a0';
       badge.textContent = _lang==='en'?'⚠ Stale — last check '+oldest+' days ago':'⚠ Desactualizado — última revisión hace '+oldest+' días';
@@ -14271,7 +14332,7 @@ Quedo a sus órdenes,
     var ov = document.getElementById('dataflow-overlay');
     if (ov) ov.style.display = 'flex';
     var c = document.getElementById('dataflow-chart');
-    if (!c || c.dataset.done) return;
+    if (!c) return;
     c.dataset.done = '1';
 
     // ── Clean tiered layout: 4 horizontal tiers flowing top to bottom ──
@@ -14316,7 +14377,7 @@ Quedo a sus órdenes,
     // ── Tier 1: Inputs ──
     var t1y = 36;
     var inp = boxRow(
-      [['Staffing Model','Roles & salaries'],['Cost Estimator','40+ line items'],['Reagent Modeler','Cost per test'],['Pricing Matrix','80+ test prices'],['Volume Projector','Channel ramps']],
+      _lang==='en'?[['Staffing Model','Roles & salaries'],['Cost Estimator','40+ line items'],['Reagent Modeler','Cost per test'],['Pricing Matrix','80+ test prices'],['Volume Projector','Channel ramps']]:[['Modelo de Personal','Roles y salarios'],['Estimador de Costos','40+ partidas'],['Modelador de Reactivos','Costo por prueba'],['Matriz de Precios','80+ precios'],['Proyector de Volumen','Rampas por canal']],
       t1y, 112, 40, C.inp, 'Input',
       ['staffing','estimator','calculator','pricing','volume']
     );
@@ -14324,7 +14385,7 @@ Quedo a sus órdenes,
     // ── Tier 2: Engines ──
     var t2y = 130;
     var eng = boxRow(
-      [['Financial Calculator','3-year P&L, break-even'],['Cash Flow Calendar','18-month runway']],
+      _lang==='en'?[['Financial Calculator','3-year P&L, break-even'],['Cash Flow Calendar','18-month runway']]:[['Calculadora Financiera','P&L 3 años, equilibrio'],['Calendario de Flujo','Pista de 18 meses']],
       t2y, 200, 40, C.eng, 'Engine',
       ['calculator','cashflow']
     );
@@ -14332,7 +14393,7 @@ Quedo a sus órdenes,
     // ── Tier 3: Outputs ──
     var t3y = 224;
     var out = boxRow(
-      [['Sensitivity','Stress scenarios'],['Funding Model','Equity & debt'],['Budget Tracker','Budget vs actual'],['Working Capital','Cash gap'],['SAT / Tax','ISR, IVA, CFDI']],
+      _lang==='en'?[['Sensitivity','Stress scenarios'],['Funding Model','Equity & debt'],['Budget Tracker','Budget vs actual'],['Working Capital','Cash gap'],['SAT / Tax','ISR, IVA, CFDI']]:[['Sensibilidad','Escenarios de estrés'],['Modelo de Fondeo','Capital y deuda'],['Seguimiento Presupuestal','Presupuesto vs real'],['Capital de Trabajo','Brecha de efectivo'],['SAT / Fiscal','ISR, IVA, CFDI']],
       t3y, 112, 40, C.out, 'Output',
       ['sensitivity','funding','budget','working-capital','sat-compliance']
     );
@@ -14340,7 +14401,7 @@ Quedo a sus órdenes,
     // ── Tier 4: Tracking ──
     var t4y = 338;
     var trk = boxRow(
-      [['Project Phases','7 phases, tasks'],['Regulatory Board','Permits Kanban'],['Physician CRM','Referral pipeline']],
+      _lang==='en'?[['Project Phases','7 phases, tasks'],['Regulatory Board','Permits Kanban'],['Physician CRM','Referral pipeline']]:[['Fases del Proyecto','7 fases, tareas'],['Tablero Regulatorio','Kanban de permisos'],['CRM Médicos','Pipeline de referencias']],
       t4y, 150, 40, C.trk, 'Tracking',
       ['dashboard','regboard','physicians']
     );
@@ -14348,7 +14409,7 @@ Quedo a sus órdenes,
     // ── Tier 5: Dashboard ──
     var t5y = 422;
     var dash = boxRow(
-      [['Dashboard','KPIs, progress, risks']],
+      [['Dashboard',_lang==='en'?'KPIs, progress, risks':'KPIs, avance, riesgos']],
       t5y, 200, 40, C.hub, 'Hub',
       ['dashboard']
     );
@@ -14356,7 +14417,7 @@ Quedo a sus órdenes,
     // ── Tier 6: Investor ──
     var t6y = 498;
     var inv = boxRow(
-      [['Investor Summary','One-page PDF export']],
+      [[_lang==='en'?'Investor Summary':'Resumen Inversionista',_lang==='en'?'One-page PDF export':'Exportar PDF de una página']],
       t6y, 200, 40, C.hub, 'Hub',
       [null]
     );
@@ -14370,14 +14431,14 @@ Quedo a sus órdenes,
     s += '<defs><marker id="dfa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>';
 
     // ── Tier labels ──
-    s += '<text x="'+pad+'" y="24" font-size="9" font-weight="600" letter-spacing="0.06em" fill="'+C.inp.a+'" opacity="0.5">DATA INPUTS</text>';
-    s += '<text x="'+pad+'" y="120" font-size="9" font-weight="600" letter-spacing="0.06em" fill="'+C.eng.a+'" opacity="0.5">CALCULATION ENGINES</text>';
-    s += '<text x="'+pad+'" y="214" font-size="9" font-weight="600" letter-spacing="0.06em" fill="'+C.out.a+'" opacity="0.5">OUTPUTS &amp; ANALYSIS</text>';
+    s += '<text x="'+pad+'" y="24" font-size="9" font-weight="600" letter-spacing="0.06em" fill="'+C.inp.a+'" opacity="0.5">'+t('df.inputs')+'</text>';
+    s += '<text x="'+pad+'" y="120" font-size="9" font-weight="600" letter-spacing="0.06em" fill="'+C.eng.a+'" opacity="0.5">'+t('df.engines')+'</text>';
+    s += '<text x="'+pad+'" y="214" font-size="9" font-weight="600" letter-spacing="0.06em" fill="'+C.out.a+'" opacity="0.5">'+t('df.outputs')+'</text>';
 
     // Separator before tracking
     var sepY = 310;
     s += '<line x1="20" y1="'+sepY+'" x2="'+(W-20)+'" y2="'+sepY+'" stroke="#d8d7d2" stroke-width="0.5" stroke-dasharray="3 2"/>';
-    s += '<text x="'+(W/2)+'" y="'+(sepY-4)+'" text-anchor="middle" font-size="8" font-weight="600" letter-spacing="0.06em" fill="#b0afa8">EXECUTION &amp; TRACKING</text>';
+    s += '<text x="'+(W/2)+'" y="'+(sepY-4)+'" text-anchor="middle" font-size="8" font-weight="600" letter-spacing="0.06em" fill="#b0afa8">'+t('df.tracking')+'</text>';
 
     // ── Arrows: Tier 1 → Tier 2 (all inputs fan into the two engines) ──
     function arrow(x1,y1,x2,y2,col) {
@@ -14462,15 +14523,15 @@ Quedo a sus órdenes,
     const bullet = (text) => '<div style="display:flex;gap:8px;padding:4px 0;font-size:12px;color:#5f5e5a"><span style="color:#1d9e75;flex-shrink:0">•</span>' + text + '</div>';
 
     body.innerHTML =
-      section(t('inv.opportunity','The Opportunity'), '#185fa5',
-        '<p style="font-size:13px;color:#5f5e5a;line-height:1.75;margin:0">LabQro is a clinical laboratory targeting the mid-market healthcare gap in Querétaro, Mexico — one of the country\'s fastest-growing cities (+2.8%/yr). IMSS labs operate at chronic overcapacity, and the dominant private chains (Salud Digna, Chopo) sacrifice quality for volume. LabQro differentiates on 4-hour turnaround, WhatsApp result delivery, and a physician-first referral model.</p>'
+      section(t('inv.opportunity'), '#185fa5',
+        '<p style="font-size:13px;color:#5f5e5a;line-height:1.75;margin:0">' + t('inv.opp.desc') + '</p>'
       ) +
-      section(t('inv.market','Market Size'), '#534ab7',
-        row('QRO metro population (2024)', '~1.3 million (INEGI 2024)') +
-        row('Estimated private lab market (annual)', '~$9.2B MXN (COFEPRIS registry 2023)') +
-        row('Target addressable market (Year 1–2)', '~1.5M studies/yr') +
-        row('Break-even market share required', '<0.03%') +
-        row('Key demand driver', 'IMSS chronic overcapacity')
+      section(t('inv.market'), '#534ab7',
+        row(t('inv.qro.pop'), '~1.3 million (INEGI 2024)') +
+        row(t('inv.mkt.private'), '~$9.2B MXN (COFEPRIS registry 2023)') +
+        row(t('inv.mkt.tam'), '~1.5M ' + (_lang==='en'?'studies/yr':'estudios/año')) +
+        row(t('inv.mkt.be.share'), '<0.03%') +
+        row(t('inv.mkt.driver'), t('inv.mkt.driver.val'))
       ) +
       section(t('inv.financial','Financial Model'), '#1d9e75',
         row(t('inv.startup.req','Startup investment required'), '$' + startup.toLocaleString() + ' MXN (~$' + Math.round(startup/20000).toLocaleString() + 'K USD)') +
@@ -14488,32 +14549,32 @@ Quedo a sus órdenes,
             row(esc(r.title), '$' + fmt(r.baseSalary) + ' base → $' + fmt(Math.round(r.baseSalary * getBurdenMultiplier())) + ' burdened')
           ).join('') +
           '<div style="border-top:1.5px solid #ddd;margin:8px 0 4px"></div>' +
-          row('Total monthly payroll (burdened)', '$' + fmt(sc.totalBurdened) + ' MXN (' + sc.headcount + ' employees)', '#2a5ea8') +
+          row(t('inv.payroll.total'), '$' + fmt(sc.totalBurdened) + ' MXN (' + sc.headcount + ' ' + t('inv.payroll.employees') + ')', '#2a5ea8') +
           row('Annual payroll cost', '$' + fmt(sc.totalBurdened * 12) + ' MXN');
         })()
       ) : '') +
       section(t('inv.regulatory','Regulatory & Timeline'), '#854f0b',
-        row('Key permit', 'Licencia Sanitaria COFEPRIS (3–9 months)') +
-        row('Required hire', 'Director Técnico — QFB with cédula profesional') +
-        row('Estimated months to launch', '10–12 months from entity formation') +
-        row('Compliance standards', 'NOM-007, NOM-166, NOM-087, LFPDPPP') +
-        row('Business structure', 'S.A. de C.V. — Régimen General de Ley')
+        row(t('inv.reg.permit'), t('inv.reg.permit.val')) +
+        row(t('inv.reg.hire'), t('inv.reg.hire.val')) +
+        row(t('inv.reg.months'), t('inv.reg.months.val')) +
+        row(t('inv.reg.compliance'), 'NOM-007, NOM-166, NOM-087, LFPDPPP') +
+        row(t('inv.reg.structure'), 'S.A. de C.V. — Régimen General de Ley')
       ) +
-      section('Competitive Advantages', '#0f6e56',
-        bullet('<strong>Speed:</strong> Resultado en 4 horas for common panels vs. 24–48h for Salud Digna') +
-        bullet('<strong>Digital delivery:</strong> PDF via WhatsApp to patient + physician copy — standard expectation, poorly executed by incumbents') +
-        bullet('<strong>Physician relationships:</strong> Commission-free referral model builds trust and loyalty') +
-        bullet('<strong>Corporate B2B:</strong> QRO\'s 300+ maquiladoras require NOM-mandated annual screenings — untapped channel') +
-        bullet('<strong>Location:</strong> Juriquilla/Zibatá zone — high-income, underserved, growing fast')
+      section(t('inv.competitive'), '#0f6e56',
+        bullet(t('inv.adv.speed')) +
+        bullet(t('inv.adv.digital')) +
+        bullet(t('inv.adv.physicians')) +
+        bullet(t('inv.adv.b2b')) +
+        bullet(t('inv.adv.location'))
       ) +
-      (bmcData ? section('Business Model (Canvas Summary)', '#7a2d6b',
+      (bmcData ? section(t('inv.bmc'), '#7a2d6b',
         '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px">' +
-        [['value','Value Proposition','#ca8a04','#fef9c3'],
-         ['segments','Customer Segments','#ea580c','#ffedd5'],
-         ['channels','Channels','#be185d','#fce7f3'],
-         ['revenue','Revenue Streams','#be185d','#fce7f3'],
-         ['costs','Cost Structure','#4d7c0f','#ecfccb'],
-         ['partners','Key Partners','#5a1d8a','#e8e0f5']]
+        [['value',_lang==='en'?'Value Proposition':'Propuesta de Valor','#ca8a04','#fef9c3'],
+         ['segments',_lang==='en'?'Customer Segments':'Segmentos de Clientes','#ea580c','#ffedd5'],
+         ['channels',_lang==='en'?'Channels':'Canales','#be185d','#fce7f3'],
+         ['revenue',_lang==='en'?'Revenue Streams':'Fuentes de Ingreso','#be185d','#fce7f3'],
+         ['costs',_lang==='en'?'Cost Structure':'Estructura de Costos','#4d7c0f','#ecfccb'],
+         ['partners',_lang==='en'?'Key Partners':'Socios Clave','#5a1d8a','#e8e0f5']]
         .map(([k,lbl,col,bg]) =>
           '<div style="background:'+bg+';border-radius:8px;padding:10px 12px">' +
           '<div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;color:'+col+';margin-bottom:5px">'+lbl+'</div>' +
@@ -14521,10 +14582,10 @@ Quedo a sus órdenes,
           '</div>'
         ).join('') + '</div>'
       ) : '') +
-      (swotData && swotData.s && swotData.s.length ? section('SWOT Summary', '#534ab7',
+      (swotData && swotData.s && swotData.s.length ? section(t('inv.swot'), '#534ab7',
         '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">' +
-        [['s','Strengths','#3b6d11','#eaf3de'],['w','Weaknesses','#a32d2d','#fcebeb'],
-         ['o','Opportunities','#185fa5','#e6f1fb'],['t','Threats','#854f0b','#faeeda']]
+        [['s',_lang==='en'?'Strengths':'Fortalezas','#3b6d11','#eaf3de'],['w',_lang==='en'?'Weaknesses':'Debilidades','#a32d2d','#fcebeb'],
+         ['o',_lang==='en'?'Opportunities':'Oportunidades','#185fa5','#e6f1fb'],['t',_lang==='en'?'Threats':'Amenazas','#854f0b','#faeeda']]
         .map(([k,lbl,col,bg]) =>
           '<div style="background:'+bg+';border-radius:8px;padding:10px 12px">' +
           '<div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;color:'+col+';margin-bottom:6px">'+lbl+'</div>' +
@@ -14532,7 +14593,7 @@ Quedo a sus órdenes,
           '</div>'
         ).join('') + '</div>'
       ) : '') +
-      section('Use of Funds', '#e24b4a',
+      section(t('inv.usefunds'), '#e24b4a',
         (() => {
           // Pull real data from the Startup Cost Estimator
           const safeVal = (id) => (typeof estValues !== 'undefined' && estValues[id] !== undefined) ? +estValues[id] : 0;
@@ -14548,14 +14609,14 @@ Quedo a sus órdenes,
           const estGrand = eqTotal + lgTotal + opTotal;
           const pctOf = (v) => estGrand > 0 ? Math.round(v / estGrand * 100) : 0;
           const source = typeof estSections !== 'undefined'
-            ? '<div style="font-size:10px;color:#bbb;margin-top:8px;font-style:italic">Source: Startup Cost Estimator (live data)</div>'
-            : '<div style="font-size:10px;color:#bbb;margin-top:8px;font-style:italic">Source: Default estimates — update via Cost Estimator</div>';
+            ? '<div style="font-size:10px;color:#bbb;margin-top:8px;font-style:italic">' + t('inv.src.live') + '</div>'
+            : '<div style="font-size:10px;color:#bbb;margin-top:8px;font-style:italic">' + t('inv.src.default') + '</div>';
 
-          return row('Equipment & Infrastructure', '$' + fmt(eqTotal) + ' MXN (' + pctOf(eqTotal) + '%)', '#534ab7') +
-                 row('Permits, Legal & Admin', '$' + fmt(lgTotal) + ' MXN (' + pctOf(lgTotal) + '%)', '#854f0b') +
-                 row('Operations & Working Capital', '$' + fmt(opTotal) + ' MXN (' + pctOf(opTotal) + '%)', '#185fa5') +
+          return row(t('inv.eq.infra'), '$' + fmt(eqTotal) + ' MXN (' + pctOf(eqTotal) + '%)', '#534ab7') +
+                 row(t('inv.legal.admin'), '$' + fmt(lgTotal) + ' MXN (' + pctOf(lgTotal) + '%)', '#854f0b') +
+                 row(t('inv.ops.wc'), '$' + fmt(opTotal) + ' MXN (' + pctOf(opTotal) + '%)', '#185fa5') +
                  '<div style="border-top:1.5px solid #ddd;margin:8px 0 4px"></div>' +
-                 row('Total startup budget', '$' + fmt(estGrand) + ' MXN (~$' + fmt(Math.round(estGrand/20)) + ' USD)', '#e24b4a') +
+                 row(t('inv.total.budget'), '$' + fmt(estGrand) + ' MXN (~$' + fmt(Math.round(estGrand/20)) + ' USD)', '#e24b4a') +
                  source;
         })()
       ) +
@@ -14612,20 +14673,20 @@ Quedo a sus órdenes,
         const runwayColor = cfRunway >= cfHorizon ? '#1d9e75' : cfRunway <= 6 ? '#a32d2d' : '#854f0b';
         const lowestColor = cfLowest < 0 ? '#a32d2d' : cfLowest < cfMinBuffer ? '#854f0b' : '#1d9e75';
 
-        return section('Capital Requirements', '#185fa5',
-          row('Opening capital', '$' + fmt(cfOpening) + ' MXN') +
-          row('Minimum capital required', '$' + fmt(cfMinCapital) + ' MXN', cfDeficit > 0 ? '#a32d2d' : '#1d9e75') +
-          row('Recommended capital (with buffer)', '$' + fmt(cfRecCapital) + ' MXN', cfRecCapital > cfOpening ? '#854f0b' : '#1d9e75') +
-          row('Cash runway', (cfRunway >= cfHorizon ? cfHorizon + '+' : cfRunway) + ' months', runwayColor) +
-          row('Lowest cash balance', '$' + fmt(cfLowest) + ' MXN (Month ' + cfLowestM + ')', lowestColor) +
-          row('Minimum cash buffer', '$' + fmt(cfMinBuffer) + ' MXN') +
+        return section(t('inv.capital'), '#185fa5',
+          row(t('inv.cap.opening'), '$' + fmt(cfOpening) + ' MXN') +
+          row(t('inv.cap.min'), '$' + fmt(cfMinCapital) + ' MXN', cfDeficit > 0 ? '#a32d2d' : '#1d9e75') +
+          row(t('inv.cap.rec'), '$' + fmt(cfRecCapital) + ' MXN', cfRecCapital > cfOpening ? '#854f0b' : '#1d9e75') +
+          row(t('inv.cap.runway'), (cfRunway >= cfHorizon ? cfHorizon + '+' : cfRunway) + ' ' + (_lang==='en'?'months':'meses'), runwayColor) +
+          row(t('inv.cap.lowest'), '$' + fmt(cfLowest) + ' MXN (' + (_lang==='en'?'Month ':'Mes ') + cfLowestM + ')', lowestColor) +
+          row(t('inv.cap.buffer'), '$' + fmt(cfMinBuffer) + ' MXN') +
           (cfDeficit > 0
-            ? '<div style="margin-top:10px;padding:8px 12px;background:#fcebeb;border:0.5px solid rgba(163,45,45,0.2);border-radius:8px;font-size:11px;color:#a32d2d;line-height:1.5">&#9888; Cash is projected to turn negative. The business needs at least <strong>$' + fmt(cfDeficit) + ' MXN</strong> more than the current opening capital to avoid running out of cash.</div>'
-            : '<div style="margin-top:10px;padding:8px 12px;background:#e1f5ee;border:0.5px solid rgba(29,158,117,0.2);border-radius:8px;font-size:11px;color:#0f6e56;line-height:1.5">&#10003; Cash position remains positive throughout the ' + cfHorizon + '-month projection horizon.</div>')
+            ? '<div style="margin-top:10px;padding:8px 12px;background:#fcebeb;border:0.5px solid rgba(163,45,45,0.2);border-radius:8px;font-size:11px;color:#a32d2d;line-height:1.5">&#9888; ' + t('inv.cap.negative') + ' <strong>$' + fmt(cfDeficit) + ' MXN</strong> ' + t('inv.cap.moreThan') + '</div>'
+            : '<div style="margin-top:10px;padding:8px 12px;background:#e1f5ee;border:0.5px solid rgba(29,158,117,0.2);border-radius:8px;font-size:11px;color:#0f6e56;line-height:1.5">&#10003; ' + t('inv.cap.positive') + ' ' + cfHorizon + t('inv.cap.horizon') + '</div>')
         );
       })() +
       '<div style="margin-top:28px;padding-top:16px;border-top:0.5px solid #eee;font-size:11px;color:#bbb;text-align:center">' +
-        'Generated by LabQro HQ · ' + new Date().toLocaleDateString('es-MX', {day:'numeric',month:'long',year:'numeric'}) + ' · Confidential — for investor use only' +
+        'Generated by LabQro HQ · ' + new Date().toLocaleDateString(_lang==='en'?'en-US':'es-MX', {day:'numeric',month:'long',year:'numeric'}) + ' · ' + t('inv.footer.conf') +
       '</div>';
   }
 
