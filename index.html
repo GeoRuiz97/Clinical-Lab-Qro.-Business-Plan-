@@ -18028,21 +18028,18 @@ Quedo a sus órdenes,
         var cred = await window._signInAnonymously(window._auth);
         // Force fresh token so Firestore backend has request.auth populated.
         await cred.user.getIdToken(true);
-        // Retry the session doc write with backoff — the Firestore backend
-        // can still lag behind the SDK auth state by a few hundred ms.
-        var written = false;
-        for (var attempt = 0; attempt < 5 && !written; attempt++) {
-          await new Promise(function(r) { setTimeout(r, 300 * (attempt + 1)); });
-          try {
-            await window._setDoc(window._doc(window._db, 'sessions', cred.user.uid), {
-              role: 'founder', ts: Date.now()
-            });
-            written = true;
-          } catch(writeErr) {
-            if (attempt === 4) {
-              console.warn('Session doc write failed after 5 attempts:', writeErr);
-            }
+        var uid = cred.user.uid;
+        var sessionRef = window._doc(window._db, 'sessions', uid);
+        // Only create the session doc if it doesn't already exist —
+        // rules allow `create` but block `update`, so setDoc on a returning
+        // user (same UID, persisted session) would fail with "insufficient permissions".
+        try {
+          var snap = await window._getDoc(sessionRef);
+          if (!snap.exists()) {
+            await window._setDoc(sessionRef, { role: 'founder', ts: Date.now() });
           }
+        } catch(writeErr) {
+          console.warn('Session doc write failed:', writeErr);
         }
       }
     } catch(e) {
